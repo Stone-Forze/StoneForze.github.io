@@ -50,6 +50,29 @@
             "demo": "https://deposit-coffee.netlify.app/",
             "github": ""
           }
+        },
+        {
+          "title": "Clinic Web",
+          "description": "A premium modern clinic website featuring responsive layouts, service showcases, and smooth animations.",
+          "featured": true,
+          "status": "active",
+          "year": "2024",
+          "pages": 4,
+          "score": 95,
+          "thumbnailEmoji": "🏥",
+          "thumbnailBg": "linear-gradient(135deg, #0f766e 0%, #042f2e 100%)",
+          "thumbnailUrl": "",
+          "keyFeatures": [
+            "Modern Responsive Design",
+            "Service Showcase",
+            "Clean UI/UX",
+            "High Performance"
+          ],
+          "tags": ["HTML5", "CSS3", "JavaScript"],
+          "links": {
+            "demo": "https://stone-forze.github.io/Clinic_web/",
+            "github": ""
+          }
         }
       ]
     }
