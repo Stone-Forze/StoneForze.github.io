@@ -1,0 +1,294 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON_GLASS // Future Interface</title>
+    <style>
+        :root {
+            --bg: #030303;
+            --neon-blue: #00f2ff;
+            --neon-pink: #ff00e5;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --transition: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- CSS Noise Texture (Performance Optimized) --- */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: repeating-radial-gradient(#fff 0 0.0001%, #000 0 0.0002%);
+            background-size: 100px 100px;
+        }
+
+        /* --- Dynamic Background --- */
+        .orb {
+            position: fixed;
+            width: 50vw;
+            height: 50vw;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.2;
+            animation: move 20s infinite alternate linear;
+        }
+
+        .orb-1 { background: var(--neon-blue); top: -10%; left: -10%; }
+        .orb-2 { background: var(--neon-pink); bottom: -10%; right: -10%; animation-delay: -5s; }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(10vw, 10vh) scale(1.2); }
+        }
+
+        /* --- Sliding Glass Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 350px;
+            height: 100vh;
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            border-left: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: right 0.6s var(--transition);
+            display: flex;
+            flex-direction: column;
+            padding: 80px 40px;
+        }
+
+        nav.active { right: 0; box-shadow: -20px 0 50px rgba(0,0,0,0.5); }
+
+        .nav-toggle {
+            position: fixed;
+            top: 30px; right: 30px;
+            width: 50px; height: 50px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        /* --- Floating UI Cards with Depth Illusion --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 20px;
+            perspective: 1000px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(to bottom, #fff, #666);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s var(--transition), box-shadow 0.4s var(--transition);
+            transform-style: preserve-3d;
+        }
+
+        /* Neon Edge Glow */
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px; /* Border thickness */
+            background: linear-gradient(45deg, transparent, var(--neon-blue), transparent, var(--neon-pink), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.3;
+            transition: opacity 0.4s;
+        }
+
+        .card:hover {
+            transform: translateZ(20px) rotateX(2deg) rotateY(-2deg);
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.4),
+                0 0 20px rgba(0, 242, 255, 0.1);
+        }
+
+        .card:hover::after { opacity: 1; }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+        }
+
+        .card p {
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* --- Buttons --- */
+        .neon-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid var(--neon-pink);
+            color: var(--neon-pink);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        .neon-btn:hover {
+            background: var(--neon-pink);
+            color: white;
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+
+        @media (max-width: 768px) {
+            nav { width: 100%; }
+            h1 { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <button class="nav-toggle" id="menuBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <nav id="sidebar">
+        <div style="margin-bottom: 40px; font-weight: 800; font-size: 1.5rem; color: var(--neon-blue);">MENU_SYSTEM</div>
+        <a href="#" style="color: white; text-decoration: none; margin-bottom: 20px; font-size: 1.2rem; display: block;">CORE_SYNC</a>
+        <a href="#" style="color: white; text-decoration: none; margin-bottom: 20px; font-size: 1.2rem; display: block;">NEURAL_NET</a>
+        <a href="#" style="color: white; text-decoration: none; margin-bottom: 20px; font-size: 1.2rem; display: block;">DATA_VAULT</a>
+        <a href="#" style="color: white; text-decoration: none; margin-bottom: 20px; font-size: 1.2rem; display: block;">SYSTEM_LOG</a>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1>TRANSCEND_</h1>
+            <p style="color: var(--neon-pink); font-weight: 600; letter-spacing: 4px;">LIMITLESS INTERFACE v2.0</p>
+        </section>
+
+        
+
+        <div class="grid">
+            <div class="card">
+                <h3>01 / QUANTUM_EYE</h3>
+                <p>Advanced visual processing layers utilizing refracted light architecture for maximum clarity in high-density data environments.</p>
+                <button class="neon-btn">Initialize</button>
+            </div>
+            <div class="card">
+                <h3>02 / SYNAPSE_LINK</h3>
+                <p>Direct neural-to-glass communication protocols. Zero latency interaction through sub-atomic vibration sensors.</p>
+                <button class="neon-btn">Connect</button>
+            </div>
+            <div class="card">
+                <h3>03 / VIRTUAL_CORE</h3>
+                <p>Hyper-threaded processing distributed across decentralized glass nodes. Stability guaranteed by neon-flux cooling.</p>
+                <button class="neon-btn">Execute</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+        
+        // Navigation Toggle
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Close Sidebar on link click
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+            });
+        });
+
+        // Depth Illusion Mouse Interaction
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) translateZ(0)`;
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev_Archive // Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #ffffff;
+            --accent: #3b82f6;
+            --secondary: #1a1a1a;
+            --transition: cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Page Transition Overlay --- */
+        #page-loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 0%;
+            background: var(--accent);
+            z-index: 9999;
+            transition: height 0.8s var(--transition);
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 40px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo { font-family: 'Syncopate', sans-serif; font-size: 1.2rem; letter-spacing: -1px; }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-link {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+        .nav-link:hover { opacity: 1; }
+
+        /* --- Hero Section --- */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+        }
+
+        .hero h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* --- Magnetic Button --- */
+        .btn-container {
+            display: inline-block;
+            position: relative;
+            padding: 20px;
+        }
+
+        .magnetic-btn {
+            padding: 20px 40px;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.2s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Project Grid --- */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .project-card {
+            background: var(--secondary);
+            aspect-ratio: 16/10;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .project-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+            transition: transform 0.8s var(--transition), opacity 0.5s;
+        }
+
+        .project-card:hover .project-preview {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        .project-info {
+            position: absolute;
+            bottom: 30px; left: 30px;
+            pointer-events: none;
+        }
+
+        /* --- Overlay View --- */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg);
+            z-index: 2000;
+            transform: translateY(100%);
+            transition: transform 0.8s var(--transition);
+            padding: 5%;
+        }
+
+        .overlay.active { transform: translateY(0); }
+
+        .close-overlay {
+            position: absolute;
+            top: 40px; right: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .iframe-wrapper {
+            width: 100%;
+            height: 80vh;
+            background: #111;
+            border-radius: 20px;
+            margin-top: 50px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+    <div id="page-loader"></div>
+
+    <nav>
+        <div class="logo">ARCHIVE_</div>
+        <div class="nav-links">
+            <a href="#work" class="nav-link">Work</a>
+            <a href="#about" class="nav-link">About</a>
+        </div>
+    </nav>
+
+    <main id="content">
+        <section class="section hero">
+            <h1>CRAFTING<br><span style="color: var(--accent)">DIGITAL</span><br>SYSTEMS.</h1>
+            <div class="btn-container">
+                <a href="#work" class="magnetic-btn">Explore Projects</a>
+            </div>
+        </section>
+
+        <section class="section" id="work">
+            <h2 style="font-family: 'Syncopate'; margin-bottom: 40px;">SELECTED_CASES</h2>
+            <div class="project-grid">
+                <div class="project-card" onclick="openProject('https://example.com', 'Aura AI')">
+                    <div class="project-preview" style="background: linear-gradient(45deg, #121212, #333);"></div>
+                    <div class="project-info">
+                        <h3>Aura AI</h3>
+                        <p>Web3 Dashboard Design</p>
+                    </div>
+                </div>
+                <div class="project-card" onclick="openProject('https://example.com', 'FluxOS')">
+                    <div class="project-preview" style="background: linear-gradient(45deg, #1a1a1a, #222);"></div>
+                    <div class="project-info">
+                        <h3>FluxOS</h3>
+                        <p>Enterprise SaaS Solution</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="overlay" id="projectOverlay">
+        <div class="close-overlay" onclick="closeProject()">[ Close ]</div>
+        <h1 id="overlayTitle" style="font-family: 'Syncopate';">Project Name</h1>
+        <div class="iframe-wrapper">
+            <iframe id="projectIframe" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        // --- Magnetic Button Interaction ---
+        const magneticBtns = document.querySelectorAll('.btn-container');
+
+        magneticBtns.forEach(container => {
+            const btn = container.querySelector('.magnetic-btn');
+            
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                // Pull effect: moves 40% of mouse distance
+                btn.style.transform = `translate(${x * 0.4}px, ${y * 0.4}px)`;
+            });
+
+            container.addEventListener('mouseleave', () => {
+                btn.style.transform = `translate(0px, 0px)`;
+            });
+        });
+
+        // --- Smooth Page Transitions (Simulated) ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const loader = document.getElementById('page-loader');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                
+                // Trigger animation
+                loader.style.height = '100%';
+                
+                setTimeout(() => {
+                    document.querySelector(targetId).scrollIntoView();
+                    loader.style.height = '0%';
+                }, 800);
+            });
+        });
+
+        // --- Project Overlay Logic ---
+        const overlay = document.getElementById('projectOverlay');
+        const iframe = document.getElementById('projectIframe');
+        const title = document.getElementById('overlayTitle');
+
+        function openProject(url, name) {
+            title.innerText = name;
+            iframe.src = url; // In real use, this would be a live link
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProject() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            setTimeout(() => { iframe.src = ''; }, 800);
+        }
+
+        // --- Reveal on Scroll ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.animate([
+                        { opacity: 0, transform: 'translateY(50px)' },
+                        { opacity: 1, transform: 'translateY(0)' }
+                    ], { duration: 1000, easing: 'cubic-bezier(0.76, 0, 0.24, 1)', fill: 'forwards' });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.project-card, .hero h1').forEach(el => observer.observe(el));
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

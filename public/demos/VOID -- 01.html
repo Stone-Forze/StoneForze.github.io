@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOID // 01</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --border: #1a1a1a;
+            --accent: #ffffff;
+            --text-dim: #666666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--accent);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- BACKGROUND MESH --- */
+        .mesh {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* --- NAV --- */
+        nav {
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Syncopate', sans-serif;
+            letter-spacing: 5px;
+        }
+
+        .status {
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            background: #00ff00;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        main {
+            padding: 0 40px 40px 40px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: minmax(200px, auto);
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .bento-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-box:hover {
+            border-color: var(--accent);
+            transform: scale(1.01);
+        }
+
+        /* Span Logic */
+        .hero-cell { grid-column: span 3; grid-row: span 2; justify-content: center; }
+        .tall-cell { grid-row: span 2; }
+        .wide-cell { grid-column: span 2; }
+
+        /* --- CONTENT --- */
+        .hero-cell h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 0.9;
+            text-transform: uppercase;
+        }
+
+        .tag {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .description {
+            color: var(--text-dim);
+            font-size: 14px;
+            max-width: 300px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-main {
+            width: fit-content;
+            padding: 15px 30px;
+            background: var(--accent);
+            color: var(--bg);
+            text-decoration: none;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-main:hover {
+            letter-spacing: 5px;
+            background: #ccc;
+        }
+
+        /* --- GLITCH ANIMATION --- */
+        .glitch-load {
+            animation: glitch 0.5s steps(2) forwards;
+        }
+
+        @keyframes glitch {
+            0% { clip-path: inset(50% 0 30% 0); transform: skew(10deg); }
+            100% { clip-path: inset(0 0 0 0); transform: skew(0deg); }
+        }
+
+        @media (max-width: 900px) {
+            main { grid-template-columns: 1fr; }
+            .hero-cell, .wide-cell { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mesh"></div>
+
+    <nav>
+        <div class="logo">VOID // 01</div>
+        <div class="status">
+            <div class="status-dot"></div>
+            SYSTEMS OPERATIONAL
+        </div>
+    </nav>
+
+    <main class="glitch-load">
+        <div class="bento-box hero-cell">
+            <span class="tag">Established 2026</span>
+            <h1>UNTOUCHABLE <br> VISION.</h1>
+            <a href="#" class="btn-main">View Dossier</a>
+        </div>
+
+        <div class="bento-box">
+            <span class="tag">Philosophy</span>
+            <h3>0% Noise</h3>
+            <p class="description">Eliminate distractions. Build the empire in complete silence.</p>
+        </div>
+
+        <div class="bento-box tall-cell">
+            <span class="tag">Performance</span>
+            <div class="stat-value">99</div>
+            <p>Percentile Ranking</p>
+            <div style="height: 100px; border-left: 1px solid var(--accent); margin-top: 20px;"></div>
+        </div>
+
+        <div class="bento-box wide-cell">
+            <span class="tag">Directives</span>
+            <h3>No Validation Required.</h3>
+            <p class="description">Ego is a tool when sharpened by discipline. Otherwise, it is a liability.</p>
+        </div>
+
+        <div class="bento-box">
+            <span class="tag">Location</span>
+            <h3 id="clock">00:00:00</h3>
+            <p class="description">GMT // GLOBAL</p>
+        </div>
+    </main>
+
+    <script>
+        // Update Clock
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB');
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Reveal animation on scroll
+        const boxes = document.querySelectorAll('.bento-box');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        boxes.forEach(box => {
+            box.style.opacity = 0;
+            box.style.transform = 'translateY(20px)';
+            box.style.transition = 'all 0.6s ease-out';
+            observer.observe(box);
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

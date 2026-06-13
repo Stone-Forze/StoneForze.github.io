@@ -1,0 +1,335 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | The Future of SaaS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --text: #ffffff;
+            --text-muted: #a1a1aa;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #6366f1;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --nav-bg: rgba(5, 5, 5, 0.8);
+        }
+
+        [data-theme="light"] {
+            --bg: #ffffff;
+            --text: #09090b;
+            --text-muted: #52525b;
+            --glass: rgba(0, 0, 0, 0.02);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --nav-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background 0.4s ease;
+        }
+
+        /* --- UI Components --- */
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+        }
+
+        .gradient-text {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Navbar --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; }
+
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--text); 
+            font-weight: 500; 
+            font-size: 0.9rem;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background: var(--accent-gradient);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 15%;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s forwards 0.2s;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.4s;
+        }
+
+        .cta-ripple {
+            position: relative;
+            padding: 1rem 2.5rem;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .cta-ripple:active { transform: scale(0.95); }
+
+        /* --- Pricing Toggle --- */
+        .pricing-section { padding: 100px 10%; text-align: center; }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+
+        .switch {
+            width: 50px; height: 26px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .switch .dot {
+            position: absolute;
+            top: 3px; left: 3px;
+            width: 18px; height: 18px;
+            background: var(--text);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .switch.active .dot { left: 27px; background: var(--accent); }
+
+        /* --- Grid & Cards --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 50px;
+        }
+
+        .card {
+            padding: 3rem 2rem;
+            text-align: left;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- Footer --- */
+        footer {
+            padding: 50px 10%;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 100px;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero { padding: 0 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">AURA</div>
+        <ul class="nav-links">
+            <li><a href="#">Product</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><button id="theme-btn" style="background:none; border:none; cursor:pointer; font-size:1.2rem;">ðŸŒ“</button></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h1>The Intelligent <br><span class="gradient-text">Layer for Growth</span></h1>
+            <p>Automate your workflow with neural-sync technology. Built for teams that demand precision and speed.</p>
+            <button class="cta-ripple" id="ripple-btn">Start 14-day Free Trial</button>
+        </section>
+
+        <section class="pricing-section" id="pricing">
+            <h2 class="reveal">Simple, Transparent Pricing</h2>
+            <div class="toggle-container reveal">
+                <span>Monthly</span>
+                <div class="switch" id="price-switch"><div class="dot"></div></div>
+                <span>Yearly <small class="gradient-text">(Save 20%)</small></span>
+            </div>
+
+            <div class="grid">
+                <div class="card glass reveal">
+                    <h3>Starter</h3>
+                    <h2 id="price-starter">$29<span>/mo</span></h2>
+                    <p>Perfect for individuals starting their journey.</p>
+                </div>
+                <div class="card glass reveal" style="border: 1px solid var(--accent);">
+                    <h3>Pro</h3>
+                    <h2 id="price-pro">$79<span>/mo</span></h2>
+                    <p>The standard for high-performance teams.</p>
+                </div>
+                <div class="card glass reveal">
+                    <h3>Enterprise</h3>
+                    <h2>Custom</h2>
+                    <p>Bespoke solutions for global scale.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="logo">AURA</div>
+        <p class="text-muted">Â© 2026 Aura Labs. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // --- Theme Toggle ---
+        const themeBtn = document.getElementById('theme-btn');
+        themeBtn.addEventListener('click', () => {
+            const root = document.documentElement;
+            const currentTheme = root.getAttribute('data-theme');
+            root.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        // --- Pricing Switcher ---
+        const priceSwitch = document.getElementById('price-switch');
+        const starter = document.getElementById('price-starter');
+        const pro = document.getElementById('price-pro');
+
+        priceSwitch.addEventListener('click', () => {
+            priceSwitch.classList.toggle('active');
+            const isYearly = priceSwitch.classList.contains('active');
+            
+            // Subtle transition for numbers
+            starter.innerText = isYearly ? '$290' : '$29';
+            pro.innerText = isYearly ? '$790' : '$79';
+            
+            // Add spans back
+            starter.innerHTML += '<span>/yr</span>';
+            pro.innerHTML += '<span>/yr</span>';
+        });
+
+        // --- Scroll Reveal Animation ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Button Ripple Effect ---
+        const rippleBtn = document.getElementById('ripple-btn');
+        rippleBtn.addEventListener('click', function(e) {
+            const x = e.clientX - e.target.offsetLeft;
+            const y = e.clientY - e.target.offsetTop;
+            
+            const ripple = document.createElement('span');
+            ripple.style.position = 'absolute';
+            ripple.style.width = '100px';
+            ripple.style.height = '100px';
+            ripple.style.background = 'rgba(255,255,255,0.3)';
+            ripple.style.borderRadius = '50%';
+            ripple.style.transform = 'translate(-50%, -50%) scale(0)';
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            ripple.style.transition = 'transform 0.5s ease-out, opacity 0.5s';
+            
+            this.appendChild(ripple);
+            
+            requestAnimationFrame(() => {
+                ripple.style.transform = 'translate(-50%, -50%) scale(4)';
+                ripple.style.opacity = '0';
+            });
+
+            setTimeout(() => ripple.remove(), 500);
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

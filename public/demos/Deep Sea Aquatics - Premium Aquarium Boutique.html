@@ -1,0 +1,421 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Sea Aquatics | Premium Aquarium Boutique</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan-glow: #00FFFF;
+            --emerald-glow: #00FF88;
+            --deep-blue: #0A0F2A;
+            --water-blue: #1A237E;
+            --glass: rgba(255, 255, 255, 0.1);
+            --bubble: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: var(--deep-blue);
+            color: white;
+            overflow-x: hidden;
+            cursor: none;
+            position: relative;
+        }
+
+        /* Custom Bubble Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, var(--cyan-glow) 20%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: screen;
+            transition: transform 0.1s ease;
+        }
+
+        .cursor trail {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--bubble);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bubbleFloat 4s infinite linear;
+        }
+
+        /* Underwater Background */
+        .ocean-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(180deg, #0A0F2A 0%, #1A237E 50%, #0A1421 100%);
+            overflow: hidden;
+        }
+
+        /* Caustic Light Rays */
+        .caustics {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 300%;
+            height: 300%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0,255,255,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0,255,136,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0,255,255,0.02) 0%, transparent 50%);
+            animation: causticShift 20s infinite linear;
+            z-index: -1;
+        }
+
+        @keyframes causticShift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Rising Bubbles */
+        .bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bubble {
+            position: absolute;
+            background: var(--bubble);
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+            animation: rise 8s infinite linear;
+        }
+
+        .bubble:nth-child(odd) { animation-duration: 12s; }
+        .bubble:nth-child(3n) { animation-duration: 10s; background: rgba(0,255,255,0.15); }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero Section with SVG Ripple */
+        .hero {
+            text-align: center;
+            padding: 120px 20px 80px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--cyan-glow), var(--emerald-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: url(#rippleFilter);
+            margin-bottom: 20px;
+            text-shadow: 0 0 40px var(--cyan-glow);
+        }
+
+        .hero p {
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            font-weight: 400;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* Liquid Glass Cards */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin: 80px 0;
+        }
+
+        .product-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass);
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.3),
+                0 0 50px rgba(0,255,255,0.2);
+            opacity: 0;
+            transform: translateY(100px) rotateX(15deg);
+        }
+
+        .product-card.drift {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .product-card:hover::before {
+            left: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 
+                0 35px 70px rgba(0,0,0,0.4),
+                0 0 100px rgba(0,255,255,0.4),
+                0 0 200px rgba(0,255,136,0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--cyan-glow), var(--emerald-glow));
+            border-radius: 20px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image::after {
+            content: 'ðŸ ';
+            position: absolute;
+            font-size: 4rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .product h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--cyan-glow);
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--emerald-glow);
+            margin: 20px 0;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--cyan-glow), var(--emerald-glow));
+            color: var(--deep-blue);
+            border: none;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,255,255,0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,255,255,0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .hero { padding: 80px 15px 60px; }
+            .products-grid { gap: 25px; }
+            .product-card { padding: 30px 25px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+
+    <!-- Ocean Background -->
+    <div class="ocean-bg">
+        <div class="caustics"></div>
+        <div class="bubbles" id="bubbles"></div>
+    </div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero drift">
+            <h1>Deep Sea Aquatics</h1>
+            <p>Premium aquarium boutique. Exotic fish, custom tanks, and marine wonders delivered to your door. Dive into luxury.</p>
+            <button class="btn">Explore Collection</button>
+        </section>
+
+        <!-- Products -->
+        <section class="products-grid" id="products">
+            <div class="product-card">
+                <div class="product-image"></div>
+                <h3>Discus Emperor</h3>
+                <div class="price">$149</div>
+                <p>Rare royal blue discus with emperor marbling. Perfect centerpiece for premium aquariums.</p>
+                <button class="btn">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image"></div>
+                <h3>Neon Tetra Pack</h3>
+                <div class="price">$89</div>
+                <p>20-count neon tetras with iridescent glow. Schooling perfection for community tanks.</p>
+                <button class="btn">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image"></div>
+                <h3>Custom 100G Tank</h3>
+                <div class="price">$1,299</div>
+                <p>Handcrafted rimless aquarium with overflow system. Lifetime warranty included.</p>
+                <button class="btn">Customize</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image"></div>
+                <h3>Coral Reef Kit</h3>
+                <div class="price">$399</div>
+                <p>Live rock, corals, and cleanup crew. Instant reef ecosystem for beginners.</p>
+                <button class="btn">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image"></div>
+                <h3>Arowana Dragon</h3>
+                <div class="price">$2,499</div>
+                <p>Asian arowana with perfect red dragon scale pattern. Investment-grade specimen.</p>
+                <button class="btn">Reserve Now</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image"></div>
+                <h3>LED Moonlight</h3>
+                <div class="price">$179</div>
+                <p>Full-spectrum lunar cycle lighting. Perfect night viewing for nocturnal species.</p>
+                <button class="btn">Add to Cart</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- SVG Filters for Water Ripple -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <filter id="rippleFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" result="noise"/>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+            <feGaussianBlur stdDeviation="0.5"/>
+        </filter>
+    </svg>
+
+    <script>
+        // Custom Bubble Cursor
+        const cursor = document.getElementById('cursor');
+        let mouseX = 0, mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            cursor.style.transform = `translate(-50%, -50%) scale(${e.movementX ? 1.5 : 1})`;
+            
+            // Create bubble trail
+            createBubble(mouseX, mouseY);
+        });
+
+        // Create bubble trail
+        function createBubble(x, y) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = x + 'px';
+            bubble.style.top = y + 'px';
+            bubble.style.width = bubble.style.height = Math.random() * 10 + 5 + 'px';
+            document.getElementById('bubbles').appendChild(bubble);
+            
+            setTimeout(() => bubble.remove(), 8000);
+        }
+
+        // Generate initial bubbles
+        setInterval(() => {
+            const x = Math.random() * window.innerWidth;
+            createBubble(x, window.innerHeight);
+        }, 800);
+
+        // Drift Animation with Intersection Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('drift');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+
+        document.querySelectorAll('.product-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Button hover cursor effect
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(2) rotate(180deg)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        });
+
+        // Parallax on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            document.querySelector('.caustics').style.transform = 
+                `translate(${scrolled * -0.1}px, ${scrolled * -0.05}px) rotate(${scrolled * 0.01}deg)`;
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

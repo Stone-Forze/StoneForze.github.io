@@ -1,0 +1,837 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Industrial Brutalist landing page featuring concrete textures, heavy structural design, and mechanical animations">
+    <title>INDUSTRIAL BRUTALIST | Raw Structural Power</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =====================================================
+           INDUSTRIAL BRUTALIST DESIGN SYSTEM
+           Raw structural power meets modern web architecture
+        ===================================================== */
+        
+        :root {
+            /* Color Palette - Industrial Strength */
+            --concrete-base: #3a3a3a;
+            --concrete-light: #505050;
+            --concrete-dark: #2a2a2a;
+            --steel-gray: #6b6b6b;
+            --iron-black: #1a1a1a;
+            --rust-accent: #8b4513;
+            --industrial-yellow: #ffd700;
+            --shadow-charcoal: #0f0f0f;
+            
+            /* Typography Scale */
+            --font-display: 'Bebas Neue', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --text-mega: clamp(4rem, 12vw, 8rem);
+            --text-huge: clamp(2.5rem, 8vw, 5rem);
+            --text-large: clamp(1.5rem, 4vw, 2.5rem);
+            --text-base: clamp(1rem, 2vw, 1.125rem);
+            
+            /* Spacing System */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 2rem;
+            --space-lg: 4rem;
+            --space-xl: 6rem;
+            
+            /* Shadow Depth */
+            --shadow-heavy: 10px 10px 0 var(--shadow-charcoal);
+            --shadow-medium: 6px 6px 0 var(--shadow-charcoal);
+            --shadow-light: 3px 3px 0 var(--shadow-charcoal);
+            
+            /* Animation Timing */
+            --timing-mechanical: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --timing-industrial: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* =====================================================
+           BASE STYLES & RESET
+        ===================================================== */
+        
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: var(--font-mono);
+            font-size: var(--text-base);
+            line-height: 1.6;
+            color: #ffffff;
+            background: var(--concrete-base);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* =====================================================
+           CONCRETE TEXTURE BACKGROUND
+           SVG noise pattern with grid overlay
+        ===================================================== */
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                /* Grid overlay */
+                linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.03) 75%, rgba(255, 255, 255, 0.03) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.03) 75%, rgba(255, 255, 255, 0.03) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* =====================================================
+           LAYOUT CONTAINER
+        ===================================================== */
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+        
+        /* =====================================================
+           VERTICAL NAVIGATION
+           Industrial side labels
+        ===================================================== */
+        
+        .nav-vertical {
+            position: fixed;
+            left: var(--space-md);
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+        
+        .nav-vertical a {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--steel-gray);
+            text-decoration: none;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            letter-spacing: 0.2em;
+            transition: color 0.3s var(--timing-industrial), transform 0.3s var(--timing-mechanical);
+            position: relative;
+        }
+        
+        .nav-vertical a::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            width: 4px;
+            height: 0;
+            background: var(--industrial-yellow);
+            transition: height 0.4s var(--timing-mechanical);
+            transform: translateY(-50%);
+        }
+        
+        .nav-vertical a:hover,
+        .nav-vertical a:focus {
+            color: var(--industrial-yellow);
+            transform: translateX(5px);
+        }
+        
+        .nav-vertical a:hover::before,
+        .nav-vertical a:focus::before {
+            height: 60px;
+        }
+        
+        /* =====================================================
+           HERO SECTION
+        ===================================================== */
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: var(--space-xl) 0;
+        }
+        
+        .hero__title {
+            font-family: var(--font-display);
+            font-size: var(--text-mega);
+            line-height: 0.9;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: var(--shadow-heavy);
+            margin-bottom: var(--space-md);
+            animation: slideInDown 1.2s var(--timing-mechanical) both;
+        }
+        
+        .hero__subtitle {
+            font-family: var(--font-mono);
+            font-size: var(--text-large);
+            color: var(--steel-gray);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            animation: slideInUp 1.4s var(--timing-mechanical) 0.2s both;
+        }
+        
+        .hero__cta {
+            margin-top: var(--space-lg);
+            animation: fadeInScale 1s var(--timing-mechanical) 0.6s both;
+        }
+        
+        /* =====================================================
+           BUTTON STYLES - Mechanical Press Effect
+        ===================================================== */
+        
+        .btn {
+            display: inline-block;
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--iron-black);
+            background: var(--industrial-yellow);
+            padding: var(--space-sm) var(--space-lg);
+            text-decoration: none;
+            position: relative;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--rust-accent);
+            z-index: -1;
+            transition: transform 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translate(3px, 3px);
+            box-shadow: 3px 3px 0 var(--shadow-charcoal);
+        }
+        
+        .btn:active {
+            transform: translate(6px, 6px);
+            box-shadow: none;
+        }
+        
+        .btn:focus {
+            outline: 3px solid var(--industrial-yellow);
+            outline-offset: 4px;
+        }
+        
+        /* =====================================================
+           STACKED SLABS - Content Cards
+        ===================================================== */
+        
+        .section {
+            padding: var(--space-xl) 0;
+            position: relative;
+        }
+        
+        .section__title {
+            font-family: var(--font-display);
+            font-size: var(--text-huge);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-lg);
+            color: #ffffff;
+            text-shadow: var(--shadow-medium);
+        }
+        
+        .slabs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .slab {
+            background: var(--concrete-dark);
+            padding: var(--space-lg);
+            position: relative;
+            box-shadow: var(--shadow-heavy);
+            border: 4px solid var(--iron-black);
+            transition: transform 0.3s var(--timing-mechanical), box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        
+        .slab.reveal {
+            animation: slideInRebound 0.8s var(--timing-mechanical) forwards;
+        }
+        
+        .slab:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 12px 12px 0 var(--shadow-charcoal);
+        }
+        
+        .slab::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: linear-gradient(135deg, var(--steel-gray) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .slab:hover::before {
+            opacity: 0.1;
+        }
+        
+        .slab__label {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--industrial-yellow);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .slab__title {
+            font-family: var(--font-display);
+            font-size: var(--text-large);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-bottom: var(--space-sm);
+            line-height: 1.2;
+        }
+        
+        .slab__description {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: var(--steel-gray);
+            line-height: 1.7;
+        }
+        
+        .slab__icon {
+            width: 60px;
+            height: 60px;
+            background: var(--industrial-yellow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--iron-black);
+            margin-bottom: var(--space-md);
+            box-shadow: var(--shadow-light);
+        }
+        
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+        
+        .footer {
+            background: var(--iron-black);
+            padding: var(--space-lg) 0;
+            text-align: center;
+            border-top: 4px solid var(--steel-gray);
+        }
+        
+        .footer__text {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--steel-gray);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        /* =====================================================
+           ANIMATIONS
+        ===================================================== */
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes slideInRebound {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(-10px) scale(1.02);
+            }
+            80% {
+                transform: translateY(5px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* =====================================================
+           ACCESSIBILITY
+        ===================================================== */
+        
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        /* =====================================================
+           RESPONSIVE DESIGN
+        ===================================================== */
+        
+        @media (max-width: 1024px) {
+            .nav-vertical {
+                position: static;
+                transform: none;
+                flex-direction: row;
+                justify-content: center;
+                padding: var(--space-md) 0;
+                gap: var(--space-md);
+            }
+            
+            .nav-vertical a {
+                writing-mode: horizontal-tb;
+                font-size: 1.125rem;
+            }
+            
+            .nav-vertical a::before {
+                left: 50%;
+                top: -10px;
+                width: 0;
+                height: 4px;
+                transform: translateX(-50%);
+            }
+            
+            .nav-vertical a:hover::before,
+            .nav-vertical a:focus::before {
+                width: 60px;
+                height: 4px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            :root {
+                --space-xl: 3rem;
+                --space-lg: 2rem;
+            }
+            
+            .slabs-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+            
+            .slab {
+                padding: var(--space-md);
+            }
+            
+            .hero__title {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 var(--space-sm);
+            }
+            
+            .btn {
+                font-size: 1.125rem;
+                padding: var(--space-sm) var(--space-md);
+            }
+        }
+        
+        /* =====================================================
+           PRINT STYLES
+        ===================================================== */
+        
+        @media print {
+            body::before,
+            body::after {
+                display: none;
+            }
+            
+            .nav-vertical {
+                display: none;
+            }
+            
+            .slab {
+                page-break-inside: avoid;
+                box-shadow: none;
+                border: 2px solid #000;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Vertical Navigation -->
+    <nav class="nav-vertical" aria-label="Main navigation">
+        <a href="#hero" aria-label="Navigate to hero section">HOME</a>
+        <a href="#features" aria-label="Navigate to features section">FEATURES</a>
+        <a href="#structure" aria-label="Navigate to structure section">STRUCTURE</a>
+        <a href="#contact" aria-label="Navigate to contact section">CONTACT</a>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <h1 class="hero__title">
+                INDUSTRIAL<br>
+                BRUTALIST
+            </h1>
+            <p class="hero__subtitle">
+                Raw Â· Structural Â· Power
+            </p>
+            <div class="hero__cta">
+                <a href="#features" class="btn" aria-label="Explore industrial features">
+                    EXPLORE
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="container">
+            <h2 class="section__title">STRUCTURAL COMPONENTS</h2>
+            
+            <div class="slabs-grid">
+                <article class="slab" data-reveal>
+                    <div class="slab__icon" aria-hidden="true">01</div>
+                    <span class="slab__label">Foundation</span>
+                    <h3 class="slab__title">Concrete Core</h3>
+                    <p class="slab__description">
+                        Built on solid architectural principles with load-bearing design patterns 
+                        that support massive scale and uncompromising structural integrity.
+                    </p>
+                </article>
+                
+                <article class="slab" data-reveal>
+                    <div class="slab__icon" aria-hidden="true">02</div>
+                    <span class="slab__label">Framework</span>
+                    <h3 class="slab__title">Steel Reinforcement</h3>
+                    <p class="slab__description">
+                        Industrial-strength codebase engineered with precision. Every component 
+                        tested under stress to ensure maximum performance and zero failure points.
+                    </p>
+                </article>
+                
+                <article class="slab" data-reveal>
+                    <div class="slab__icon" aria-hidden="true">03</div>
+                    <span class="slab__label">Architecture</span>
+                    <h3 class="slab__title">Modular Slabs</h3>
+                    <p class="slab__description">
+                        Componentized systems that stack seamlessly. Each module engineered for 
+                        independence while maintaining cohesion with the larger structure.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Structure Section -->
+    <section class="section" id="structure">
+        <div class="container">
+            <h2 class="section__title">ENGINEERING SPECS</h2>
+            
+            <div class="slabs-grid">
+                <article class="slab" data-reveal>
+                    <div class="slab__icon" aria-hidden="true">âš™</div>
+                    <span class="slab__label">Performance</span>
+                    <h3 class="slab__title">Heavy-Duty Operations</h3>
+                    <p class="slab__description">
+                        Optimized for maximum throughput with minimal overhead. GPU-accelerated 
+                        animations and RAF-based rendering ensure 60fps under full load.
+                    </p>
+                </article>
+                
+                <article class="slab" data-reveal>
+                    <div class="slab__icon" aria-hidden="true">â¬›</div>
+                    <span class="slab__label">Accessibility</span>
+                    <h3 class="slab__title">Universal Access</h3>
+                    <p class="slab__description">
+                        WCAG 2.1 AA compliant with semantic HTML5, keyboard navigation, and 
+                        screen reader optimization. Reduced motion support for all users.
+                    </p>
+                </article>
+                
+                <article class="slab" data-reveal>
+                    <div class="slab__icon" aria-hidden="true">â–£</div>
+                    <span class="slab__label">Responsive</span>
+                    <h3 class="slab__title">Adaptive Grid</h3>
+                    <p class="slab__description">
+                        Fluid layout system that maintains structural integrity across all 
+                        viewports. Mobile-first approach with desktop-enhanced experiences.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <div class="container">
+            <h2 class="section__title">BUILD WITH US</h2>
+            
+            <div class="slabs-grid">
+                <article class="slab" data-reveal>
+                    <span class="slab__label">Connect</span>
+                    <h3 class="slab__title">Start Your Project</h3>
+                    <p class="slab__description">
+                        Ready to build something that lasts? Let's engineer solutions that 
+                        stand the test of time with raw structural power.
+                    </p>
+                    <div style="margin-top: var(--space-md);">
+                        <a href="mailto:contact@industrial.dev" class="btn">
+                            CONTACT US
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer__text">
+                Â© 2026 Industrial Brutalist Â· Engineered for Maximum Impact
+            </p>
+        </div>
+    </footer>
+    
+    <!-- JavaScript - Mechanical Animations & Intersection Observer -->
+    <script>
+        /**
+         * INDUSTRIAL BRUTALIST - JavaScript Controller
+         * Handles mechanical animations and scroll-based reveals
+         */
+        
+        // =====================================================
+        // INTERSECTION OBSERVER - Staggered Slab Reveals
+        // =====================================================
+        
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    // Stagger animation delay based on index
+                    const delay = index * 150;
+                    setTimeout(() => {
+                        entry.target.classList.add('reveal');
+                    }, delay);
+                    
+                    // Unobserve after reveal (one-time animation)
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all slabs
+        const slabs = document.querySelectorAll('[data-reveal]');
+        slabs.forEach(slab => {
+            revealObserver.observe(slab);
+        });
+        
+        // =====================================================
+        // BUTTON MECHANICAL SHAKE ON CLICK
+        // =====================================================
+        
+        const buttons = document.querySelectorAll('.btn');
+        
+        buttons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                // Add mechanical shake animation
+                button.style.animation = 'none';
+                
+                // Force reflow
+                button.offsetHeight;
+                
+                // Apply shake
+                button.style.animation = 'mechanicalPress 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                
+                // Haptic feedback if supported
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(50);
+                }
+            });
+        });
+        
+        // Define mechanical press animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes mechanicalPress {
+                0%, 100% { transform: scale(1); }
+                25% { transform: scale(0.95) rotate(-1deg); }
+                50% { transform: scale(0.98) rotate(1deg); }
+                75% { transform: scale(1.02) rotate(-0.5deg); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // =====================================================
+        // SMOOTH SCROLL WITH MECHANICAL EASING
+        // =====================================================
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // =====================================================
+        // ACCESSIBILITY - FOCUS INDICATORS
+        // =====================================================
+        
+        // Announce page load for screen readers
+        const announcer = document.createElement('div');
+        announcer.setAttribute('role', 'status');
+        announcer.setAttribute('aria-live', 'polite');
+        announcer.className = 'sr-only';
+        announcer.textContent = 'Industrial Brutalist website loaded successfully. Navigate using tab key.';
+        document.body.appendChild(announcer);
+        
+        // Remove announcement after 3 seconds
+        setTimeout(() => {
+            announcer.remove();
+        }, 3000);
+        
+        // =====================================================
+        // PERFORMANCE MONITORING (Development Only)
+        // =====================================================
+        
+        if (window.performance && window.performance.mark) {
+            window.addEventListener('load', () => {
+                performance.mark('page-loaded');
+                
+                // Measure key metrics
+                const perfData = performance.getEntriesByType('navigation')[0];
+                
+                console.log('ðŸ—ï¸ INDUSTRIAL BRUTALIST - Performance Metrics:');
+                console.log(`âš¡ DOM Content Loaded: ${perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart}ms`);
+                console.log(`ðŸŽ¯ Page Load Time: ${perfData.loadEventEnd - perfData.loadEventStart}ms`);
+                console.log(`ðŸ“¦ Total Transfer Size: ${(perfData.transferSize / 1024).toFixed(2)}KB`);
+            });
+        }
+        
+        // =====================================================
+        // CONSOLE SIGNATURE
+        // =====================================================
+        
+        console.log('%câ¬› INDUSTRIAL BRUTALIST â¬›', 
+            'font-family: monospace; font-size: 16px; font-weight: bold; color: #ffd700; background: #1a1a1a; padding: 10px 20px;');
+        console.log('%cRaw Structural Power | Engineered for Maximum Impact', 
+            'font-family: monospace; font-size: 12px; color: #6b6b6b;');
+        
+    </script>
+    
+<script src="../template-injector.js"></script>
+</body>
+</html>

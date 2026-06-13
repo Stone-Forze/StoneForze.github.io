@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KINETIC // Scroll-Driven Narrative</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --text: #ffffff;
+            --accent: #3b82f6;
+            --font-main: 'Inter', system-ui, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            /* Height determines the "duration" of the scroll experience */
+            height: 500vh; 
+            overflow-x: hidden;
+        }
+
+        /* --- UI Elements --- */
+        .progress-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
+            z-index: 1000;
+        }
+        #progress-bar {
+            height: 100%; width: 0%;
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        /* --- Scroll Stages --- */
+        .stage {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        /* --- Content Styling --- */
+        .title {
+            font-size: clamp(2rem, 15vw, 10rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            text-align: center;
+            line-height: 0.8;
+        }
+
+        .sub-text {
+            max-width: 400px;
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 300px; height: 300px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        /* --- Background Morph --- */
+        #bg-mesh {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), #111 0%, #050505 100%);
+            transition: background 1s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bg-mesh"></div>
+
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <div class="stage" id="scene-1">
+        <h1 class="title">BEGIN</h1>
+    </div>
+
+    <div class="stage" id="scene-2">
+        <h1 class="title" style="color: transparent; -webkit-text-stroke: 1px white;">SHIFT</h1>
+    </div>
+
+    <div class="stage" id="scene-3">
+        <div class="parallax-layer" id="layer-1"></div>
+        <div class="parallax-layer" id="layer-2" style="width: 500px; height: 500px;"></div>
+        <p class="sub-text">Every action has a reaction. Every scroll reveals a new dimension.</p>
+    </div>
+
+    <div class="stage" id="scene-4">
+        <h1 class="title">END_</h1>
+    </div>
+
+    <script>
+        const stages = [
+            document.getElementById('scene-1'),
+            document.getElementById('scene-2'),
+            document.getElementById('scene-3'),
+            document.getElementById('scene-4')
+        ];
+        const progressBar = document.getElementById('progress-bar');
+        const bgMesh = document.getElementById('bg-mesh');
+
+        // Linear Interpolation for Smooth Momentum
+        let currentScroll = 0;
+        let targetScroll = 0;
+        const lerpAmount = 0.08;
+
+        window.addEventListener('scroll', () => {
+            targetScroll = window.scrollY;
+        });
+
+        function update() {
+            // Calculate Lerp
+            currentScroll += (targetScroll - currentScroll) * lerpAmount;
+            
+            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            const progress = currentScroll / maxScroll;
+
+            // Update Progress Bar
+            progressBar.style.width = `${progress * 100}%`;
+
+            // Scene Logic: Map progress ranges to scene animations
+            animateScenes(progress);
+
+            requestAnimationFrame(update);
+        }
+
+        function animateScenes(p) {
+            // Scene 1: Fades out as you scroll to 25%
+            if (p < 0.25) {
+                const localP = p / 0.25;
+                stages[0].style.opacity = 1 - localP;
+                stages[0].style.transform = `scale(${1 + localP}) rotate(${localP * 10}deg)`;
+            } else {
+                stages[0].style.opacity = 0;
+            }
+
+            // Scene 2: Reveal and Morph (25% to 50%)
+            if (p > 0.20 && p < 0.55) {
+                const localP = (p - 0.20) / 0.35;
+                stages[1].style.opacity = Math.sin(localP * Math.PI); // Fade in/out curve
+                stages[1].style.transform = `translateX(${(0.5 - localP) * 100}px)`;
+                bgMesh.style.background = `radial-gradient(circle, #1a1a2e 0%, #050505 100%)`;
+            } else {
+                stages[1].style.opacity = 0;
+            }
+
+            // Scene 3: Parallax Depth (50% to 75%)
+            if (p > 0.50 && p < 0.85) {
+                const localP = (p - 0.50) / 0.35;
+                stages[2].style.opacity = Math.sin(localP * Math.PI);
+                document.getElementById('layer-1').style.transform = `translateY(${localP * -200}px) rotate(${localP * 90}deg)`;
+                document.getElementById('layer-2').style.transform = `translateY(${localP * -400}px) rotate(${localP * -45}deg)`;
+                bgMesh.style.background = `radial-gradient(circle, #2e1a1a 0%, #050505 100%)`;
+            } else {
+                stages[2].style.opacity = 0;
+            }
+
+            // Scene 4: Conclusion (75% to 100%)
+            if (p > 0.80) {
+                const localP = (p - 0.80) / 0.20;
+                stages[3].style.opacity = localP;
+                stages[3].style.transform = `scale(${2 - localP})`;
+                bgMesh.style.background = `radial-gradient(circle, #1a2e1a 0%, #050505 100%)`;
+            } else {
+                stages[3].style.opacity = 0;
+            }
+        }
+
+        // Mouse interaction for background mesh
+        window.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            bgMesh.style.setProperty('--mouse-x', `${x}%`);
+            bgMesh.style.setProperty('--mouse-y', `${y}%`);
+        });
+
+        // Initialize Loop
+        update();
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,446 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Valentine | Our Love Story</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS VARIABLES & THEME --- */
+        :root {
+            --primary-red: #800e13;   /* Deep Velvet Red */
+            --primary-pink: #ff4d6d;  /* Vibrant Rose */
+            --bg-pink: #fff0f3;       /* Very Pale Pink */
+            --gold: #c9a227;          /* Muted Gold */
+            --white: #ffffff;
+            --text-dark: #2b2b2b;
+            
+            --font-cursive: 'Great Vibes', cursive;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lato', sans-serif;
+            
+            --transition: all 0.5s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-pink);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* --- HEART ANIMATION BACKGROUND --- */
+        .heart-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .floating-heart {
+            position: absolute;
+            color: rgba(255, 77, 109, 0.2);
+            font-size: 20px;
+            animation: floatUp 15s linear infinite;
+            bottom: -100px;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { font-family: var(--font-heading); color: var(--primary-red); }
+        
+        .cursive {
+            font-family: var(--font-cursive);
+            color: var(--primary-pink);
+            font-weight: 400;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-header .pre-title {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: -10px;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            background: linear-gradient(rgba(45, 10, 15, 0.5), rgba(45, 10, 15, 0.5)), 
+                        url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 5rem;
+            color: var(--white);
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .btn-love {
+            margin-top: 2rem;
+            padding: 15px 40px;
+            background: var(--white);
+            color: var(--primary-red);
+            border: none;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-love:hover {
+            transform: translateY(-3px);
+            background: var(--primary-pink);
+            color: var(--white);
+            box-shadow: 0 15px 30px rgba(255, 77, 109, 0.4);
+        }
+
+        /* --- COUNTER SECTION --- */
+        .counter-section {
+            background: var(--white);
+            padding: 4rem 10%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 1;
+            margin-top: -50px;
+            border-radius: 20px 20px 0 0;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .timer-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .time-card {
+            background: var(--bg-pink);
+            padding: 20px;
+            min-width: 120px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 77, 109, 0.2);
+        }
+
+        .time-card span {
+            font-size: 2.5rem;
+            font-family: var(--font-heading);
+            color: var(--primary-red);
+            font-weight: 700;
+            display: block;
+        }
+        
+        .time-card p {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dark);
+        }
+
+        /* --- REASONS I LOVE YOU (Cards) --- */
+        section { padding: 5rem 10%; position: relative; z-index: 1; }
+
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .love-card {
+            background: var(--white);
+            padding: 2.5rem;
+            text-align: center;
+            border-radius: 15px;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        .love-card:hover {
+            transform: translateY(-10px);
+            border-bottom: 3px solid var(--primary-pink);
+            box-shadow: 0 20px 40px rgba(128, 14, 19, 0.1);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .love-card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .love-card p { color: #666; font-style: italic; }
+
+        /* --- MEMORY GALLERY --- */
+        .gallery-wrap {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 250px);
+            gap: 10px;
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-img:hover { transform: scale(0.98); opacity: 0.9; }
+
+        /* Grid Spans for Masonry Feel */
+        .g-1 { grid-column: span 2; grid-row: span 2; height: 510px; }
+        .g-2 { grid-column: span 1; grid-row: span 1; }
+
+        /* --- LETTER SECTION --- */
+        .letter-section {
+            background-color: var(--primary-red);
+            color: var(--white);
+            text-align: center;
+            padding: 6rem 10%;
+        }
+
+        .letter-content {
+            max-width: 700px;
+            margin: 0 auto;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 3rem;
+            position: relative;
+        }
+
+        .letter-content::before {
+            content: 'â¤';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-red);
+            padding: 0 15px;
+            font-size: 2rem;
+            color: var(--primary-pink);
+        }
+
+        .letter-text {
+            font-size: 1.1rem;
+            line-height: 2;
+        }
+        
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--white);
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* --- UTILITY & RESPONSIVE --- */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 3.5rem; }
+            .gallery-wrap { display: flex; flex-direction: column; height: auto; }
+            .g-1 { height: 300px; }
+            .timer-grid { gap: 1rem; }
+            .time-card { min-width: 80px; padding: 15px; }
+            .time-card span { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="heart-container" id="heartContainer"></div>
+
+    <header class="hero">
+        <div class="hero-content fade-up">
+            <p class="cursive" style="font-size: 3rem; margin-bottom: 0;">Happy Valentine's Day</p>
+            <h1>My Forever <br> Valentine</h1>
+            <p>Sarah & James</p>
+            <button class="btn-love" onclick="scrollToLove()">Why I Love You</button>
+        </div>
+    </header>
+
+    <div class="counter-section fade-up">
+        <h3 style="text-transform: uppercase; font-size: 1rem; letter-spacing: 2px; color: #888;">We have been in love for</h3>
+        <div class="timer-grid" id="timer">
+            <div class="time-card"><span id="days">0</span><p>Days</p></div>
+            <div class="time-card"><span id="hours">0</span><p>Hours</p></div>
+            <div class="time-card"><span id="minutes">0</span><p>Mins</p></div>
+            <div class="time-card"><span id="seconds">0</span><p>Secs</p></div>
+        </div>
+        <p class="cursive" style="font-size: 2rem; margin-top: 1rem; color: var(--primary-red);">...and counting.</p>
+    </div>
+
+    <section id="reasons">
+        <div class="section-header fade-up">
+            <span class="pre-title cursive">3 Reasons</span>
+            <h2>Why You Are The One</h2>
+        </div>
+        
+        <div class="reasons-grid">
+            <div class="love-card fade-up">
+                <span class="card-icon">â˜•</span>
+                <h3>Your Kindness</h3>
+                <p>"The way you treat everyone with such warmth, from the barista to my parents, makes my heart melt every single day."</p>
+            </div>
+            <div class="love-card fade-up" style="transition-delay: 0.2s">
+                <span class="card-icon">ðŸŒŸ</span>
+                <h3>Your Support</h3>
+                <p>"You are my biggest cheerleader. Even when I doubt myself, you are there to remind me of who I can be."</p>
+            </div>
+            <div class="love-card fade-up" style="transition-delay: 0.4s">
+                <span class="card-icon">ðŸ¤£</span>
+                <h3>Your Laugh</h3>
+                <p>"It is absolutely my favorite sound in the world. Making you smile is my life's greatest mission."</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="background-color: var(--white);">
+        <div class="section-header fade-up">
+            <span class="pre-title cursive">Our Memories</span>
+            <h2>Moments in Time</h2>
+        </div>
+        <div class="gallery-wrap fade-up">
+            <img src="https://images.unsplash.com/photo-1529634806980-85c3dd626271?q=80&w=1972&auto=format&fit=crop" class="gallery-img g-1" alt="Couple 1">
+            <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1974&auto=format&fit=crop" class="gallery-img g-2" alt="Couple 2">
+            <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=1974&auto=format&fit=crop" class="gallery-img g-2" alt="Couple 3">
+            <img src="https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?q=80&w=1974&auto=format&fit=crop" class="gallery-img g-2" alt="Couple 4">
+            <img src="https://images.unsplash.com/photo-1621112904887-419379ce6824?q=80&w=2072&auto=format&fit=crop" class="gallery-img g-2" alt="Couple 5">
+        </div>
+    </section>
+
+    <section class="letter-section">
+        <div class="letter-content fade-up">
+            <h2 style="color: var(--white); margin-bottom: 2rem;">My Promise to You</h2>
+            <p class="letter-text">
+                "I promise to love you when life is easy and when it is hard. I promise to always share my fries with you (mostly). 
+                I promise to be your partner, your best friend, and your safe harbor. You are my greatest adventure."
+            </p>
+            <br>
+            <p class="cursive" style="font-size: 2.5rem; color: var(--primary-pink);">Love always, Me.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>Made with â¤ï¸ for Valentine's Day 2024</p>
+    </footer>
+
+    <script>
+        // 1. FLOATING HEARTS GENERATOR
+        function createHearts() {
+            const container = document.getElementById('heartContainer');
+            const heartCount = 15; // Number of hearts on screen
+
+            for (let i = 0; i < heartCount; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('floating-heart');
+                    heart.innerHTML = 'â¤';
+                    
+                    // Random positioning
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (Math.random() * 5 + 10) + 's'; // 10-15s float speed
+                    heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                    heart.style.opacity = Math.random() * 0.5;
+
+                    container.appendChild(heart);
+
+                    // Remove heart after animation loops to prevent DOM overload (optional logic)
+                    // For simple CSS infinite loop, we just leave them.
+                }, i * 500);
+            }
+        }
+        createHearts();
+
+        // 2. TIME TOGETHER COUNTER
+        // CHANGE THIS DATE to when you started dating!
+        const startDate = new Date("February 14, 2020 00:00:00").getTime();
+
+        setInterval(function() {
+            const now = new Date().getTime();
+            const distance = now - startDate; // Time elapsed
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = days;
+            document.getElementById("hours").innerHTML = hours;
+            document.getElementById("minutes").innerHTML = minutes;
+            document.getElementById("seconds").innerHTML = seconds;
+        }, 1000);
+
+        // 3. SCROLL ANIMATION
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // 4. SMOOTH SCROLL
+        function scrollToLove() {
+            document.getElementById('reasons').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

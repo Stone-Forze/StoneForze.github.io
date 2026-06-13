@@ -1,0 +1,1236 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO-TERMINAL 8080 | Retro-Future Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --midnight-blue: #0A0E2A;
+            --deep-space: #12163C;
+            --terminal-cyan: #00FFFF;
+            --terminal-glow: rgba(0, 255, 255, 0.7);
+            --phosphor-green: #00FF00;
+            --phosphor-glow: rgba(0, 255, 0, 0.5);
+            --crt-white: #CCCCCC;
+            --crt-grey: #888888;
+            --plastic-dark: #2A2A4A;
+            --plastic-light: #4A4A6A;
+            --scanline: rgba(0, 255, 0, 0.1);
+            --grid-glow: rgba(0, 255, 255, 0.2);
+            --shadow-heavy: rgba(0, 0, 0, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--midnight-blue);
+        }
+
+        body {
+            font-family: 'VT323', monospace;
+            background-color: var(--midnight-blue);
+            color: var(--phosphor-green);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.4;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px var(--phosphor-glow);
+            cursor: default;
+        }
+
+        /* CRT flicker and scanline overlay */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    var(--scanline) 2px,
+                    var(--scanline) 4px
+                );
+            opacity: 0.3;
+            animation: flicker 5s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 0.3; }
+            1%, 2% { opacity: 0.2; }
+            3%, 4% { opacity: 0.4; }
+            5%, 6% { opacity: 0.3; }
+            7%, 8% { opacity: 0.25; }
+            9%, 10% { opacity: 0.35; }
+            97%, 98% { opacity: 0.2; }
+            99%, 100% { opacity: 0.3; }
+        }
+
+        /* Glowing grid floor at bottom */
+        .grid-floor {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            background: 
+                linear-gradient(transparent 10%, rgba(0, 255, 255, 0.05) 100%),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 80px,
+                    var(--grid-glow) 80px,
+                    var(--grid-glow) 100px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 80px,
+                    var(--grid-glow) 80px,
+                    var(--grid-glow) 100px
+                );
+            z-index: 1;
+            transform-origin: bottom;
+            transform: perspective(500px) rotateX(60deg);
+            animation: grid-flow 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes grid-flow {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        /* Terminal header */
+        .terminal-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(10, 14, 42, 0.9);
+            border-bottom: 2px solid var(--terminal-cyan);
+            box-shadow: 0 0 20px var(--terminal-glow);
+        }
+
+        .system-title {
+            font-family: 'VT323', monospace;
+            font-size: 2rem;
+            color: var(--terminal-cyan);
+            text-decoration: none;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px var(--terminal-glow);
+            position: relative;
+        }
+
+        .system-title::before {
+            content: '>';
+            position: absolute;
+            left: -25px;
+            color: var(--phosphor-green);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .status-line {
+            display: flex;
+            gap: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--phosphor-green);
+            box-shadow: 0 0 10px var(--phosphor-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            color: var(--crt-white);
+        }
+
+        /* Main terminal screen */
+        .terminal-screen {
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* CRT monitor cards */
+        .crt-card {
+            background-color: rgba(18, 22, 60, 0.9);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            border: 4px solid var(--plastic-dark);
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 0 0 2px var(--plastic-light),
+                0 0 40px rgba(0, 255, 255, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .crt-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                0deg,
+                transparent 50%,
+                rgba(0, 255, 255, 0.05) 100%
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .crt-card:hover {
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 0 0 2px var(--plastic-light),
+                0 0 60px rgba(0, 255, 255, 0.5);
+            transform: translateY(-5px);
+        }
+
+        /* Scanline overlay for cards */
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 0, 0.05) 2px,
+                rgba(0, 255, 0, 0.05) 4px
+            );
+            pointer-events: none;
+            z-index: 2;
+            animation: scanline-move 10s linear infinite;
+        }
+
+        @keyframes scanline-move {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        /* Typewriter headlines */
+        .typewriter-headline {
+            font-family: 'Courier Prime', monospace;
+            font-size: 2.5rem;
+            color: var(--terminal-cyan);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 15px var(--terminal-glow);
+            border-bottom: 2px solid var(--terminal-cyan);
+            padding-bottom: 0.5rem;
+            overflow: hidden;
+            white-space: nowrap;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .typewriter-headline::after {
+            content: 'â–ˆ';
+            position: absolute;
+            right: -10px;
+            animation: blink 1s infinite;
+            color: var(--phosphor-green);
+        }
+
+        .card-title {
+            font-family: 'VT323', monospace;
+            font-size: 2rem;
+            color: var(--phosphor-green);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px var(--phosphor-glow);
+        }
+
+        .card-content {
+            font-family: 'VT323', monospace;
+            font-size: 1.3rem;
+            line-height: 1.5;
+            color: var(--crt-white);
+            margin-bottom: 1.5rem;
+        }
+
+        .terminal-prompt {
+            font-family: 'Courier Prime', monospace;
+            color: var(--terminal-cyan);
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .prompt-text {
+            color: var(--crt-grey);
+        }
+
+        /* Plastic toggle buttons */
+        .plastic-toggle {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(
+                to bottom,
+                var(--plastic-dark) 0%,
+                var(--plastic-light) 100%
+            );
+            border: 2px solid var(--plastic-dark);
+            color: var(--crt-white);
+            font-family: 'VT323', monospace;
+            font-size: 1.3rem;
+            text-decoration: none;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 0 rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px var(--phosphor-glow);
+        }
+
+        .plastic-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 255, 0.2),
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+
+        .plastic-toggle:hover {
+            color: var(--terminal-cyan);
+            box-shadow: 
+                0 4px 0 rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 20px var(--terminal-glow);
+            transform: translateY(-2px);
+        }
+
+        .plastic-toggle:hover::before {
+            left: 100%;
+        }
+
+        .plastic-toggle.active {
+            background: linear-gradient(
+                to bottom,
+                var(--plastic-light) 0%,
+                var(--plastic-dark) 100%
+            );
+            color: var(--phosphor-green);
+            box-shadow: 
+                0 2px 0 rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 0 30px var(--phosphor-glow);
+            transform: translateY(2px);
+        }
+
+        .plastic-toggle.active::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            border: 1px solid var(--phosphor-green);
+            border-radius: 4px;
+            box-shadow: inset 0 0 10px var(--phosphor-glow);
+            pointer-events: none;
+        }
+
+        /* Terminal grid layout */
+        .terminal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .grid-item {
+            background-color: rgba(18, 22, 60, 0.8);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 3px solid var(--plastic-dark);
+            position: relative;
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.8),
+                0 0 0 1px var(--plastic-light);
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover {
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.8),
+                0 0 0 1px var(--plastic-light),
+                0 0 30px rgba(0, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .grid-icon {
+            font-size: 2.5rem;
+            color: var(--terminal-cyan);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px var(--terminal-glow);
+            text-align: center;
+        }
+
+        .grid-title {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.5rem;
+            color: var(--phosphor-green);
+            margin-bottom: 0.8rem;
+            text-align: center;
+            text-shadow: 0 0 10px var(--phosphor-glow);
+        }
+
+        .grid-description {
+            font-size: 1.2rem;
+            color: var(--crt-white);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* System console output */
+        .console-output {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 3rem 0;
+            border: 3px solid var(--plastic-dark);
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--crt-white);
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+        }
+
+        .console-line {
+            margin-bottom: 0.5rem;
+            animation: type-in 0.5s ease forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        @keyframes type-in {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .console-prompt {
+            color: var(--terminal-cyan);
+            font-weight: bold;
+        }
+
+        .console-text {
+            color: var(--crt-white);
+        }
+
+        .console-comment {
+            color: var(--crt-grey);
+            font-style: italic;
+        }
+
+        /* Terminal footer */
+        .terminal-footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            border-top: 2px solid var(--terminal-cyan);
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column-title {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.5rem;
+            color: var(--terminal-cyan);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px var(--terminal-glow);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--crt-white);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: var(--phosphor-green);
+            text-shadow: 0 0 10px var(--phosphor-glow);
+            transform: translateX(5px);
+        }
+
+        .footer-links a::before {
+            content: '>';
+            margin-right: 0.5rem;
+            color: var(--terminal-cyan);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+        }
+
+        .system-boot {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--plastic-dark);
+            font-size: 1rem;
+            color: var(--crt-grey);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .terminal-screen {
+                padding: 7rem 1.5rem 3rem;
+            }
+            
+            .typewriter-headline {
+                font-size: 2rem;
+            }
+            
+            .terminal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .terminal-header {
+                padding: 0.8rem 1rem;
+            }
+            
+            .system-title {
+                font-size: 1.5rem;
+            }
+            
+            .status-line {
+                gap: 1rem;
+                font-size: 1rem;
+            }
+            
+            .terminal-screen {
+                padding: 6rem 1rem 2rem;
+            }
+            
+            .crt-card {
+                padding: 1.5rem;
+            }
+            
+            .typewriter-headline {
+                font-size: 1.8rem;
+            }
+            
+            .card-title {
+                font-size: 1.8rem;
+            }
+            
+            .terminal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .system-title {
+                font-size: 1.2rem;
+            }
+            
+            .status-line {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .typewriter-headline {
+                font-size: 1.5rem;
+            }
+            
+            .card-title {
+                font-size: 1.5rem;
+            }
+            
+            .card-content {
+                font-size: 1.1rem;
+            }
+            
+            .plastic-toggle {
+                padding: 0.6rem 1.5rem;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .crt-overlay,
+            .grid-floor,
+            .scanlines,
+            .status-indicator,
+            .system-title::before,
+            .typewriter-headline::after,
+            .console-line {
+                animation: none !important;
+            }
+            
+            .plastic-toggle:hover,
+            .crt-card:hover,
+            .grid-item:hover {
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CRT flicker overlay -->
+    <div class="crt-overlay"></div>
+    
+    <!-- Grid floor with perspective -->
+    <div class="grid-floor"></div>
+
+    <!-- Terminal header -->
+    <header class="terminal-header">
+        <a href="#" class="system-title">NEO-TERMINAL 8080</a>
+        
+        <div class="status-line">
+            <div class="status-item">
+                <div class="status-indicator"></div>
+                <span class="status-text">SYSTEM: ONLINE</span>
+            </div>
+            <div class="status-item">
+                <div class="status-indicator" style="background-color: var(--terminal-cyan);"></div>
+                <span class="status-text">NETWORK: ACTIVE</span>
+            </div>
+            <div class="status-item">
+                <div class="status-indicator" style="animation-delay: 0.5s;"></div>
+                <span class="status-text">MEMORY: 87%</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main terminal screen -->
+    <main class="terminal-screen">
+        <!-- Hero section -->
+        <section class="crt-card">
+            <div class="scanlines"></div>
+            <h1 class="typewriter-headline" id="mainHeadline">> SYSTEM BOOT: NEO-TERMINAL 8080</h1>
+            <p class="card-content">
+                WELCOME TO THE RETRO-FUTURE INTERFACE SYSTEM. 
+                THIS TERMINAL SIMULATES THE AESTHETIC OF 1980S SCI-FI 
+                COMPUTING WITH MODERN WEB TECHNOLOGIES. ALL SYSTEMS 
+                OPERATIONAL. READY FOR USER INPUT.
+            </p>
+            <div class="terminal-prompt">
+                <span class="prompt-text">SYSTEM></span> INITIALIZING USER INTERFACE...
+            </div>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="#modules" class="plastic-toggle active" id="toggle1">ACCESS MODULES</a>
+                <a href="#console" class="plastic-toggle" id="toggle2">VIEW CONSOLE</a>
+                <a href="#systems" class="plastic-toggle" id="toggle3">SYSTEM INFO</a>
+            </div>
+        </section>
+
+        <!-- Modules grid -->
+        <section id="modules">
+            <h2 class="typewriter-headline" id="modulesHeadline">> AVAILABLE SYSTEM MODULES</h2>
+            
+            <div class="terminal-grid">
+                <div class="grid-item">
+                    <div class="grid-icon">â–£</div>
+                    <h3 class="grid-title">NEURAL NETWORK</h3>
+                    <p class="grid-description">
+                        ARTIFICIAL INTELLIGENCE MODULE WITH 
+                        PATTERN RECOGNITION CAPABILITIES.
+                    </p>
+                    <a href="#" class="plastic-toggle" style="margin-top: 1rem; display: block; text-align: center;">ACTIVATE</a>
+                </div>
+                
+                <div class="grid-item">
+                    <div class="grid-icon">â—ˆ</div>
+                    <h3 class="grid-title">HYPERSPACE NAV</h3>
+                    <p class="grid-description">
+                        FTL NAVIGATION SYSTEM FOR INTERSTELLAR 
+                        TRAJECTORY CALCULATIONS.
+                    </p>
+                    <a href="#" class="plastic-toggle" style="margin-top: 1rem; display: block; text-align: center;">ACTIVATE</a>
+                </div>
+                
+                <div class="grid-item">
+                    <div class="grid-icon">âŒ¬</div>
+                    <h3 class="grid-title">QUANTUM COMMS</h3>
+                    <p class="grid-description">
+                        INSTANTANEOUS COMMUNICATION ACROSS 
+                        ANY DISTANCE USING ENTANGLEMENT.
+                    </p>
+                    <a href="#" class="plastic-toggle" style="margin-top: 1rem; display: block; text-align: center;">ACTIVATE</a>
+                </div>
+                
+                <div class="grid-item">
+                    <div class="grid-icon">â—‰</div>
+                    <h3 class="grid-title">HOLO-DISPLAY</h3>
+                    <p class="grid-description">
+                        THREE-DIMENSIONAL HOLOGRAPHIC 
+                        INTERFACE AND VISUALIZATION.
+                    </p>
+                    <a href="#" class="plastic-toggle" style="margin-top: 1rem; display: block; text-align: center;">ACTIVATE</a>
+                </div>
+                
+                <div class="grid-item">
+                    <div class="grid-icon">âš¡</div>
+                    <h3 class="grid-title">POWER GRID</h3>
+                    <p class="grid-description">
+                        FUSION REACTOR MANAGEMENT AND 
+                        ENERGY DISTRIBUTION SYSTEM.
+                    </p>
+                    <a href="#" class="plastic-toggle" style="margin-top: 1rem; display: block; text-align: center;">ACTIVATE</a>
+                </div>
+                
+                <div class="grid-item">
+                    <div class="grid-icon">âŒ€</div>
+                    <h3 class="grid-title">CYBER DEFENSE</h3>
+                    <p class="grid-description">
+                        MULTI-LAYER SECURITY PROTOCOLS 
+                        AND INTRUSION DETECTION.
+                    </p>
+                    <a href="#" class="plastic-toggle" style="margin-top: 1rem; display: block; text-align: center;">ACTIVATE</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- System console -->
+        <section id="console">
+            <h2 class="typewriter-headline" id="consoleHeadline">> SYSTEM CONSOLE OUTPUT</h2>
+            
+            <div class="crt-card">
+                <div class="scanlines"></div>
+                <div class="console-output" id="consoleOutput">
+                    <!-- Console lines will be added by JavaScript -->
+                </div>
+                <div class="terminal-prompt" style="margin-top: 1rem;">
+                    <span class="prompt-text">CONSOLE></span> READY FOR COMMANDS...
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="plastic-toggle" onclick="addConsoleLine()">ADD LOG ENTRY</button>
+                    <button class="plastic-toggle" onclick="clearConsole()">CLEAR CONSOLE</button>
+                    <button class="plastic-toggle" onclick="runDiagnostic()">RUN DIAGNOSTIC</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- System information -->
+        <section id="systems">
+            <h2 class="typewriter-headline" id="systemsHeadline">> SYSTEM SPECIFICATIONS</h2>
+            
+            <div class="crt-card">
+                <div class="scanlines"></div>
+                <div class="card-content">
+                    <p style="margin-bottom: 1.5rem;">
+                        <strong>SYSTEM ARCHITECTURE:</strong> NEURO-SYNTHETIC HYBRID<br>
+                        <strong>PROCESSOR:</strong> QUANTUM PHOTONIC CHIP 8080<br>
+                        <strong>MEMORY:</strong> 64 ZETTABYTES HOLOGRAPHIC RAM<br>
+                        <strong>STORAGE:</strong> SINGULARITY COMPRESSION DRIVE<br>
+                        <strong>DISPLAY:</strong> RETINA PROJECTION CRT<br>
+                        <strong>INTERFACE:</strong> NEURAL DIRECT CONNECT
+                    </p>
+                    
+                    <p style="margin-bottom: 1.5rem;">
+                        <strong>OPERATING SYSTEM:</strong> NEXUS-OS v8.0<br>
+                        <strong>NETWORK PROTOCOL:</strong> QUANTUM ENTANGLEMENT<br>
+                        <strong>POWER SOURCE:</strong> ZERO-POINT ENERGY CELL<br>
+                        <strong>SECURITY:</strong> MULTIVERSE ENCRYPTION<br>
+                        <strong>STATUS:</strong> ALL SYSTEMS NOMINAL
+                    </p>
+                </div>
+                
+                <div class="terminal-prompt">
+                    <span class="prompt-text">SYSTEM></span> SPECIFICATIONS LOADED. READY FOR QUERIES.
+                </div>
+            </div>
+        </section>
+
+        <!-- Terminal footer -->
+        <footer class="terminal-footer">
+            <div class="footer-grid">
+                <div>
+                    <h4 class="footer-column-title">SYSTEM COMMANDS</h4>
+                    <ul class="footer-links">
+                        <li><a href="#modules">ACCESS MODULES</a></li>
+                        <li><a href="#console">VIEW CONSOLE</a></li>
+                        <li><a href="#systems">SYSTEM INFO</a></li>
+                        <li><a href="#">DIAGNOSTICS</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-column-title">NETWORK PORTS</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">PORT 8080: MAIN</a></li>
+                        <li><a href="#">PORT 3030: AUX</a></li>
+                        <li><a href="#">PORT 6060: SECURE</a></li>
+                        <li><a href="#">PORT 9090: ADMIN</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-column-title">SYSTEM LOGS</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">BOOT SEQUENCE</a></li>
+                        <li><a href="#">ERROR LOG</a></li>
+                        <li><a href="#">NETWORK TRAFFIC</a></li>
+                        <li><a href="#">ACCESS HISTORY</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="system-boot">
+                NEO-TERMINAL 8080 Â© 2080 | SYSTEM BOOT: 08:30:45 | UPTIME: 24.7.15
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Typewriter effect for headlines
+        class TypewriterEffect {
+            constructor() {
+                this.headlines = document.querySelectorAll('.typewriter-headline');
+                this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                this.init();
+            }
+            
+            init() {
+                if (this.isReducedMotion) {
+                    // Skip animations for reduced motion preference
+                    this.headlines.forEach(headline => {
+                        headline.style.overflow = 'visible';
+                        headline.style.whiteSpace = 'normal';
+                        headline.querySelector('::after')?.style.display = 'none';
+                    });
+                    return;
+                }
+                
+                // Set initial state for all headlines
+                this.headlines.forEach(headline => {
+                    const text = headline.textContent.replace('â–ˆ', '');
+                    headline.textContent = '';
+                    headline.dataset.fullText = text;
+                    headline.style.width = '0';
+                });
+                
+                // Start typing animations with delays
+                setTimeout(() => this.typeHeadline(this.headlines[0]), 500);
+                setTimeout(() => this.typeHeadline(this.headlines[1]), 2000);
+                setTimeout(() => this.typeHeadline(this.headlines[2]), 3500);
+                setTimeout(() => this.typeHeadline(this.headlines[3]), 5000);
+            }
+            
+            typeHeadline(headline) {
+                const fullText = headline.dataset.fullText;
+                let i = 0;
+                
+                const typeChar = () => {
+                    if (i < fullText.length) {
+                        headline.textContent += fullText.charAt(i);
+                        headline.style.width = 'auto';
+                        i++;
+                        
+                        // Random typing speed for natural feel
+                        const speed = Math.random() * 50 + 30;
+                        setTimeout(typeChar, speed);
+                    } else {
+                        // Add blinking cursor
+                        headline.innerHTML += '<span style="animation: blink 1s infinite;">â–ˆ</span>';
+                    }
+                };
+                
+                typeChar();
+            }
+        }
+        
+        // Plastic toggle button interactions
+        class ToggleButtons {
+            constructor() {
+                this.toggles = document.querySelectorAll('.plastic-toggle');
+                this.init();
+            }
+            
+            init() {
+                this.toggles.forEach(toggle => {
+                    // Only add click handlers to toggles that aren't links
+                    if (!toggle.getAttribute('href')) {
+                        toggle.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            this.toggleButton(toggle);
+                        });
+                    }
+                    
+                    // Add keyboard support
+                    toggle.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.toggleButton(toggle);
+                            if (e.key === 'Enter') toggle.click();
+                        }
+                    });
+                });
+                
+                // Special handling for header toggles
+                const headerToggles = document.querySelectorAll('#toggle1, #toggle2, #toggle3');
+                headerToggles.forEach(toggle => {
+                    toggle.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        headerToggles.forEach(t => t.classList.remove('active'));
+                        toggle.classList.add('active');
+                    });
+                });
+            }
+            
+            toggleButton(button) {
+                if (button.classList.contains('active')) {
+                    button.classList.remove('active');
+                } else {
+                    button.classList.add('active');
+                }
+                
+                // Add haptic feedback if available
+                if (navigator.vibrate) {
+                    navigator.vibrate(30);
+                }
+                
+                // Add sound effect for toggle (optional)
+                this.playToggleSound();
+            }
+            
+            playToggleSound() {
+                // Create a simple beep sound using Web Audio API
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                } catch (e) {
+                    // Web Audio API not supported, silent fail
+                }
+            }
+        }
+        
+        // Console system with dynamic output
+        class ConsoleSystem {
+            constructor() {
+                this.consoleOutput = document.getElementById('consoleOutput');
+                this.lines = [
+                    { prompt: 'BOOT>', text: 'SYSTEM INITIALIZATION COMPLETE', type: 'text' },
+                    { prompt: 'MEMORY>', text: 'ALLOCATING 64ZB HOLOGRAPHIC RAM', type: 'text' },
+                    { prompt: 'NETWORK>', text: 'ESTABLISHING QUANTUM ENTANGLEMENT... CONNECTED', type: 'text' },
+                    { prompt: 'SECURITY>', text: 'MULTIVERSE ENCRYPTION ACTIVE', type: 'text' },
+                    { prompt: 'AI>', text: 'NEURAL NETWORK ONLINE', type: 'text' },
+                    { prompt: 'SYSTEM>', text: 'ALL MODULES OPERATIONAL', type: 'text' },
+                    { prompt: 'USER>', text: 'WELCOME TO NEO-TERMINAL 8080', type: 'comment' }
+                ];
+                
+                this.init();
+            }
+            
+            init() {
+                // Add initial console lines with delay
+                this.lines.forEach((line, index) => {
+                    setTimeout(() => {
+                        this.addLine(line.prompt, line.text, line.type);
+                    }, index * 800);
+                });
+                
+                // Auto-scroll console to bottom
+                this.autoScroll();
+            }
+            
+            addLine(prompt, text, type = 'text') {
+                const line = document.createElement('div');
+                line.className = 'console-line';
+                
+                let className = 'console-text';
+                if (type === 'comment') className = 'console-comment';
+                
+                line.innerHTML = `
+                    <span class="console-prompt">${prompt}</span>
+                    <span class="${className}"> ${text}</span>
+                `;
+                
+                this.consoleOutput.appendChild(line);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    line.style.animation = 'type-in 0.5s ease forwards';
+                }, 10);
+                
+                // Auto-scroll to bottom
+                this.autoScroll();
+                
+                return line;
+            }
+            
+            addConsoleLine() {
+                const prompts = ['SYSTEM>', 'USER>', 'NETWORK>', 'SECURITY>', 'AI>', 'MEMORY>'];
+                const texts = [
+                    'PERFORMING ROUTINE DIAGNOSTIC... ALL SYSTEMS NOMINAL',
+                    'USER INPUT DETECTED. PROCESSING COMMAND...',
+                    'DATA PACKET RECEIVED. DECRYPTING... COMPLETE',
+                    'INTRUSION DETECTION: NO THREATS FOUND',
+                    'NEURAL NETWORK OPTIMIZATION IN PROGRESS... 42% COMPLETE',
+                    'MEMORY FRAGMENTATION: 3% - WITHIN ACCEPTABLE PARAMETERS',
+                    'QUANTUM PROCESSOR TEMPERATURE: 2.7K - STABLE',
+                    'ZERO-POINT ENERGY CELL: 98.7% CAPACITY',
+                    'HOLOGRAPHIC DISPLAY CALIBRATION: ACTIVE',
+                    'BACKUP SYSTEMS: STANDBY MODE'
+                ];
+                
+                const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+                const randomText = texts[Math.floor(Math.random() * texts.length)];
+                
+                this.addLine(randomPrompt, randomText);
+            }
+            
+            clearConsole() {
+                this.consoleOutput.innerHTML = '';
+                this.addLine('SYSTEM>', 'CONSOLE CLEARED. READY FOR NEW INPUT.');
+            }
+            
+            runDiagnostic() {
+                this.addLine('DIAGNOSTIC>', 'INITIATING FULL SYSTEM DIAGNOSTIC...');
+                
+                setTimeout(() => {
+                    this.addLine('DIAGNOSTIC>', 'CHECKING PROCESSOR... OK');
+                }, 300);
+                
+                setTimeout(() => {
+                    this.addLine('DIAGNOSTIC>', 'TESTING MEMORY BANKS... OK');
+                }, 600);
+                
+                setTimeout(() => {
+                    this.addLine('DIAGNOSTIC>', 'VERIFYING NETWORK CONNECTIONS... OK');
+                }, 900);
+                
+                setTimeout(() => {
+                    this.addLine('DIAGNOSTIC>', 'SCANNING SECURITY SYSTEMS... OK');
+                }, 1200);
+                
+                setTimeout(() => {
+                    this.addLine('DIAGNOSTIC>', 'DIAGNOSTIC COMPLETE. ALL SYSTEMS OPERATIONAL.');
+                }, 1500);
+            }
+            
+            autoScroll() {
+                this.consoleOutput.scrollTop = this.consoleOutput.scrollHeight;
+            }
+        }
+        
+        // Grid floor perspective effect on scroll
+        class GridPerspective {
+            constructor() {
+                this.gridFloor = document.querySelector('.grid-floor');
+                this.lastScrollY = window.scrollY;
+                this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                
+                if (!this.isReducedMotion) {
+                    this.init();
+                }
+            }
+            
+            init() {
+                window.addEventListener('scroll', () => {
+                    this.updatePerspective();
+                }, { passive: true });
+                
+                // Initial update
+                this.updatePerspective();
+            }
+            
+            updatePerspective() {
+                const scrollY = window.scrollY;
+                const scrollDelta = scrollY - this.lastScrollY;
+                this.lastScrollY = scrollY;
+                
+                // Adjust grid perspective based on scroll
+                const perspective = 500 + scrollY * 0.1;
+                const rotateX = 60 + scrollDelta * 0.05;
+                
+                // Clamp values
+                const clampedPerspective = Math.max(400, Math.min(perspective, 1000));
+                const clampedRotateX = Math.max(45, Math.min(rotateX, 75));
+                
+                this.gridFloor.style.transform = `
+                    perspective(${clampedPerspective}px)
+                    rotateX(${clampedRotateX}deg)
+                `;
+                
+                // Adjust animation speed based on scroll
+                const animationSpeed = 20 + scrollY * 0.01;
+                this.gridFloor.style.animationDuration = `${animationSpeed}s`;
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize all systems
+            const typewriter = new TypewriterEffect();
+            const toggleButtons = new ToggleButtons();
+            const consoleSystem = new ConsoleSystem();
+            const gridPerspective = new GridPerspective();
+            
+            // Make console functions globally available for buttons
+            window.addConsoleLine = () => consoleSystem.addConsoleLine();
+            window.clearConsole = () => consoleSystem.clearConsole();
+            window.runDiagnostic = () => consoleSystem.runDiagnostic();
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Ctrl+L to clear console
+                if (e.ctrlKey && e.key === 'l') {
+                    e.preventDefault();
+                    consoleSystem.clearConsole();
+                }
+                
+                // Ctrl+D to run diagnostic
+                if (e.ctrlKey && e.key === 'd') {
+                    e.preventDefault();
+                    consoleSystem.runDiagnostic();
+                }
+                
+                // Ctrl+N to add new line
+                if (e.ctrlKey && e.key === 'n') {
+                    e.preventDefault();
+                    consoleSystem.addConsoleLine();
+                }
+            });
+            
+            // Add focus styles for accessibility
+            const focusStyles = document.createElement('style');
+            focusStyles.textContent = `
+                .plastic-toggle:focus {
+                    outline: 2px solid var(--terminal-cyan);
+                    outline-offset: 4px;
+                }
+                
+                a:focus {
+                    outline: 2px solid var(--phosphor-green);
+                    outline-offset: 4px;
+                }
+                
+                /* Reduced motion adjustments */
+                @media (prefers-reduced-motion: reduce) {
+                    .grid-floor {
+                        animation: none !important;
+                    }
+                    
+                    .console-line {
+                        animation: none !important;
+                        opacity: 1 !important;
+                        transform: none !important;
+                    }
+                }
+            `;
+            document.head.appendChild(focusStyles);
+            
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    
+                    if (href !== '#') {
+                        e.preventDefault();
+                        
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            const headerHeight = document.querySelector('.terminal-header').offsetHeight;
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                            
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

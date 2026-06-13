@@ -1,0 +1,1412 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOGUE CULTURE | Luxury Fashion Editorial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --ivory: #F8F5F0;
+            --ivory-dark: #EFEBE3;
+            --ink-black: #1A1A1A;
+            --ink-light: #2C2C2C;
+            --paper-texture: url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+            --page-shadow: rgba(0, 0, 0, 0.08);
+            --accent-red: #9A2A2A;
+            --gold-leaf: #C5A572;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--ivory);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ivory);
+            color: var(--ink-black);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            background-image: var(--paper-texture);
+        }
+
+        /* Page container with paper effect */
+        .page-container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+            background-color: var(--ivory);
+        }
+
+        /* Page sections with paper layering */
+        .page-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            padding: 4rem 6rem;
+            background-color: var(--ivory);
+            transform-origin: left center;
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), 
+                        opacity 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: 1;
+            box-shadow: -5px 0 30px var(--page-shadow);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .page-section.active {
+            z-index: 10;
+            transform: translateX(0) rotateY(0);
+            opacity: 1;
+        }
+
+        .page-section.inactive {
+            transform: translateX(100%) rotateY(-10deg);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .page-section.previous {
+            transform: translateX(-30%) rotateY(5deg);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Magazine header */
+        .magazine-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(248, 245, 240, 0.95);
+            border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .magazine-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            font-weight: normal;
+            color: var(--ink-black);
+            text-decoration: none;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .magazine-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--ink-black);
+        }
+
+        .issue-number {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.1rem;
+            color: var(--ink-light);
+            font-style: italic;
+            margin-left: 1rem;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .page-indicator {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.1rem;
+            color: var(--ink-light);
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: var(--ink-black);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .nav-button:hover {
+            background-color: rgba(26, 26, 26, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Hero section with bento grid */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 2.5rem;
+            margin-top: 6rem;
+            margin-bottom: 6rem;
+        }
+
+        .hero-title {
+            grid-column: 1 / 3;
+            grid-row: 1;
+            font-family: 'DM Serif Display', serif;
+            font-size: 6rem;
+            font-weight: normal;
+            line-height: 1;
+            color: var(--ink-black);
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            grid-column: 3;
+            grid-row: 1;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--ink-light);
+            padding-top: 1rem;
+            border-top: 1px solid var(--ink-black);
+        }
+
+        .hero-image-main {
+            grid-column: 1 / 3;
+            grid-row: 2;
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            background-color: var(--ivory-dark);
+        }
+
+        .hero-image-side {
+            grid-column: 3;
+            grid-row: 2;
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+            background-color: var(--ivory-dark);
+        }
+
+        /* Floating image effect */
+        .floating-image {
+            position: relative;
+            overflow: hidden;
+            background-color: var(--ivory-dark);
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: opacity 1.2s cubic-bezier(0.215, 0.61, 0.355, 1), 
+                        transform 1.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        .floating-image.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .floating-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        .floating-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            background: linear-gradient(transparent, rgba(26, 26, 26, 0.7));
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .floating-image:hover .image-caption {
+            transform: translateY(0);
+        }
+
+        /* Asymmetrical grid layout */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(200px, auto);
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .grid-item-large {
+            grid-column: span 8;
+            grid-row: span 2;
+        }
+
+        .grid-item-medium {
+            grid-column: span 4;
+            grid-row: span 1;
+        }
+
+        .grid-item-tall {
+            grid-column: span 4;
+            grid-row: span 3;
+        }
+
+        .grid-item-wide {
+            grid-column: span 6;
+            grid-row: span 1;
+        }
+
+        /* Editorial content */
+        .editorial-content {
+            margin: 6rem 0;
+            max-width: 900px;
+        }
+
+        .editorial-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 3.5rem;
+            font-weight: normal;
+            line-height: 1.1;
+            color: var(--ink-black);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .editorial-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background-color: var(--accent-red);
+        }
+
+        .editorial-subtitle {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            font-weight: normal;
+            line-height: 1.3;
+            color: var(--ink-black);
+            margin: 3rem 0 1.5rem;
+            font-style: italic;
+        }
+
+        .editorial-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--ink-light);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .pull-quote {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.2rem;
+            line-height: 1.3;
+            color: var(--ink-black);
+            border-left: 3px solid var(--gold-leaf);
+            padding-left: 2rem;
+            margin: 3rem 0;
+            font-style: italic;
+        }
+
+        /* Ink bleed hover effect */
+        .ink-bleed-link {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            color: var(--ink-black);
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            padding: 0.2rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .ink-bleed-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--accent-red);
+            transition: width 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .ink-bleed-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--accent-red);
+            opacity: 0.2;
+            transition: width 0.5s cubic-bezier(0.77, 0, 0.175, 1) 0.1s;
+        }
+
+        .ink-bleed-link:hover {
+            color: var(--accent-red);
+        }
+
+        .ink-bleed-link:hover::before,
+        .ink-bleed-link:hover::after {
+            width: 100%;
+        }
+
+        /* Fashion collection items */
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .collection-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .collection-item-image {
+            aspect-ratio: 3/4;
+            background-color: var(--ivory-dark);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .collection-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        .collection-item:hover .collection-item-image img {
+            transform: scale(1.05);
+        }
+
+        .collection-item-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.8rem;
+            font-weight: normal;
+            color: var(--ink-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .collection-item-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--ink-light);
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        /* Magazine footer */
+        .magazine-footer {
+            margin-top: 8rem;
+            padding: 4rem 0;
+            border-top: 1px solid rgba(26, 26, 26, 0.1);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+        }
+
+        .footer-column-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.2rem;
+            font-weight: normal;
+            color: var(--ink-black);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .copyright {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(26, 26, 26, 0.1);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: var(--ink-light);
+            text-align: center;
+        }
+
+        /* Page turn effect overlay */
+        .page-turn-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--ivory);
+            z-index: 9999;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transform-origin: left;
+            pointer-events: none;
+            transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 1200px) {
+            .page-section {
+                padding: 4rem 3rem;
+            }
+            
+            .magazine-header {
+                padding: 1.5rem 3rem;
+            }
+            
+            .hero-title {
+                font-size: 5rem;
+            }
+            
+            .hero-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .hero-title {
+                grid-column: 1 / 3;
+            }
+            
+            .hero-subtitle {
+                grid-column: 1 / 3;
+                grid-row: 2;
+            }
+            
+            .hero-image-main {
+                grid-column: 1 / 3;
+                grid-row: 3;
+            }
+            
+            .hero-image-side {
+                grid-column: 1 / 3;
+                grid-row: 4;
+                aspect-ratio: 16/9;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-section {
+                padding: 3rem 1.5rem;
+            }
+            
+            .magazine-header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .bento-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .grid-item-large,
+            .grid-item-medium,
+            .grid-item-tall,
+            .grid-item-wide {
+                grid-column: 1;
+                grid-row: auto;
+            }
+            
+            .editorial-title {
+                font-size: 2.5rem;
+            }
+            
+            .editorial-subtitle {
+                font-size: 1.8rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .nav-controls {
+                gap: 1rem;
+            }
+            
+            .nav-button {
+                font-size: 1.5rem;
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .editorial-title {
+                font-size: 2rem;
+            }
+            
+            .editorial-text {
+                font-size: 1.1rem;
+            }
+            
+            .pull-quote {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            .page-section,
+            .floating-image,
+            .floating-image img,
+            .ink-bleed-link::before,
+            .ink-bleed-link::after,
+            .page-turn-overlay {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        /* Focus styles for keyboard navigation */
+        .ink-bleed-link:focus,
+        .nav-button:focus {
+            outline: 2px solid var(--accent-red);
+            outline-offset: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page turn overlay for transitions -->
+    <div class="page-turn-overlay" id="pageTurnOverlay"></div>
+
+    <!-- Magazine header -->
+    <header class="magazine-header">
+        <a href="#" class="magazine-title">
+            VOGUE CULTURE <span class="issue-number">â€” SPRING 2024 EDITION</span>
+        </a>
+        
+        <div class="nav-controls">
+            <span class="page-indicator">
+                <span id="currentPage">01</span> / <span id="totalPages">05</span>
+            </span>
+            <button class="nav-button" id="prevPage" aria-label="Previous page">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="nav-button" id="nextPage" aria-label="Next page">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Page 1: Cover / Hero -->
+    <section class="page-section active" id="page1" data-page="1">
+        <div class="hero-grid">
+            <h1 class="hero-title">
+                The New <br>
+                Elegance
+            </h1>
+            
+            <p class="hero-subtitle">
+                In an era of constant change, true style remains timeless. 
+                This season, we explore how contemporary designers are 
+                redefining luxury through sustainable practices and 
+                innovative silhouettes.
+            </p>
+            
+            <div class="floating-image hero-image-main">
+                <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Fashion model in architectural setting">
+                <div class="image-caption">Photography by Alexander Wang | Milan Fashion Week 2024</div>
+            </div>
+            
+            <div class="floating-image hero-image-side">
+                <img src="https://images.unsplash.com/photo-1581044777550-4cfa60707c03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Fashion details close-up">
+                <div class="image-caption">Textural details from the new collection</div>
+            </div>
+        </div>
+        
+        <div class="editorial-content">
+            <p class="editorial-text">
+                As we navigate the complex landscape of modern fashion, 
+                a quiet revolution is taking place. Designers are moving 
+                beyond seasonal trends to create pieces that speak to 
+                permanence, quality, and conscious creation. This isn't 
+                merely about clothingâ€”it's about cultivating an aesthetic 
+                philosophy.
+            </p>
+            
+            <div class="pull-quote">
+                "Luxury is no longer about excess, but about essence. 
+                The most valuable piece in your wardrobe is the one 
+                you'll wear for decades."
+            </div>
+        </div>
+        
+        <div class="collection-grid">
+            <article class="collection-item">
+                <div class="collection-item-image floating-image">
+                    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Sustainable fashion collection">
+                </div>
+                <h3 class="collection-item-title">Sustainable Luxury</h3>
+                <p class="collection-item-description">
+                    Exploring how high fashion embraces eco-conscious 
+                    materials without compromising on aesthetic excellence.
+                </p>
+                <a href="#" class="ink-bleed-link">Read Feature â†’</a>
+            </article>
+            
+            <article class="collection-item">
+                <div class="collection-item-image floating-image">
+                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Architectural fashion">
+                </div>
+                <h3 class="collection-item-title">Architectural Forms</h3>
+                <p class="collection-item-description">
+                    When fashion meets architecture: sculptural silhouettes 
+                    that redefine the relationship between body and space.
+                </p>
+                <a href="#" class="ink-bleed-link">View Collection â†’</a>
+            </article>
+            
+            <article class="collection-item">
+                <div class="collection-item-image floating-image">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Fashion portrait">
+                </div>
+                <h3 class="collection-item-title">Portrait of a Muse</h3>
+                <p class="collection-item-description">
+                    An intimate conversation with this season's defining 
+                    faces and the designers who dress them.
+                </p>
+                <a href="#" class="ink-bleed-link">Meet the Muses â†’</a>
+            </article>
+        </div>
+    </section>
+
+    <!-- Page 2: Editorial Feature -->
+    <section class="page-section inactive" id="page2" data-page="2">
+        <div class="editorial-content">
+            <h2 class="editorial-title">
+                The Quiet Revolution:<br>
+                Sustainable Couture
+            </h2>
+            
+            <p class="editorial-text">
+                In the hallowed ateliers of Paris and Milan, a transformation 
+                is occurring that challenges the very foundations of luxury 
+                fashion. For centuries, couture has been synonymous with 
+                exclusivity, craftsmanship, and, often, extravagance. Today, 
+                a new generation of designers is redefining these principles 
+                through the lens of sustainability.
+            </p>
+            
+            <div class="bento-grid">
+                <div class="grid-item-large floating-image">
+                    <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Sustainable fashion designer at work">
+                    <div class="image-caption">Maria Silva working with organic fabrics in her Lisbon studio</div>
+                </div>
+                
+                <div class="grid-item-medium floating-image">
+                    <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Eco-friendly textiles">
+                </div>
+                
+                <div class="grid-item-medium floating-image">
+                    <img src="https://images.unsplash.com/photo-1558769132-cb2f3c2a5c14?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Natural dye process">
+                </div>
+                
+                <div class="grid-item-tall floating-image">
+                    <img src="https://images.unsplash.com/photo-1519457431-44ccd64a579b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w-600&q=80" alt="Couture detail">
+                </div>
+                
+                <div class="grid-item-wide">
+                    <h3 class="editorial-subtitle">Materials of Tomorrow</h3>
+                    <p class="editorial-text">
+                        From mushroom leather to pineapple fiber silk, 
+                        innovative materials are revolutionizing what 
+                        luxury can mean. These aren't mere alternatives 
+                        but superior choices that offer new textures, 
+                        durability, and aesthetic possibilities while 
+                        reducing environmental impact by up to 80%.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="pull-quote">
+                "The most radical act in fashion today isn't a shocking 
+                silhouette or bold printâ€”it's creating something beautiful 
+                that leaves the world more beautiful than it found it."
+            </div>
+            
+            <p class="editorial-text">
+                This movement isn't confined to small independent labels. 
+                Major houses are investing heavily in sustainable practices, 
+                from Chanel's acquisition of specialized textile innovators 
+                to Gucci's carbon-neutral runway shows. The economics of 
+                fashion are shifting, with consumers increasingly valuing 
+                transparency and ethical production.
+            </p>
+            
+            <p class="editorial-text">
+                Yet the challenge remains: how to maintain the exquisite 
+                craftsmanship that defines haute couture while embracing 
+                these new methods. The answer lies in viewing sustainability 
+                not as a limitation but as a creative constraint that spurs 
+                innovation. The resulting piecesâ€”like Dior's zero-waste 
+                gown constructed from a single piece of fabricâ€”represent 
+                both technical mastery and philosophical commitment.
+            </p>
+        </div>
+    </section>
+
+    <!-- Page 3: Designer Profiles -->
+    <section class="page-section inactive" id="page3" data-page="3">
+        <div class="editorial-content">
+            <h2 class="editorial-title">
+                Visionaries:<br>
+                The New Guard
+            </h2>
+            
+            <p class="editorial-text">
+                Across global fashion capitals, a cohort of designers 
+                under 40 is reshaping the industry's future. Their 
+                approaches varyâ€”from digital-native brands to artisanal 
+                revivalsâ€”but they share a commitment to authenticity, 
+                innovation, and responsible creation.
+            </p>
+        </div>
+        
+        <div class="collection-grid">
+            <article class="collection-item">
+                <div class="collection-item-image floating-image">
+                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Designer portrait">
+                </div>
+                <h3 class="collection-item-title">Alessandro Russo</h3>
+                <p class="collection-item-description">
+                    Milan-based designer revolutionizing tailoring through 
+                    gender-fluid silhouettes and zero-waste pattern cutting.
+                </p>
+                <a href="#" class="ink-bleed-link">Full Profile â†’</a>
+            </article>
+            
+            <article class="collection-item">
+                <div class="collection-item-image floating-image">
+                    <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Designer at work">
+                </div>
+                <h3 class="collection-item-title">Maya Chen</h3>
+                <p class="collection-item-description">
+                    Shanghai-born, Paris-based innovator merging traditional 
+                    Chinese textile techniques with augmented reality fitting.
+                </p>
+                <a href="#" class="ink-bleed-link">Full Profile â†’</a>
+            </article>
+            
+            <article class="collection-item">
+                <div class="collection-item-image floating-image">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Designer in studio">
+                </div>
+                <h3 class="collection-item-title">Kwame Ofori</h3>
+                <p class="collection-item-description">
+                    Accra-based designer creating entirely biodegradable 
+                    collections using indigenous West African materials.
+                </p>
+                <a href="#" class="ink-bleed-link">Full Profile â†’</a>
+            </article>
+        </div>
+        
+        <div class="editorial-content" style="margin-top: 6rem;">
+            <h3 class="editorial-subtitle">The Digital Atelier</h3>
+            <p class="editorial-text">
+                Beyond physical design studios, a parallel revolution 
+                is occurring in virtual spaces. Digital fashion houses 
+                are creating garments that exist only as NFTs, worn by 
+                avatars in virtual worlds. While seemingly antithetical 
+                to traditional fashion's tactile nature, these digital 
+                creations represent an important frontier: completely 
+                waste-free design with global accessibility.
+            </p>
+            
+            <div class="bento-grid">
+                <div class="grid-item-wide floating-image">
+                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Digital fashion design">
+                </div>
+                
+                <div class="grid-item-medium">
+                    <h3 class="editorial-subtitle">Virtual Runways</h3>
+                    <p class="editorial-text">
+                        How AR and VR are transforming fashion shows into 
+                        immersive experiences accessible to global audiences.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page 4: Fashion Forward -->
+    <section class="page-section inactive" id="page4" data-page="4">
+        <div class="hero-grid">
+            <h1 class="hero-title">
+                Beyond<br>
+                The Garment
+            </h1>
+            
+            <p class="hero-subtitle">
+                Fashion's influence extends far beyond clothing. 
+                We examine how design thinking is reshaping 
+                architecture, technology, and even urban planning.
+            </p>
+            
+            <div class="floating-image hero-image-main">
+                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Fashion and architecture">
+                <div class="image-caption">The dialogue between fashion and architectural space</div>
+            </div>
+        </div>
+        
+        <div class="editorial-content">
+            <h2 class="editorial-title">
+                Wearable Technology:<br>
+                When Fashion Becomes Interface
+            </h2>
+            
+            <p class="editorial-text">
+                The convergence of fashion and technology has moved 
+                beyond smartwatches and fitness trackers. Today's 
+                innovations include garments that monitor health 
+                metrics, change color based on environment, or even 
+                generate electricity through movement. This isn't 
+                gadgetry disguised as clothing, but a seamless 
+                integration where technology serves the aesthetic 
+                and functional needs of the wearer.
+            </p>
+            
+            <div class="pull-quote">
+                "The phone in your pocket will soon be obsolete. 
+                Your jacket will be your computer, your dress will 
+                be your doctor, and your shoes will be your guide."
+            </div>
+            
+            <div class="bento-grid">
+                <div class="grid-item-tall floating-image">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Tech-infused fashion">
+                </div>
+                
+                <div class="grid-item-wide">
+                    <h3 class="editorial-subtitle">Responsive Materials</h3>
+                    <p class="editorial-text">
+                        Fabrics that adapt to temperature changes, 
+                        textiles that clean themselves, and materials 
+                        that store solar energyâ€”these innovations 
+                        represent the next frontier in functional fashion. 
+                        The most exciting developments come from 
+                        collaborations between fashion houses and 
+                        material science laboratories.
+                    </p>
+                    <a href="#" class="ink-bleed-link">Explore Innovations â†’</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page 5: Conclusion & Directory -->
+    <section class="page-section inactive" id="page5" data-page="5">
+        <div class="editorial-content">
+            <h2 class="editorial-title">
+                The Future<br>
+                Is Conscious
+            </h2>
+            
+            <p class="editorial-text">
+                As we look toward fashion's next chapter, certain 
+                principles emerge as non-negotiable: transparency 
+                in supply chains, respect for artisans and their 
+                traditions, innovation in sustainable materials, 
+                and design that transcends seasonal trends to 
+                create enduring value.
+            </p>
+            
+            <div class="pull-quote" style="margin: 4rem 0;">
+                "Fashion is not art. Art asks questions. 
+                Fashion must answer themâ€”beautifully, responsibly, 
+                and with intention."
+            </div>
+            
+            <h3 class="editorial-subtitle">Resources & Further Reading</h3>
+            
+            <div class="collection-grid">
+                <article class="collection-item">
+                    <h3 class="collection-item-title">Sustainable Brands Directory</h3>
+                    <p class="collection-item-description">
+                        A curated list of fashion labels leading 
+                        in ethical production, material innovation, 
+                        and circular business models.
+                    </p>
+                    <a href="#" class="ink-bleed-link">Access Directory â†’</a>
+                </article>
+                
+                <article class="collection-item">
+                    <h3 class="collection-item-title">Material Innovation Guide</h3>
+                    <p class="collection-item-description">
+                        From lab-grown leather to seaweed-based 
+                        textiles, explore the materials shaping 
+                        fashion's sustainable future.
+                    </p>
+                    <a href="#" class="ink-bleed-link">Read Guide â†’</a>
+                </article>
+                
+                <article class="collection-item">
+                    <h3 class="collection-item-title">Artisan Preservation</h3>
+                    <p class="collection-item-description">
+                        How fashion houses are partnering with 
+                        traditional craftspeople to preserve 
+                        endangered techniques and provide 
+                        sustainable livelihoods.
+                    </p>
+                    <a href="#" class="ink-bleed-link">Learn More â†’</a>
+                </article>
+            </div>
+        </div>
+        
+        <footer class="magazine-footer">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h4 class="footer-column-title">VOGUE CULTURE</h4>
+                    <p style="font-family: 'Inter', sans-serif; color: var(--ink-light); line-height: 1.6; margin-top: 1rem;">
+                        A publication dedicated to the intersection 
+                        of fashion, culture, and conscious creation.
+                    </p>
+                </div>
+                
+                <div class="footer-column">
+                    <h4 class="footer-column-title">Sections</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="ink-bleed-link">Fashion</a></li>
+                        <li><a href="#" class="ink-bleed-link">Culture</a></li>
+                        <li><a href="#" class="ink-bleed-link">Sustainability</a></li>
+                        <li><a href="#" class="ink-bleed-link">Innovation</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4 class="footer-column-title">Subscribe</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="ink-bleed-link">Print Edition</a></li>
+                        <li><a href="#" class="ink-bleed-link">Digital Access</a></li>
+                        <li><a href="#" class="ink-bleed-link">Newsletter</a></li>
+                        <li><a href="#" class="ink-bleed-link">Events</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4 class="footer-column-title">Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="ink-bleed-link">Instagram</a></li>
+                        <li><a href="#" class="ink-bleed-link">Newsletter</a></li>
+                        <li><a href="#" class="ink-bleed-link">Contact</a></li>
+                        <li><a href="#" class="ink-bleed-link">Careers</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                VOGUE CULTURE Â© 2024. All rights reserved. 
+                This is a conceptual editorial website. 
+                All images courtesy of Unsplash.
+            </div>
+        </footer>
+    </section>
+
+    <script>
+        // Page navigation system
+        class MagazineNavigation {
+            constructor() {
+                this.currentPage = 1;
+                this.totalPages = 5;
+                this.isAnimating = false;
+                this.pages = document.querySelectorAll('.page-section');
+                this.overlay = document.getElementById('pageTurnOverlay');
+                this.prevButton = document.getElementById('prevPage');
+                this.nextButton = document.getElementById('nextPage');
+                this.currentPageElement = document.getElementById('currentPage');
+                this.totalPagesElement = document.getElementById('totalPages');
+                
+                this.init();
+            }
+            
+            init() {
+                // Set initial state
+                this.updatePageIndicator();
+                this.setupEventListeners();
+                this.setupKeyboardNavigation();
+                this.setupSwipeNavigation();
+                
+                // Initialize floating images observer
+                this.initImageObserver();
+                
+                // Set total pages indicator
+                this.totalPagesElement.textContent = this.totalPages.toString().padStart(2, '0');
+            }
+            
+            setupEventListeners() {
+                // Previous button
+                this.prevButton.addEventListener('click', () => {
+                    this.navigateToPage(this.currentPage - 1);
+                });
+                
+                // Next button
+                this.nextButton.addEventListener('click', () => {
+                    this.navigateToPage(this.currentPage + 1);
+                });
+                
+                // Update button states based on current page
+                this.updateButtonStates();
+            }
+            
+            setupKeyboardNavigation() {
+                document.addEventListener('keydown', (e) => {
+                    if (this.isAnimating) return;
+                    
+                    switch(e.key) {
+                        case 'ArrowLeft':
+                            this.navigateToPage(this.currentPage - 1);
+                            break;
+                        case 'ArrowRight':
+                            this.navigateToPage(this.currentPage + 1);
+                            break;
+                        case 'Home':
+                            this.navigateToPage(1);
+                            break;
+                        case 'End':
+                            this.navigateToPage(this.totalPages);
+                            break;
+                    }
+                });
+            }
+            
+            setupSwipeNavigation() {
+                let touchStartX = 0;
+                let touchEndX = 0;
+                
+                document.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                });
+                
+                document.addEventListener('touchend', (e) => {
+                    if (this.isAnimating) return;
+                    
+                    touchEndX = e.changedTouches[0].screenX;
+                    const swipeThreshold = 50;
+                    const swipeDistance = touchEndX - touchStartX;
+                    
+                    if (Math.abs(swipeDistance) > swipeThreshold) {
+                        if (swipeDistance > 0) {
+                            // Swipe right - previous page
+                            this.navigateToPage(this.currentPage - 1);
+                        } else {
+                            // Swipe left - next page
+                            this.navigateToPage(this.currentPage + 1);
+                        }
+                    }
+                });
+            }
+            
+            initImageObserver() {
+                // Intersection Observer for floating image animations
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -100px 0px'
+                });
+                
+                // Observe all floating images
+                document.querySelectorAll('.floating-image').forEach(img => {
+                    imageObserver.observe(img);
+                });
+            }
+            
+            navigateToPage(pageNumber) {
+                // Validate page number
+                if (pageNumber < 1 || pageNumber > this.totalPages || this.isAnimating) {
+                    return;
+                }
+                
+                this.isAnimating = true;
+                
+                // Determine direction for animation
+                const direction = pageNumber > this.currentPage ? 'next' : 'prev';
+                
+                // Trigger page turn animation
+                this.animatePageTurn(direction, () => {
+                    // Update current page
+                    this.currentPage = pageNumber;
+                    
+                    // Update page visibility
+                    this.updatePageVisibility();
+                    
+                    // Update UI
+                    this.updateButtonStates();
+                    this.updatePageIndicator();
+                    
+                    // Reset animation state
+                    setTimeout(() => {
+                        this.isAnimating = false;
+                    }, 300);
+                });
+            }
+            
+            animatePageTurn(direction, callback) {
+                // Set up overlay animation based on direction
+                if (direction === 'next') {
+                    this.overlay.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+                    this.overlay.style.transformOrigin = 'right';
+                } else {
+                    this.overlay.style.clipPath = 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)';
+                    this.overlay.style.transformOrigin = 'left';
+                }
+                
+                // Force reflow
+                this.overlay.offsetHeight;
+                
+                // Animate overlay
+                if (direction === 'next') {
+                    this.overlay.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+                } else {
+                    this.overlay.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+                }
+                
+                // Execute callback after animation
+                setTimeout(() => {
+                    if (callback) callback();
+                    
+                    // Reset overlay
+                    setTimeout(() => {
+                        this.overlay.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+                    }, 100);
+                }, 600);
+            }
+            
+            updatePageVisibility() {
+                this.pages.forEach(page => {
+                    const pageNum = parseInt(page.dataset.page);
+                    
+                    // Remove all classes first
+                    page.classList.remove('active', 'inactive', 'previous');
+                    
+                    // Add appropriate class
+                    if (pageNum === this.currentPage) {
+                        page.classList.add('active');
+                    } else if (pageNum === this.currentPage - 1) {
+                        page.classList.add('previous');
+                    } else {
+                        page.classList.add('inactive');
+                    }
+                });
+            }
+            
+            updateButtonStates() {
+                // Previous button
+                if (this.currentPage === 1) {
+                    this.prevButton.disabled = true;
+                    this.prevButton.setAttribute('aria-disabled', 'true');
+                } else {
+                    this.prevButton.disabled = false;
+                    this.prevButton.setAttribute('aria-disabled', 'false');
+                }
+                
+                // Next button
+                if (this.currentPage === this.totalPages) {
+                    this.nextButton.disabled = true;
+                    this.nextButton.setAttribute('aria-disabled', 'true');
+                } else {
+                    this.nextButton.disabled = false;
+                    this.nextButton.setAttribute('aria-disabled', 'false');
+                }
+            }
+            
+            updatePageIndicator() {
+                this.currentPageElement.textContent = this.currentPage.toString().padStart(2, '0');
+            }
+        }
+        
+        // Ink bleed effect enhancement
+        class InkBleedEffect {
+            constructor() {
+                this.links = document.querySelectorAll('.ink-bleed-link');
+                this.init();
+            }
+            
+            init() {
+                this.links.forEach(link => {
+                    // Add focus support for accessibility
+                    link.addEventListener('focus', () => {
+                        link.classList.add('focused');
+                    });
+                    
+                    link.addEventListener('blur', () => {
+                        link.classList.remove('focused');
+                    });
+                    
+                    // Enhanced hover effect with random delay for natural feel
+                    link.addEventListener('mouseenter', (e) => {
+                        const link = e.currentTarget;
+                        const before = link.querySelector('.ink-bleed-before') || 
+                                     this.createInkElement(link, 'before');
+                        const after = link.querySelector('.ink-bleed-after') || 
+                                    this.createInkElement(link, 'after');
+                        
+                        // Random slight delay for organic feel
+                        const delay = Math.random() * 0.2;
+                        
+                        setTimeout(() => {
+                            before.style.width = '100%';
+                            after.style.width = '100%';
+                        }, delay * 1000);
+                    });
+                    
+                    link.addEventListener('mouseleave', (e) => {
+                        const link = e.currentTarget;
+                        const before = link.querySelector('.ink-bleed-before');
+                        const after = link.querySelector('.ink-bleed-after');
+                        
+                        if (before) before.style.width = '0';
+                        if (after) after.style.width = '0';
+                    });
+                });
+            }
+            
+            createInkElement(link, position) {
+                const ink = document.createElement('span');
+                ink.className = `ink-bleed-${position}`;
+                ink.style.position = 'absolute';
+                ink.style.bottom = position === 'before' ? '0' : '-2px';
+                ink.style.left = '0';
+                ink.style.width = '0';
+                ink.style.height = position === 'before' ? '1px' : '3px';
+                ink.style.backgroundColor = 'var(--accent-red)';
+                ink.style.transition = 'width 0.5s cubic-bezier(0.77, 0, 0.175, 1)';
+                
+                if (position === 'after') {
+                    ink.style.opacity = '0.2';
+                    ink.style.transitionDelay = '0.1s';
+                }
+                
+                link.style.position = 'relative';
+                link.appendChild(ink);
+                return ink;
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new MagazineNavigation();
+            
+            // Initialize ink bleed effects
+            const inkEffects = new InkBleedEffect();
+            
+            // Preload images for smoother experience
+            this.preloadImages();
+            
+            // Add subtle parallax effect to floating images on scroll
+            this.addParallaxEffect();
+            
+            // Set up reduced motion preference
+            this.setupReducedMotion();
+        });
+        
+        // Image preloading for smoother transitions
+        function preloadImages() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                const src = img.getAttribute('src');
+                if (src) {
+                    const preload = new Image();
+                    preload.src = src;
+                }
+            });
+        }
+        
+        // Subtle parallax effect for floating images
+        function addParallaxEffect() {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallaxElements = document.querySelectorAll('.floating-image');
+                
+                parallaxElements.forEach(element => {
+                    const rate = element.dataset.rate || 0.3;
+                    const offset = scrolled * rate;
+                    element.style.transform = `translateY(${offset}px) scale(1)`;
+                });
+            }, { passive: true });
+        }
+        
+        // Handle reduced motion preferences
+        function setupReducedMotion() {
+            const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+            
+            if (mediaQuery.matches) {
+                // Disable all animations
+                document.documentElement.style.setProperty('--warp-speed', 'cubic-bezier(0, 0, 0, 0)');
+                
+                // Remove transition delays
+                document.querySelectorAll('*').forEach(el => {
+                    el.style.animationDuration = '0.001ms !important';
+                    el.style.transitionDuration = '0.001ms !important';
+                });
+            }
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

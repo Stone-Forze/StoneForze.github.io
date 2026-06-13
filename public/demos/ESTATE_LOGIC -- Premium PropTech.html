@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Estate Logic - Intelligent property management and investment analytics.">
+    <title>ESTATE_LOGIC // Premium PropTech</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f8f9fa;
+            --primary: #1a1a1a;
+            --accent: #c5a059; /* Champagne Gold */
+            --text: #1a1a1a;
+            --text-dim: #666666;
+            --border: #e5e7eb;
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Inter', sans-serif;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --primary: #ffffff;
+            --text: #f9fafb;
+            --text-dim: #9ca3af;
+            --border: #262626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            transition: background 0.5s var(--ease);
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 30px; }
+
+        /* --- Navigation --- */
+        nav {
+            padding: 30px 0; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: rgba(var(--bg), 0.8); backdrop-filter: blur(10px); z-index: 1000;
+        }
+        .logo { font-family: var(--font-serif); font-size: 1.8rem; font-style: italic; letter-spacing: -1px; }
+
+        /* --- Hero --- */
+        .hero { padding: 120px 0 80px; text-align: center; }
+        .hero h1 { 
+            font-family: var(--font-serif); font-size: clamp(3rem, 8vw, 6rem); 
+            line-height: 1; font-style: italic; margin-bottom: 30px;
+        }
+        .hero p { font-size: 1.1rem; color: var(--text-dim); max-width: 600px; margin: 0 auto 40px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- Analytics Dashboard (Simulated) --- */
+        
+        .dashboard-sim {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 40px; margin: 40px auto 100px;
+            display: grid; grid-template-columns: 1fr 2fr; gap: 40px;
+        }
+        .market-index { font-family: 'JetBrains Mono', monospace; }
+        .index-value { font-size: 3rem; font-weight: 700; color: var(--accent); }
+        
+        .bar-container { display: flex; align-items: flex-end; gap: 10px; height: 150px; }
+        .bar { flex: 1; background: var(--accent); border-radius: 2px 2px 0 0; transform-origin: bottom; transform: scaleY(0); transition: 1.5s var(--ease); }
+
+        /* --- Listing Grid --- */
+        .listing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin: 80px 0; }
+        .listing-card { position: relative; overflow: hidden; border-radius: 4px; border: 1px solid var(--border); transition: 0.4s; cursor: pointer; }
+        .listing-card:hover { border-color: var(--accent); transform: translateY(-10px); }
+        .listing-img { width: 100%; aspect-ratio: 16/10; background: var(--border); transition: 0.6s; }
+        .listing-card:hover .listing-img { transform: scale(1.05); }
+        .listing-info { padding: 25px; }
+        .listing-price { font-family: var(--font-serif); font-size: 1.5rem; color: var(--accent); font-style: italic; }
+
+        /* --- Pricing Section --- */
+        .pricing-wrap { display: flex; justify-content: center; gap: 40px; margin-bottom: 120px; flex-wrap: wrap; }
+        .price-card { padding: 60px 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; width: 380px; transition: 0.3s; }
+        .price-card.featured { border: 2px solid var(--accent); position: relative; }
+        .price-card h4 { text-transform: uppercase; letter-spacing: 3px; font-size: 0.8rem; margin-bottom: 20px; }
+
+        /* --- Global Elements --- */
+        .btn {
+            display: inline-block; padding: 16px 35px; border: 1px solid var(--text);
+            color: var(--text); text-decoration: none; font-weight: 600; 
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
+        }
+        .btn-primary { background: var(--text); color: var(--bg); }
+        .btn-primary:hover { opacity: 0.8; }
+        
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .theme-toggle { background: none; border: 1px solid var(--border); padding: 8px 15px; border-radius: 4px; cursor: pointer; color: var(--text); font-size: 0.7rem; letter-spacing: 1px; }
+
+        @media (max-width: 900px) { .dashboard-sim { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <nav class="container">
+        <div class="logo">Estate_Logic.</div>
+        <div style="display: flex; gap: 30px; align-items: center;">
+            <button class="theme-toggle" id="themeBtn">â— MODE_THEME</button>
+            <a href="#" class="btn" style="padding: 10px 20px; font-size: 0.7rem;">Client Portal</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1 class="reveal">Investing in <br> <i>Modernity.</i></h1>
+            <p class="reveal" style="transition-delay: 0.1s;">Autonomous Asset Management for the Sovereign Investor.</p>
+            <div class="reveal" style="transition-delay: 0.2s;">
+                <a href="#dashboard" class="btn btn-primary">Analyze Markets</a>
+                <a href="#" class="btn" style="margin-left: 15px;">View Listings</a>
+            </div>
+        </section>
+
+        <section id="dashboard" class="dashboard-sim reveal">
+            <div class="market-info">
+                <h3 style="text-transform: uppercase; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 10px;">Portfolio Yield Index</h3>
+                <div class="index-value" id="counter">0.0</div>
+                <p style="font-size: 0.8rem; margin-top: 20px;">Real-time analysis across 42 global markets. Yield projections increased by 1.2% in Q1.</p>
+            </div>
+            <div class="bar-container" id="barChart">
+                <div class="bar" style="height: 40%;"></div>
+                <div class="bar" style="height: 65%;"></div>
+                <div class="bar" style="height: 50%;"></div>
+                <div class="bar" style="height: 85%;"></div>
+                <div class="bar" style="height: 70%;"></div>
+                <div class="bar" style="height: 95%;"></div>
+            </div>
+        </section>
+
+        <section>
+            <h2 style="font-family: var(--font-serif); font-style: italic; font-size: 2.5rem; margin-bottom: 40px;">Curated Portfolio</h2>
+            <div class="listing-grid">
+                <div class="listing-card reveal">
+                    <div class="listing-img" style="background: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                    <div class="listing-info">
+                        <span class="listing-price">$4,250,000</span>
+                        <h3 style="margin: 10px 0; font-size: 1.1rem;">The Obsidian Pavilion</h3>
+                        <p style="color: var(--text-dim); font-size: 0.8rem;">Zurich, Switzerland â€” 4,200 sqft</p>
+                    </div>
+                </div>
+                <div class="listing-card reveal" style="transition-delay: 0.1s;">
+                    <div class="listing-img" style="background: url('https://images.unsplash.com/photo-1600607687940-4e2a09695d51?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                    <div class="listing-info">
+                        <span class="listing-price">$12,800,000</span>
+                        <h3 style="margin: 10px 0; font-size: 1.1rem;">Aeon Sky Penthouse</h3>
+                        <p style="color: var(--text-dim); font-size: 0.8rem;">Dubai, UAE â€” 8,500 sqft</p>
+                    </div>
+                </div>
+                <div class="listing-card reveal" style="transition-delay: 0.2s;">
+                    <div class="listing-img" style="background: url('https://images.unsplash.com/photo-1600566753190-17f0bb2a6c3e?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                    <div class="listing-info">
+                        <span class="listing-price">$6,100,000</span>
+                        <h3 style="margin: 10px 0; font-size: 1.1rem;">Elysian Coastal Villa</h3>
+                        <p style="color: var(--text-dim); font-size: 0.8rem;">Malibu, CA â€” 5,100 sqft</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pricing-wrap">
+            <div class="price-card reveal">
+                <h4>Private Investor</h4>
+                <div style="font-family: var(--font-serif); font-size: 2.5rem; margin-bottom: 25px;">$499<i>/mo</i></div>
+                <ul style="list-style: none; font-size: 0.85rem; color: var(--text-dim); line-height: 2.5; margin-bottom: 40px;">
+                    <li>âœ“ Global MLS Integration</li>
+                    <li>âœ“ Basic Yield Projections</li>
+                    <li>âœ“ 24h Concierge Support</li>
+                </ul>
+                <a href="#" class="btn" style="width: 100%; text-align: center;">Choose Plan</a>
+            </div>
+            <div class="price-card featured reveal" style="transition-delay: 0.1s;">
+                <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 5px 15px; font-size: 0.6rem; letter-spacing: 2px;">MOST ADOPTED</div>
+                <h4>Family Office</h4>
+                <div style="font-family: var(--font-serif); font-size: 2.5rem; margin-bottom: 25px;">$1,850<i>/mo</i></div>
+                <ul style="list-style: none; font-size: 0.85rem; color: var(--text-dim); line-height: 2.5; margin-bottom: 40px;">
+                    <li>âœ“ Predictive AI Risk Models</li>
+                    <li>âœ“ Multi-entity Management</li>
+                    <li>âœ“ Dedicated Portfolio Manager</li>
+                    <li>âœ“ Tax Optimization Tools</li>
+                </ul>
+                <a href="#" class="btn btn-primary" style="width: 100%; text-align: center; background: var(--accent); border-color: var(--accent);">Initialize</a>
+            </div>
+        </section>
+    </main>
+
+    <footer style="padding: 100px 0; border-top: 1px solid var(--border); text-align: center;">
+        <div class="logo" style="margin-bottom: 30px; opacity: 0.5;">Estate_Logic.</div>
+        <p style="color: var(--text-dim); font-size: 0.75rem; letter-spacing: 2px;">&copy; 2026 ESTATE LOGIC GLOBAL HOLDINGS. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+        });
+
+        // --- Intersection Observer (Scroll Reveal) ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if (entry.target.id === 'dashboard') startDashboardSim();
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Simulated Dashboard Logic ---
+        function startDashboardSim() {
+            // Animate Bars
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach((bar, i) => {
+                setTimeout(() => { bar.style.transform = 'scaleY(1)'; }, i * 150);
+            });
+
+            // Animate Counter
+            let count = 0;
+            const target = 14.8;
+            const counterEl = document.getElementById('counter');
+            const interval = setInterval(() => {
+                count += 0.4;
+                if (count >= target) {
+                    counterEl.innerText = target.toFixed(1) + '%';
+                    clearInterval(interval);
+                } else {
+                    counterEl.innerText = count.toFixed(1) + '%';
+                }
+            }, 30);
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

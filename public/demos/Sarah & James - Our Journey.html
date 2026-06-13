@@ -1,0 +1,538 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarah & James | Our Journey</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary-color: #1a1a1a; /* Dark Charcoal */
+            --accent-color: #c5a059; /* Muted Gold */
+            --bg-color: #f9f8f4; /* Off-white/Cream */
+            --white: #ffffff;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lato', sans-serif;
+            --transition: all 0.4s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: var(--transition); }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            font-weight: 400;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Decorative underline for headings */
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: var(--accent-color);
+            margin: 15px auto 0;
+        }
+        .section-title p {
+            color: #666;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        nav.scrolled {
+            background: var(--white);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 1rem 5%;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            padding: 0 1rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .hero .subtitle {
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: 1px solid var(--white);
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            background: transparent;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--white);
+            color: var(--primary-color);
+        }
+
+        /* --- SECTIONS GENERAL --- */
+        section {
+            padding: 5rem 10%;
+        }
+
+        /* --- COUNTDOWN --- */
+        .countdown-section {
+            background-color: var(--white);
+            padding: 4rem 10%;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            text-align: center;
+        }
+
+        .time-box span {
+            display: block;
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--accent-color);
+            line-height: 1;
+        }
+
+        .time-box p {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0.5rem;
+        }
+
+        /* --- OUR STORY (Timeline) --- */
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .story-img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 20px 20px 0px var(--accent-color);
+        }
+
+        .story-content h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .story-content p {
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- GALLERY --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            height: 350px;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+        }
+
+        .gallery-item:hover .overlay { opacity: 1; }
+
+        /* --- RSVP FORM --- */
+        .rsvp-section {
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .rsvp-section h2 { color: var(--white); }
+        .rsvp-section p { color: #ccc; }
+
+        .rsvp-form {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .btn-submit {
+            background-color: var(--accent-color);
+            border: none;
+            width: 100%;
+            padding: 15px;
+            color: var(--white);
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: var(--transition);
+        }
+
+        .btn-submit:hover {
+            background-color: #b08d4b;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 3rem 10%;
+            background-color: var(--bg-color);
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* --- ANIMATIONS --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- MOBILE RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; } /* Simplified for single file demo */
+            .story-grid { grid-template-columns: 1fr; }
+            .story-img { height: 300px; margin-bottom: 2rem; box-shadow: 10px 10px 0px var(--accent-color); }
+            .timer { gap: 1.5rem; }
+            .time-box span { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="logo">S & J</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#story">Our Story</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#rsvp">RSVP</a>
+        </div>
+    </nav>
+
+    <header id="home" class="hero">
+        <div class="fade-in">
+            <p class="subtitle">We Are Getting Married</p>
+            <h1>Sarah & James</h1>
+            <p style="margin-bottom: 2rem; font-style: italic;">December 12th, 2024 â€¢ New York City</p>
+            <button class="btn" onclick="document.getElementById('rsvp').scrollIntoView({behavior: 'smooth'})">Save the Date</button>
+        </div>
+    </header>
+
+    <section class="countdown-section fade-in">
+        <div class="timer" id="countdown">
+            <div class="time-box"><span id="days">00</span><p>Days</p></div>
+            <div class="time-box"><span id="hours">00</span><p>Hours</p></div>
+            <div class="time-box"><span id="minutes">00</span><p>Mins</p></div>
+            <div class="time-box"><span id="seconds">00</span><p>Secs</p></div>
+        </div>
+    </section>
+
+    <section id="story">
+        <div class="section-title fade-in">
+            <h2>Our Journey</h2>
+            <p>From the first hello to forever.</p>
+        </div>
+        <div class="story-grid">
+            <div class="story-content fade-in">
+                <h3>How We Met</h3>
+                <p class="subtitle" style="color: var(--accent-color); font-weight: 700; margin-bottom: 10px;">September 2018</p>
+                <p>It started with a chance encounter at a local coffee shop. Neither of us was looking for anything serious, but three hours of conversation later, we both knew this was different. The coffee went cold, but our connection was just heating up.</p>
+                <p>Five years, two apartments, and one golden retriever later, we are ready to take on the world together, forever.</p>
+            </div>
+            <img src="https://images.unsplash.com/photo-1522673607200-1645062cd958?q=80&w=2043&auto=format&fit=crop" alt="Couple" class="story-img fade-in">
+        </div>
+    </section>
+
+    <section id="gallery" style="background-color: var(--white);">
+        <div class="section-title fade-in">
+            <h2>Captured Moments</h2>
+            <p>Snippets of our life together.</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item fade-in">
+                <img src="https://images.unsplash.com/photo-1511285560982-1356c11d4606?q=80&w=2070&auto=format&fit=crop" alt="Gallery 1">
+                <div class="overlay">The Proposal</div>
+            </div>
+            <div class="gallery-item fade-in">
+                <img src="https://images.unsplash.com/photo-1621621667797-e06afc217fb0?q=80&w=2070&auto=format&fit=crop" alt="Gallery 2">
+                <div class="overlay">Paris Trip</div>
+            </div>
+            <div class="gallery-item fade-in">
+                <img src="https://images.unsplash.com/photo-1529636721198-4c374775d4c7?q=80&w=1974&auto=format&fit=crop" alt="Gallery 3">
+                <div class="overlay">Sundays</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="rsvp" class="rsvp-section">
+        <div class="section-title fade-in">
+            <h2>Are You Attending?</h2>
+            <p style="color: rgba(255,255,255,0.7)">Please let us know by November 1st.</p>
+        </div>
+
+        <form class="rsvp-form fade-in" id="rsvpForm">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" required placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+                <label>Will you attend?</label>
+                <select>
+                    <option>Yes, I will be there</option>
+                    <option>Sorry, I can't make it</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Message (Optional)</label>
+                <textarea rows="4" placeholder="Any dietary requirements?"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Confirm RSVP</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Sarah & James. Designed with Love.</p>
+    </footer>
+
+    <script>
+        // --- 1. NAVBAR SCROLL EFFECT ---
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // --- 2. COUNTDOWN TIMER ---
+        // Set the date we're counting down to (Month Day, Year Time)
+        const countDownDate = new Date("Dec 12, 2026 15:00:00").getTime();
+
+        const timerInterval = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = days < 10 ? '0'+days : days;
+            document.getElementById("hours").innerHTML = hours < 10 ? '0'+hours : hours;
+            document.getElementById("minutes").innerHTML = minutes < 10 ? '0'+minutes : minutes;
+            document.getElementById("seconds").innerHTML = seconds < 10 ? '0'+seconds : seconds;
+
+            if (distance < 0) {
+                clearInterval(timerInterval);
+                document.getElementById("countdown").innerHTML = "<h2>We are Married!</h2>";
+            }
+        }, 1000);
+
+        // --- 3. SCROLL ANIMATIONS (Intersection Observer) ---
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // --- 4. FORM HANDLING (Demo) ---
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('.btn-submit');
+            const originalText = btn.innerText;
+            
+            btn.innerText = 'Sent!';
+            btn.style.backgroundColor = '#4CAF50';
+            
+            setTimeout(() => {
+                alert("Thank you! Your RSVP has been received (Demo Mode).");
+                this.reset();
+                btn.innerText = originalText;
+                btn.style.backgroundColor = 'var(--accent-color)';
+            }, 500);
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

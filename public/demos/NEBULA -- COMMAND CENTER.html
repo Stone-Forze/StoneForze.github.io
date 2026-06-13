@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEBULA // COMMAND CENTER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glow: #00f2ff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #e0faff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #02040a;
+            color: var(--text);
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* --- STARFIELD BACKGROUND --- */
+        #canvas {
+            position: fixed;
+            top: 0; left: 0;
+            z-index: -1;
+        }
+
+        /* --- MAIN DASHBOARD --- */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            grid-template-rows: 80px 1fr 100px;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* --- GLASS PANELS --- */
+        .panel {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--glow), transparent);
+            animation: scanning 4s linear infinite;
+        }
+
+        @keyframes scanning {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* --- HEADER --- */
+        header {
+            grid-column: span 3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            color: var(--glow);
+            text-shadow: 0 0 15px var(--glow);
+        }
+
+        /* --- LEFT NAV --- */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-item {
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-left: 2px solid transparent;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-item:hover {
+            background: rgba(0, 242, 255, 0.05);
+            border-left: 2px solid var(--glow);
+            padding-left: 25px;
+        }
+
+        /* --- CENTER CONTENT --- */
+        .main-display {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .system-status {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to bottom, #fff, var(--glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- STATS PANEL --- */
+        .stat-row {
+            margin-bottom: 20px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--glow);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            width: 100%;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--glow);
+            box-shadow: 0 0 10px var(--glow);
+            width: 65%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            grid-column: span 3;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .coordinate-tracker {
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        /* --- BUTTON --- */
+        .btn-orbit {
+            background: transparent;
+            border: 1px solid var(--glow);
+            color: var(--glow);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: 0.4s;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .btn-orbit:hover {
+            background: var(--glow);
+            color: #000;
+            box-shadow: 0 0 30px var(--glow);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="dashboard">
+        <header class="panel">
+            <div class="logo">NEBULA_OS</div>
+            <div id="clock">00:00:00</div>
+        </header>
+
+        <aside class="sidebar panel">
+            <div class="nav-item">CORE_SYSTEMS</div>
+            <div class="nav-item">NAVIGATION</div>
+            <div class="nav-item">STAR_MAPS</div>
+            <div class="nav-item">COMM_LINK</div>
+            <div class="nav-item">SECURITY</div>
+        </aside>
+
+        <section class="main-display panel">
+            <p class="stat-label">System Integrity</p>
+            <h1 class="system-status">OPTIMAL</h1>
+            <p style="letter-spacing: 5px; opacity: 0.6;">GALACTIC POSITION: SECTOR-7G</p>
+            <button class="btn-orbit" style="margin-top: 30px;">Initiate Hyperjump</button>
+        </section>
+
+        <aside class="panel">
+            <h3 style="font-family: 'Orbitron'; font-size: 0.9rem; margin-bottom: 30px;">DIAGNOSTICS</h3>
+            <div class="stat-row">
+                <span class="stat-label">Oxygen Levels</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 92%"></div></div>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Engine Core Temp</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 45%; background: #ff4d4d; box-shadow: 0 0 10px #ff4d4d;"></div></div>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Shield Integrity</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: 78%"></div></div>
+            </div>
+        </aside>
+
+        <footer class="panel">
+            <div class="coordinate-tracker" id="coords">X: 0.00 Y: 0.00 Z: 0.00</div>
+            <div style="font-size: 0.7rem; opacity: 0.5;">DEEP SPACE NETWORK CONNECTED</div>
+        </footer>
+    </div>
+
+    <script>
+        // --- 1. STARFIELD CANVAS ---
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speed = Math.random() * 0.5;
+            }
+            update() {
+                this.y += this.speed;
+                if (this.y > canvas.height) this.y = 0;
+            }
+            draw() {
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            resize();
+            stars = [];
+            for (let i = 0; i < 200; i++) stars.push(new Star());
+        }
+
+        function animate() {
+            ctx.fillStyle = '#02040a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(s => { s.update(); s.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+        window.addEventListener('resize', init);
+
+        // --- 2. LIVE CLOCK ---
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+            
+            // Randomize coordinates for "feel"
+            const x = (Math.random() * 100).toFixed(2);
+            const y = (Math.random() * 100).toFixed(2);
+            document.getElementById('coords').innerText = `X: ${x} Y: ${y} Z: 42.09`;
+        }
+        setInterval(updateClock, 1000);
+
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,649 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Neo-Brutalist design showcase with aggressive typography and mechanical interactions">
+    <title>NEO-BRUTALIST PORTFOLIO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           CSS VARIABLE SYSTEM - DAY-GLO & DEEP-VOID
+           ======================================== */
+        :root {
+            /* Day-Glo Palette (Light Mode) */
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F0F0F0;
+            --text-primary: #000000;
+            --text-secondary: #1a1a1a;
+            --accent-primary: #00FF41; /* Cyber-Yellow replacement - Electric Green */
+            --accent-secondary: #FF006E; /* Hot Pink */
+            --accent-tertiary: #0066FF; /* Electric Blue */
+            --border-color: #000000;
+            --shadow-color: #000000;
+            --card-bg: #FFFF00; /* Pure Yellow */
+            
+            /* Layout & Typography */
+            --border-width: 6px;
+            --shadow-offset: 8px;
+            --font-header: 'Archivo Black', sans-serif;
+            --font-body: 'Space Grotesk', monospace;
+            --transition-snap: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        [data-theme="dark"] {
+            /* Deep-Void Palette (Dark Mode) */
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --text-primary: #FFFFFF;
+            --text-secondary: #E0E0E0;
+            --accent-primary: #FFFFFF;
+            --accent-secondary: #888888;
+            --accent-tertiary: #444444;
+            --border-color: #FFFFFF;
+            --shadow-color: #FFFFFF;
+            --card-bg: #1a1a1a;
+        }
+
+        /* ========================================
+           RESET & BASE STYLES
+           ======================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ========================================
+           TYPOGRAPHY - ULTRA-BOLD EDITORIAL HIERARCHY
+           ======================================== */
+        h1, h2, h3 {
+            font-family: var(--font-header);
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 0.9;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 12vw, 8rem);
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 8vw, 5rem);
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        /* ========================================
+           LAYOUT CONTAINERS
+           ======================================== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 0;
+            border-bottom: var(--border-width) solid var(--border-color);
+        }
+
+        /* ========================================
+           HEADER & NAVIGATION - MECHANICAL FIXED BAR
+           ======================================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: var(--bg-primary);
+            border-bottom: var(--border-width) solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .logo {
+            font-family: var(--font-header);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            text-decoration: none;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--accent-primary);
+            transition: width 0.3s var(--transition-snap);
+        }
+
+        nav a:hover::after,
+        nav a:focus::after {
+            width: 100%;
+        }
+
+        /* ========================================
+           THEME TOGGLE - MECHANICAL SWITCH
+           ======================================== */
+        .theme-toggle {
+            position: relative;
+            width: 70px;
+            height: 35px;
+            background-color: var(--bg-secondary);
+            border: var(--border-width) solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow-color);
+        }
+
+        .theme-toggle:active {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0 var(--shadow-color);
+        }
+
+        .theme-toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 25px;
+            height: 25px;
+            background-color: var(--accent-primary);
+            border: 3px solid var(--border-color);
+            transition: transform 0.3s var(--transition-snap);
+        }
+
+        [data-theme="dark"] .theme-toggle-slider {
+            transform: translateX(32px);
+        }
+
+        /* ========================================
+           HERO SECTION - EXPLOSIVE ENTRY
+           ======================================== */
+        .hero {
+            position: relative;
+            padding-top: 100px;
+            text-align: center;
+        }
+
+        .hero-title {
+            animation: slideInDown 0.8s var(--transition-snap) backwards;
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            animation: slideInDown 1s var(--transition-snap) 0.2s backwards;
+        }
+
+        .hero-cta {
+            margin-top: 3rem;
+            animation: slideInUp 1s var(--transition-snap) 0.4s backwards;
+        }
+
+        /* ========================================
+           BRUTALIST BUTTONS - PHYSICAL PRESS EFFECT
+           ======================================== */
+        .btn {
+            display: inline-block;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text-primary);
+            background-color: var(--accent-primary);
+            padding: 1.25rem 2.5rem;
+            border: var(--border-width) solid var(--border-color);
+            box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow-color);
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            letter-spacing: 0.05em;
+            position: relative;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: calc(var(--shadow-offset) + 2px) calc(var(--shadow-offset) + 2px) 0 var(--shadow-color);
+        }
+
+        .btn:active {
+            transform: translate(var(--shadow-offset), var(--shadow-offset));
+            box-shadow: 0 0 0 var(--shadow-color);
+        }
+
+        .btn-secondary {
+            background-color: var(--accent-secondary);
+        }
+
+        .btn-tertiary {
+            background-color: var(--accent-tertiary);
+            color: #FFFFFF;
+        }
+
+        /* ========================================
+           CARD SYSTEM - HARD-EDGED CONTAINERS
+           ======================================== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            width: 100%;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: var(--border-width) solid var(--border-color);
+            box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow-color);
+            padding: 2rem;
+            transition: transform 0.3s var(--transition-snap), box-shadow 0.3s var(--transition-snap);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .card.visible {
+            animation: cardSlideIn 0.6s var(--transition-snap) forwards;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: calc(var(--shadow-offset) + 4px) calc(var(--shadow-offset) + 8px) 0 var(--shadow-color);
+        }
+
+        .card h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+        }
+
+        .card-accent-1 {
+            background-color: var(--accent-primary);
+        }
+
+        .card-accent-2 {
+            background-color: var(--accent-secondary);
+        }
+
+        .card-accent-3 {
+            background-color: var(--accent-tertiary);
+            color: #FFFFFF;
+        }
+
+        .card-accent-3 h3,
+        .card-accent-3 p {
+            color: #FFFFFF;
+        }
+
+        /* ========================================
+           ABOUT SECTION - SPLIT LAYOUT
+           ======================================== */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(45deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border: var(--border-width) solid var(--border-color);
+            box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        /* ========================================
+           FOOTER - MINIMAL BRUTALIST CLOSE
+           ======================================== */
+        footer {
+            background-color: var(--bg-secondary);
+            border-top: var(--border-width) solid var(--border-color);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           ANIMATIONS - SNAPPY & MECHANICAL
+           ======================================== */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes cardSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN - MOBILE OPTIMIZATION
+           ======================================== */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+        }
+
+        /* ========================================
+           ACCESSIBILITY - FOCUS STATES
+           ======================================== */
+        *:focus {
+            outline: 4px solid var(--accent-primary);
+            outline-offset: 4px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- ========================================
+         HEADER & NAVIGATION
+         ======================================== -->
+    <header>
+        <a href="#" class="logo" aria-label="Home">NEO-BRUTAL</a>
+        <nav aria-label="Main Navigation">
+            <a href="#work">Work</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+            <button class="theme-toggle" aria-label="Toggle dark mode" role="switch" aria-checked="false">
+                <span class="theme-toggle-slider" aria-hidden="true"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- ========================================
+         HERO SECTION
+         ======================================== -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1 class="hero-title">REJECT<br>GRADIENTS.<br>EMBRACE<br>BRUTALISM.</h1>
+            <p class="hero-subtitle">Ultra-Bold Design for the Anti-Design Era</p>
+            <div class="hero-cta">
+                <a href="#work" class="btn">View Projects</a>
+                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         WORK SECTION - CARD GRID
+         ======================================== -->
+    <section id="work">
+        <div class="container">
+            <h2>Featured Work</h2>
+            <div class="card-grid">
+                <article class="card card-accent-1">
+                    <h3>Project Alpha</h3>
+                    <p>A high-contrast editorial platform built with mechanical precision and zero-tolerance design philosophy.</p>
+                    <a href="#" class="btn btn-tertiary" style="margin-top: 1rem;">View Case</a>
+                </article>
+                
+                <article class="card card-accent-2">
+                    <h3>Project Beta</h3>
+                    <p>E-commerce microservices architecture delivering sub-100ms response times across 12 global regions.</p>
+                    <a href="#" class="btn" style="margin-top: 1rem;">Explore Tech</a>
+                </article>
+                
+                <article class="card card-accent-3">
+                    <h3>Project Gamma</h3>
+                    <p>Real-time data visualization dashboard processing 10M events/second with WebSocket streaming.</p>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">See Demo</a>
+                </article>
+                
+                <article class="card card-accent-1">
+                    <h3>Project Delta</h3>
+                    <p>Serverless event-driven architecture handling 500K concurrent users with 99.99% uptime SLA.</p>
+                    <a href="#" class="btn btn-tertiary" style="margin-top: 1rem;">Read More</a>
+                </article>
+                
+                <article class="card card-accent-2">
+                    <h3>Project Epsilon</h3>
+                    <p>GraphQL federated gateway unifying 25+ microservices with intelligent query batching.</p>
+                    <a href="#" class="btn" style="margin-top: 1rem;">Architecture</a>
+                </article>
+                
+                <article class="card card-accent-3">
+                    <h3>Project Zeta</h3>
+                    <p>Kubernetes-orchestrated CI/CD pipeline deploying 200+ times daily with zero-downtime releases.</p>
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Learn How</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         ABOUT SECTION
+         ======================================== -->
+    <section id="about">
+        <div class="container">
+            <div class="about-content">
+                <div>
+                    <h2>About This Philosophy</h2>
+                    <p>Neo-Brutalism strips away the decorative excess of modern web design. No gradients. No transparency. No soft shadows.</p>
+                    <p>Every element exists with purpose. Hard borders define space. Flat colors demand attention. Mechanical animations provide tactile feedback.</p>
+                    <p>This is design as engineeringâ€”precise, intentional, and unapologetically bold.</p>
+                    <a href="#contact" class="btn btn-tertiary" style="margin-top: 2rem;">Start a Project</a>
+                </div>
+                <div class="about-image" aria-label="Abstract geometric representation">
+                    <span aria-hidden="true">â¬›</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         CONTACT SECTION
+         ======================================== -->
+    <section id="contact">
+        <div class="container" style="text-align: center;">
+            <h2>Let's Build Something Bold</h2>
+            <p style="max-width: 600px; margin: 0 auto 2rem;">High-performance systems engineered with precision. Zero compromises. Maximum impact.</p>
+            <a href="/cdn-cgi/l/email-protection#2f4c40415b4e4c5b6f414a404d5d5a5b4e43014b4a5c464841" class="btn btn-secondary"><span class="__cf_email__" data-cfemail="a2c1cdccd6c3c1d6e2ccc7cdc0d0d7d6c3ce8cc6c7d1cbc5cc">[email&#160;protected]</span></a>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Neo-Brutalist Design System. Built with zero gradients and maximum contrast.</p>
+        </div>
+    </footer>
+
+    <!-- ========================================
+         JAVASCRIPT - THEME TOGGLE & INTERSECTION OBSERVER
+         ======================================== -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // ========================================
+        // THEME TOGGLE FUNCTIONALITY
+        // ========================================
+        const themeToggle = document.querySelector('.theme-toggle');
+        const html = document.documentElement;
+        
+        // Check for saved theme preference or default to 'light'
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', currentTheme);
+        themeToggle.setAttribute('aria-checked', currentTheme === 'dark' ? 'true' : 'false');
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.setAttribute('aria-checked', newTheme === 'dark' ? 'true' : 'false');
+        });
+
+        // ========================================
+        // INTERSECTION OBSERVER - CARD ANIMATIONS
+        // ========================================
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    // Stagger animation delays
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => observer.observe(card));
+
+        // ========================================
+        // SMOOTH SCROLL WITH OFFSET FOR FIXED HEADER
+        // ========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ========================================
+        // KEYBOARD ACCESSIBILITY ENHANCEMENT
+        // ========================================
+        themeToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                themeToggle.click();
+            }
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

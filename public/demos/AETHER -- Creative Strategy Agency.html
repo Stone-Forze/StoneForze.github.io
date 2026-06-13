@@ -1,0 +1,317 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER // Creative Strategy Agency</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --muted: #666666;
+            --accent: #000000;
+            --transition: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+            color: white;
+        }
+
+        .logo {
+            font-weight: 600;
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-item {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            color: inherit;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+            background: var(--bg);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 700;
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            letter-spacing: -2px;
+        }
+
+        .line-wrapper {
+            overflow: hidden;
+        }
+
+        .reveal-line {
+            display: block;
+            transform: translateY(110%);
+            animation: revealText 1.2s var(--transition) forwards;
+        }
+
+        @keyframes revealText {
+            to { transform: translateY(0); }
+        }
+
+        .hero p {
+            max-width: 500px;
+            font-size: 1.2rem;
+            color: var(--muted);
+            margin-left: 5px;
+            opacity: 0;
+            animation: fadeIn 1.5s var(--transition) forwards 0.5s;
+        }
+
+        /* --- Case Study Grid --- */
+        .case-studies {
+            padding: 100px 5%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 100px 40px;
+        }
+
+        .case-item {
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .image-container {
+            width: 100%;
+            aspect-ratio: 4/5;
+            background: #f0f0f0;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.2s var(--transition);
+        }
+
+        .case-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .case-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .case-info span {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+        }
+
+        /* --- Smooth Reveal on Scroll --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s var(--transition), transform 1s var(--transition);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Modal --- */
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: white;
+            z-index: 1000;
+            display: none;
+            padding: 10% 20%;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 40px; right: 40px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: 2px;
+        }
+
+        /* --- Custom Animations --- */
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">AETHER</div>
+        <div class="nav-links">
+            <a href="#" class="nav-item">Work</a>
+            <a href="#" class="nav-item">About</a>
+            <a href="#" class="nav-item">Contact</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="line-wrapper">
+            <h1 class="reveal-line">Defining the</h1>
+        </div>
+        <div class="line-wrapper">
+            <h1 class="reveal-line" style="animation-delay: 0.1s;"><i>Standard.</i></h1>
+        </div>
+        <p>A minimalist design laboratory focused on luxury branding, high-end digital experiences, and cinematic strategy.</p>
+    </section>
+
+    <section class="case-studies">
+        <div class="grid">
+            <div class="case-item reveal" onclick="openModal('Project Aura')">
+                <div class="image-container">
+                    <div style="width:100%; height:100%; background: linear-gradient(to bottom, #e0e0e0, #ffffff);"></div>
+                </div>
+                <div class="case-info">
+                    <span>Branding / Digital</span>
+                    <h3>Project Aura</h3>
+                </div>
+            </div>
+
+            <div class="case-item reveal" style="margin-top: 100px;" onclick="openModal('Noire Collection')">
+                <div class="image-container">
+                    <div style="width:100%; height:100%; background: linear-gradient(to bottom, #222, #444);"></div>
+                </div>
+                <div class="case-info">
+                    <span>Strategy / E-com</span>
+                    <h3>Noire Collection</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="caseModal" class="modal">
+        <div class="modal-close" onclick="closeModal()">Close â€” Esc</div>
+        <h1 id="modalTitle" style="font-family: 'Playfair Display'; font-size: 4rem;">Title</h1>
+        <p style="margin-top: 40px; color: var(--muted); font-size: 1.5rem;">The project details will fade in here with a cinematic transition. We focus on the intersection of form, function, and absolute luxury.</p>
+    </div>
+
+    <script>
+        // --- Scroll Reveal Implementation ---
+        const observerOptions = {
+            threshold: 0.2
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Modal Logic ---
+        const modal = document.getElementById('caseModal');
+        const modalTitle = document.getElementById('modalTitle');
+
+        function openModal(title) {
+            modalTitle.innerText = title;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            // Simple fade in
+            modal.animate([
+                { opacity: 0, transform: 'translateY(100px)' },
+                { opacity: 1, transform: 'translateY(0)' }
+            ], { duration: 800, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+        }
+
+        function closeModal() {
+            modal.animate([
+                { opacity: 1, transform: 'translateY(0)' },
+                { opacity: 0, transform: 'translateY(100px)' }
+            ], { duration: 600, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' }).onfinish = () => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            };
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") closeModal();
+        });
+
+        // --- Subtle Parallax for Images ---
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const images = document.querySelectorAll('.image-container img');
+            
+            images.forEach(img => {
+                const parent = img.parentElement;
+                const speed = 0.1;
+                const yPos = -(scrolled * speed);
+                img.style.transform = `translateY(${yPos}px) scale(1.1)`;
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

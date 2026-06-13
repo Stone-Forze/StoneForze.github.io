@@ -1,0 +1,686 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Dark Alchemy - A mysterious landing page with interactive flashlight cursor and shadow-morphism design" />
+    <title>Dark Alchemy</title>
+    
+    <!-- Google Fonts: Quicksand for elegant, thin typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <style>
+        /* ============================================================
+           RESET & BASE STYLES
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #0a0a0a;
+            color: #a0aec0;
+            font-weight: 300;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+            cursor: none; /* Hide default cursor for flashlight effect */
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ============================================================
+           CANVAS BACKGROUND - Smoke/Ink Animation Layer
+           ============================================================ */
+        #canvas-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.15; /* Low opacity for subtle effect */
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           MAIN CONTENT WRAPPER
+           ============================================================ */
+        main {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ============================================================
+           FLASHLIGHT CURSOR
+           ============================================================ */
+        .flashlight-cursor {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.3) 0%, rgba(0, 217, 255, 0.1) 50%, rgba(0, 217, 255, 0) 100%);
+            box-shadow: 0 0 60px 20px rgba(0, 217, 255, 0.2), inset 0 0 40px 10px rgba(168, 85, 247, 0.1);
+            filter: blur(8px);
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+        }
+
+        /* ============================================================
+           REVEAL EFFECT - Text/Elements Hidden Until Hovered
+           ============================================================ */
+        .reveal-text {
+            color: #6b7280;
+            transition: color 0.4s ease, text-shadow 0.4s ease;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0);
+        }
+
+        .reveal-text:hover,
+        .reveal-text.revealed {
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.6), 0 0 40px rgba(168, 85, 247, 0.3);
+        }
+
+        /* ============================================================
+           SHADOW-MORPHISM - Elements Defined by Soft Glows
+           ============================================================ */
+        .shadow-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            box-shadow: 
+                0 0 30px rgba(0, 217, 255, 0.1),
+                0 0 60px rgba(168, 85, 247, 0.05),
+                inset 0 0 20px rgba(255, 255, 255, 0.02);
+        }
+
+        .shadow-card:hover {
+            box-shadow: 
+                0 0 50px rgba(0, 217, 255, 0.3),
+                0 0 100px rgba(168, 85, 247, 0.15),
+                inset 0 0 30px rgba(255, 255, 255, 0.05);
+            transform: translateY(-4px);
+        }
+
+        /* ============================================================
+           TYPOGRAPHY SYSTEM
+           ============================================================ */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 217, 255, 0.3), 0 0 60px rgba(168, 85, 247, 0.2);
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: 0.8px;
+            color: #e0e7ff;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            letter-spacing: 0.6px;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #a0aec0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ============================================================
+           LAYOUT & SPACING
+           ============================================================ */
+        section {
+            padding: 4rem 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 10;
+        }
+
+        /* ============================================================
+           ASYMMETRIC LAYOUT - Alternating Content Blocks
+           ============================================================ */
+        .content-block {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin: 3rem 0;
+        }
+
+        .content-block.reverse {
+            direction: rtl;
+        }
+
+        .content-block.reverse > * {
+            direction: ltr;
+        }
+
+        .content-text {
+            padding: 2rem;
+        }
+
+        .content-visual {
+            height: 300px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(0, 217, 255, 0.1) 100%);
+            border-radius: 12px;
+            box-shadow: 
+                0 0 40px rgba(0, 217, 255, 0.15),
+                0 0 80px rgba(168, 85, 247, 0.1),
+                inset 0 0 30px rgba(255, 255, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #6b7280;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* ============================================================
+           FEATURE GRID
+           ============================================================ */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-item {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #00d9ff;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+
+        /* ============================================================
+           CALL-TO-ACTION BUTTON
+           ============================================================ */
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(0, 217, 255, 0.2) 100%);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 
+                0 0 20px rgba(0, 217, 255, 0.2),
+                inset 0 0 20px rgba(255, 255, 255, 0.05);
+            text-decoration: none;
+            margin-top: 1.5rem;
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.4) 0%, rgba(0, 217, 255, 0.4) 100%);
+            border-color: rgba(0, 217, 255, 0.6);
+            box-shadow: 
+                0 0 40px rgba(0, 217, 255, 0.4),
+                0 0 80px rgba(168, 85, 247, 0.2),
+                inset 0 0 30px rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* ============================================================
+           RESPONSIVE DESIGN
+           ============================================================ */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .content-block {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .content-block.reverse {
+                direction: ltr;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 2rem 1rem;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 3rem 1rem;
+            }
+
+            .flashlight-cursor {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            p {
+                font-size: 0.95rem;
+            }
+
+            .shadow-card {
+                padding: 1.5rem;
+            }
+
+            .cta-button {
+                padding: 0.8rem 2rem;
+                font-size: 0.9rem;
+            }
+
+            .flashlight-cursor {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        /* ============================================================
+           ANIMATION KEYFRAMES
+           ============================================================ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 
+                    0 0 30px rgba(0, 217, 255, 0.1),
+                    0 0 60px rgba(168, 85, 247, 0.05);
+            }
+            50% {
+                box-shadow: 
+                    0 0 50px rgba(0, 217, 255, 0.2),
+                    0 0 100px rgba(168, 85, 247, 0.1);
+            }
+        }
+
+        .shadow-card {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .shadow-card:nth-child(1) { animation-delay: 0.2s; }
+        .shadow-card:nth-child(2) { animation-delay: 0.4s; }
+        .shadow-card:nth-child(3) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <!-- ============================================================
+         CANVAS BACKGROUND - Smoke/Ink Animation
+         ============================================================ -->
+    <canvas id="canvas-background"></canvas>
+
+    <!-- ============================================================
+         FLASHLIGHT CURSOR
+         ============================================================ -->
+    <div class="flashlight-cursor" id="flashlight"></div>
+
+    <!-- ============================================================
+         MAIN CONTENT
+         ============================================================ -->
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="reveal-text">Dark Alchemy</h1>
+                <p style="font-size: 1.2rem; margin-top: 1.5rem;" class="reveal-text">
+                    Move your cursor to reveal hidden secrets. Discover the interplay of shadow and light.
+                </p>
+                <button class="cta-button reveal-text">Begin Your Journey</button>
+            </div>
+        </section>
+
+        <!-- CONTENT SECTION 1 -->
+        <section class="container">
+            <div class="content-block">
+                <div class="content-text">
+                    <h2 class="reveal-text">The Art of Revelation</h2>
+                    <p class="reveal-text">
+                        In the depths of darkness lies untapped potential. Our design philosophy embraces the mystery of the unknown, 
+                        revealing beauty through interaction. Every element is carefully crafted to respond to your presence, 
+                        creating a unique experience of discovery.
+                    </p>
+                    <p class="reveal-text">
+                        The flashlight cursor is not merely a toolâ€”it is an invitation to explore, to uncover, to understand 
+                        the delicate balance between concealment and revelation.
+                    </p>
+                </div>
+                <div class="content-visual shadow-card">
+                    âœ¨ Visual Element<br/>Hover to reveal
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES SECTION -->
+        <section class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem;" class="reveal-text">Core Features</h2>
+            <div class="feature-grid">
+                <div class="shadow-card feature-item">
+                    <div class="feature-icon">ðŸ”¦</div>
+                    <h3 class="reveal-text">Flashlight Cursor</h3>
+                    <p class="reveal-text">
+                        An interactive glow that follows your mouse, revealing hidden content as you explore the page.
+                    </p>
+                </div>
+                <div class="shadow-card feature-item">
+                    <div class="feature-icon">ðŸŒ«ï¸</div>
+                    <h3 class="reveal-text">Smoke Animation</h3>
+                    <p class="reveal-text">
+                        Ethereal particles drift and morph in the background, creating an atmospheric canvas of mystery.
+                    </p>
+                </div>
+                <div class="shadow-card feature-item">
+                    <div class="feature-icon">âœ¨</div>
+                    <h3 class="reveal-text">Shadow-Morphism</h3>
+                    <p class="reveal-text">
+                        UI elements defined by soft glows rather than solid borders, creating an elegant, modern aesthetic.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTENT SECTION 2 -->
+        <section class="container">
+            <div class="content-block reverse">
+                <div class="content-text">
+                    <h2 class="reveal-text">Elegant Typography</h2>
+                    <p class="reveal-text">
+                        Typography is the voice of design. We employ Quicksand in thin, elegant weights to create 
+                        a sophisticated reading experience. Text transitions from subtle grey to brilliant white as you hover, 
+                        symbolizing the revelation of truth.
+                    </p>
+                    <p class="reveal-text">
+                        Every letter, every word carries intention. The generous spacing and careful kerning ensure 
+                        that even in darkness, clarity prevails.
+                    </p>
+                </div>
+                <div class="content-visual shadow-card">
+                    ðŸ“ Typography<br/>Hover to brighten
+                </div>
+            </div>
+        </section>
+
+        <!-- CLOSING SECTION -->
+        <section class="container">
+            <div style="text-align: center; padding: 3rem; background: rgba(15, 23, 42, 0.3); border-radius: 12px; box-shadow: 0 0 30px rgba(0, 217, 255, 0.1);">
+                <h2 class="reveal-text">Experience the Mystery</h2>
+                <p class="reveal-text" style="max-width: 600px; margin: 1.5rem auto;">
+                    Dark Alchemy is more than a landing pageâ€”it's an exploration of the interplay between light and shadow, 
+                    between revelation and mystery. Every interaction is designed to delight, to intrigue, and to inspire.
+                </p>
+                <button class="cta-button reveal-text">Explore More</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="reveal-text">&copy; 2026 Dark Alchemy. Crafted with mystery and elegance.</p>
+    </footer>
+
+    <!-- ============================================================
+         JAVASCRIPT - Flashlight Cursor & Canvas Animation
+         ============================================================ -->
+    <script>
+        // ============================================================
+        // FLASHLIGHT CURSOR EFFECT
+        // ============================================================
+        const flashlight = document.getElementById('flashlight');
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        // Track mouse movement
+        document.addEventListener('mousemove', (e) => {
+            targetX = e.clientX;
+            targetY = e.clientY;
+        });
+
+        // Smooth animation loop for flashlight cursor
+        function animateFlashlight() {
+            // Smooth interpolation for organic feel
+            mouseX += (targetX - mouseX) * 0.15;
+            mouseY += (targetY - mouseY) * 0.15;
+
+            flashlight.style.left = mouseX + 'px';
+            flashlight.style.top = mouseY + 'px';
+
+            requestAnimationFrame(animateFlashlight);
+        }
+        animateFlashlight();
+
+        // Reveal effect on cursor proximity
+        document.addEventListener('mousemove', (e) => {
+            const revealElements = document.querySelectorAll('.reveal-text');
+            revealElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const distance = Math.sqrt(
+                    Math.pow(e.clientX - (rect.left + rect.width / 2), 2) +
+                    Math.pow(e.clientY - (rect.top + rect.height / 2), 2)
+                );
+
+                // Reveal if within 250px of cursor
+                if (distance < 250) {
+                    el.classList.add('revealed');
+                } else {
+                    el.classList.remove('revealed');
+                }
+            });
+        });
+
+        // ============================================================
+        // CANVAS BACKGROUND - Smoke/Ink Animation
+        // ============================================================
+        const canvas = document.getElementById('canvas-background');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size to window size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Particle system for smoke/ink effect
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.life = Math.random() * 0.5 + 0.3;
+                this.maxLife = this.life;
+                this.size = Math.random() * 100 + 50;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= 0.002;
+                this.vx *= 0.99; // Friction
+                this.vy *= 0.99;
+                this.vy -= 0.01; // Slight upward drift
+
+                // Wrap around edges
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                const alpha = (this.life / this.maxLife) * 0.3;
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                
+                // Gradient colors: purple to cyan
+                gradient.addColorStop(0, `rgba(168, 85, 247, ${alpha})`);
+                gradient.addColorStop(0.5, `rgba(0, 217, 255, ${alpha * 0.5})`);
+                gradient.addColorStop(1, `rgba(0, 217, 255, 0)`);
+
+                ctx.fillStyle = gradient;
+                ctx.fillRect(this.x - this.size, this.y - this.size, this.size * 2, this.size * 2);
+            }
+        }
+
+        // Create particle pool
+        let particles = [];
+        for (let i = 0; i < 30; i++) {
+            particles.push(new Particle());
+        }
+
+        // Animation loop
+        function animateCanvas() {
+            // Clear canvas with slight fade effect
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw particles
+            particles.forEach((particle, index) => {
+                particle.update();
+                particle.draw();
+
+                // Respawn dead particles
+                if (particle.life <= 0) {
+                    particles[index] = new Particle();
+                }
+            });
+
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // ============================================================
+        // BUTTON INTERACTIONS
+        // ============================================================
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Simple feedback
+                button.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    button.style.transform = '';
+                }, 100);
+                console.log('Button clicked - Ready for integration with your backend!');
+            });
+        });
+
+        // ============================================================
+        // INTERSECTION OBSERVER - Animate elements on scroll
+        // ============================================================
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.shadow-card, .content-block').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

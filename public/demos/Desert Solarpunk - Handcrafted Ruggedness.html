@@ -1,0 +1,983 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desert Solarpunk | Handcrafted Ruggedness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Stint+Ultra+Expanded&family=Source+Serif+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --burnt-sienna: #E07A5F;
+            --ochre: #D4A35E;
+            --sand-tan: #E8DCB8;
+            --desert-dark: #3D352A;
+            --rust: #A64C2E;
+            --dust: #C9B8A8;
+            --sun-glow: #FF9E4A;
+            --shadow-heavy: rgba(61, 53, 42, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Serif Pro', serif;
+            background-color: var(--sand-tan);
+            color: var(--desert-dark);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Grainy texture overlay */
+        .texture-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 100;
+            mix-blend-mode: multiply;
+            opacity: 0.3;
+        }
+
+        /* Parallax container */
+        .parallax-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 110%;
+            height: 110%;
+            top: -5%;
+            left: -5%;
+        }
+
+        .dunes-back {
+            background: linear-gradient(to bottom, #F7D9AA 0%, var(--sand-tan) 100%);
+            z-index: 1;
+        }
+
+        .dunes-mid {
+            background-image: url("data:image/svg+xml,%3Csvg width='1200' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,200 Q300,100 600,200 T1200,200 L1200,400 L0,400 Z' fill='%23D4A35E'/%3E%3Cpath d='M0,250 Q400,150 800,250 T1200,250 L1200,400 L0,400 Z' fill='%23E07A5F' opacity='0.6'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center bottom;
+            z-index: 2;
+            opacity: 0.8;
+        }
+
+        .dunes-front {
+            background-image: url("data:image/svg+xml,%3Csvg width='1200' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,150 Q200,50 400,150 T800,150 Q1000,50 1200,150 L1200,300 L0,300 Z' fill='%23A64C2E' opacity='0.7'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center bottom;
+            z-index: 3;
+            opacity: 0.9;
+        }
+
+        /* Heat haze filter */
+        .heat-haze {
+            filter: url(#heatDistortion);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 90;
+            background-color: rgba(232, 220, 184, 0.85);
+            border-bottom: 2px solid var(--rust);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-family: 'Stint Ultra Expanded', serif;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--rust);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            font-family: 'Stint Ultra Expanded', serif;
+            color: var(--desert-dark);
+            text-decoration: none;
+            font-size: 1.1rem;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--rust);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--desert-dark);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: 'Stint Ultra Expanded', serif;
+            font-size: 5.5rem;
+            font-weight: 400;
+            color: var(--rust);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 3px 3px 0 var(--shadow-heavy);
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            color: var(--desert-dark);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            line-height: 1.5;
+            font-weight: 300;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background-color: var(--rust);
+            color: var(--sand-tan);
+            font-family: 'Stint Ultra Expanded', serif;
+            font-size: 1.3rem;
+            text-decoration: none;
+            border: none;
+            border-radius: 0;
+            box-shadow: 5px 5px 0 var(--shadow-heavy);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0 var(--shadow-heavy);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Main content */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(232, 220, 184, 0.85);
+            backdrop-filter: blur(10px);
+            border-top: 3px solid var(--rust);
+            padding: 5rem 3rem;
+        }
+
+        .section-title {
+            font-family: 'Stint Ultra Expanded', serif;
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--rust);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 3px;
+            background-color: var(--ochre);
+        }
+
+        /* Rusted Slate Cards */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-bottom: 5rem;
+        }
+
+        .rusted-card {
+            background: linear-gradient(145deg, var(--sand-tan), #D8C9A6);
+            border: 3px solid var(--rust);
+            padding: 2.5rem;
+            position: relative;
+            box-shadow: 10px 10px 0 var(--shadow-heavy);
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+
+        .rusted-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(166, 76, 46, 0.1) 50%, transparent 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .rusted-card:hover {
+            transform: translate(-5px, -5px);
+            box-shadow: 15px 15px 0 var(--shadow-heavy);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            color: var(--rust);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .card-title {
+            font-family: 'Stint Ultra Expanded', serif;
+            font-size: 2rem;
+            color: var(--desert-dark);
+            margin-bottom: 1.2rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--desert-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Solarpunk Features */
+        .features-section {
+            padding: 5rem 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 2rem;
+            border-top: 2px solid var(--ochre);
+            border-bottom: 2px solid var(--ochre);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: var(--rust);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--rust);
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-family: 'Stint Ultra Expanded', serif;
+            font-size: 1.8rem;
+            color: var(--desert-dark);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .feature-desc {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--desert-dark);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--desert-dark);
+            color: var(--sand-tan);
+            padding: 4rem 3rem 2rem;
+            border-top: 3px solid var(--rust);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-title {
+            font-family: 'Stint Ultra Expanded', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--ochre);
+            text-transform: uppercase;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--sand-tan);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--ochre);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(232, 220, 184, 0.2);
+            font-size: 0.9rem;
+            color: var(--dust);
+        }
+
+        /* Sand particles */
+        .sand-particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background-color: var(--ochre);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 80;
+            opacity: 0.6;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 4.5rem;
+            }
+            
+            .section-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .mobile-nav {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: rgba(232, 220, 184, 0.95);
+                padding: 2rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+                transform: translateY(-100%);
+                transition: transform 0.5s ease;
+                z-index: 99;
+                border-bottom: 2px solid var(--rust);
+            }
+            
+            .mobile-nav.active {
+                transform: translateY(0);
+            }
+            
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.4rem;
+            }
+            
+            .main-content {
+                padding: 3rem 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .cta-button {
+                padding: 1rem 2rem;
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .rusted-card {
+                padding: 1.8rem;
+            }
+            
+            .card-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG filter for heat haze distortion -->
+    <svg width="0" height="0">
+        <filter id="heatDistortion">
+            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.03" numOctaves="2" result="noise" seed="3">
+                <animate attributeName="baseFrequency" values="0.01 0.03;0.02 0.05;0.01 0.03" dur="7s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
+            <feGaussianBlur stdDeviation="0.5" />
+        </filter>
+    </svg>
+
+    <!-- Grainy texture overlay -->
+    <div class="texture-overlay"></div>
+
+    <!-- Parallax desert layers -->
+    <div class="parallax-container">
+        <div class="parallax-layer dunes-back" id="dunesBack"></div>
+        <div class="parallax-layer dunes-mid" id="dunesMid"></div>
+        <div class="parallax-layer dunes-front" id="dunesFront"></div>
+    </div>
+
+    <!-- Sand particles container -->
+    <div id="sandParticles"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">Desert Solarpunk</div>
+        
+        <nav class="nav-links">
+            <a href="#philosophy">Philosophy</a>
+            <a href="#craftsmanship">Craftsmanship</a>
+            <a href="#technology">Technology</a>
+            <a href="#community">Community</a>
+        </nav>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+    
+    <!-- Mobile navigation menu -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="#philosophy">Philosophy</a>
+        <a href="#craftsmanship">Craftsmanship</a>
+        <a href="#technology">Technology</a>
+        <a href="#community">Community</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="heat-haze">Handcrafted Ruggedness</h1>
+        <p class="hero-subtitle">Where ancient desert wisdom meets sustainable innovation. We forge resilient tools and technologies that honor the earth while powering tomorrow.</p>
+        <a href="#craftsmanship" class="cta-button">Explore Our Craft</a>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Philosophy Section -->
+        <section id="philosophy">
+            <h2 class="section-title">Our Desert Philosophy</h2>
+            
+            <div class="cards-container">
+                <!-- Card 1 -->
+                <article class="rusted-card">
+                    <div class="card-icon">â˜€ï¸</div>
+                    <h3 class="card-title">Solar Harmony</h3>
+                    <p class="card-content">We harness the relentless desert sun not as an adversary, but as our greatest ally. Our technologies work in harmony with natural cycles, storing excess energy in thermal batteries crafted from local clay and stone.</p>
+                    <div class="card-footer">
+                        <span class="card-tag">Energy</span>
+                        <span class="card-tag">Sustainability</span>
+                    </div>
+                </article>
+                
+                <!-- Card 2 -->
+                <article class="rusted-card">
+                    <div class="card-icon">ðŸœï¸</div>
+                    <h3 class="card-title">Rugged Resilience</h3>
+                    <p class="card-content">Everything we create is built to withstand the harshest conditions. Our designs embrace patina, weathering, and adaptationâ€”becoming more beautiful and functional with time and use.</p>
+                    <div class="card-footer">
+                        <span class="card-tag">Durability</span>
+                        <span class="card-tag">Design</span>
+                    </div>
+                </article>
+                
+                <!-- Card 3 -->
+                <article class="rusted-card">
+                    <div class="card-icon">ðŸ¤²</div>
+                    <h3 class="card-title">Handcrafted Ethos</h3>
+                    <p class="card-content">We reject mass production in favor of artisanal craftsmanship. Each piece is individually forged, stitched, or assembled by skilled makers who embed intention and care into every detail.</p>
+                    <div class="card-footer">
+                        <span class="card-tag">Craftsmanship</span>
+                        <span class="card-tag">Artisanal</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Craftsmanship Section -->
+        <section id="craftsmanship" class="features-section">
+            <h2 class="section-title">Desert Craftsmanship</h2>
+            
+            <div class="feature-grid">
+                <!-- Feature 1 -->
+                <div class="feature-item">
+                    <div class="feature-icon">âš¡</div>
+                    <h3 class="feature-title">Solar Forged Tools</h3>
+                    <p class="feature-desc">Our blacksmiths use concentrated solar arrays to heat-treat steel, creating tools with exceptional durability and distinctive desert patterning.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-item">
+                    <div class="feature-icon">ðŸº</div>
+                    <h3 class="feature-title">Ceramic Batteries</h3>
+                    <p class="feature-desc">Traditional pottery techniques meet advanced energy storage in our terracotta thermal batteries, capable of storing solar heat for days.</p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-item">
+                    <div class="feature-icon">ðŸŒµ</div>
+                    <h3 class="feature-title">Biomimetic Design</h3>
+                    <p class="feature-desc">We study desert flora and fauna to create efficient, water-saving technologies that thrive in arid environments.</p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-item">
+                    <div class="feature-icon">ðŸ§µ</div>
+                    <h3 class="feature-title">Nomadic Textiles</h3>
+                    <p class="feature-desc">Woven from sun-bleached fibers and dyed with desert minerals, our textiles provide insulation by day and radiant warmth by night.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technology Section -->
+        <section id="technology">
+            <h2 class="section-title">Desert-Tech Innovations</h2>
+            
+            <div class="cards-container">
+                <!-- Card 1 -->
+                <article class="rusted-card">
+                    <div class="card-icon">ðŸŒ€</div>
+                    <h3 class="card-title">Vortex Coolers</h3>
+                    <p class="card-content">Our passive cooling systems use carefully designed clay structures to create vortex flows that drop temperatures by 15-20Â°C without electricity.</p>
+                    <div class="card-footer">
+                        <span class="card-tag">Cooling</span>
+                        <span class="card-tag">Passive Tech</span>
+                    </div>
+                </article>
+                
+                <!-- Card 2 -->
+                <article class="rusted-card">
+                    <div class="card-icon">ðŸ’§</div>
+                    <h3 class="card-title">Atmospheric Harvesters</h3>
+                    <p class="card-content">Mesh-net structures that capture overnight dew and morning fog, providing up to 10 liters of clean water daily in the driest environments.</p>
+                    <div class="card-footer">
+                        <span class="card-tag">Water</span>
+                        <span class="card-tag">Harvesting</span>
+                    </div>
+                </article>
+                
+                <!-- Card 3 -->
+                <article class="rusted-card">
+                    <div class="card-icon">ðŸ”­</div>
+                    <h3 class="card-title">Solar Navigation</h3>
+                    <p class="card-content">Ancient celestial navigation principles updated with photovoltaic tracking systems that guide travelers without satellites or batteries.</p>
+                    <div class="card-footer">
+                        <span class="card-tag">Navigation</span>
+                        <span class="card-tag">Solar</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="community">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3 class="footer-title">Desert Solarpunk</h3>
+                <p>Forging a sustainable future from the elements of the past. We create technologies that don't just survive in harsh environmentsâ€”they thrive.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-title">Craft Guilds</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Solar Smiths</a></li>
+                    <li><a href="#">Clay Engineers</a></li>
+                    <li><a href="#">Textile Weavers</a></li>
+                    <li><a href="#">Desert Gardeners</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-title">Learn With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Workshops</a></li>
+                    <li><a href="#">Apprenticeships</a></li>
+                    <li><a href="#">Desert Expeditions</a></li>
+                    <li><a href="#">Open Source Plans</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2023 Desert Solarpunk Collective. All knowledge is open source. All crafts are hand-forged.
+        </div>
+    </footer>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script>
+        // Initialize sand particle system
+        class SandParticleSystem {
+            constructor() {
+                this.particles = [];
+                this.container = document.getElementById('sandParticles');
+                this.scrollY = window.scrollY;
+                this.scrollDirection = 0;
+                this.lastScrollY = 0;
+                
+                this.init();
+            }
+            
+            init() {
+                // Create initial sand particles
+                for (let i = 0; i < 80; i++) {
+                    this.createParticle();
+                }
+                
+                // Update scroll direction on scroll
+                window.addEventListener('scroll', () => {
+                    this.lastScrollY = this.scrollY;
+                    this.scrollY = window.scrollY;
+                    this.scrollDirection = this.scrollY > this.lastScrollY ? 1 : -1;
+                });
+                
+                // Animate particles
+                this.animate();
+            }
+            
+            createParticle() {
+                const particle = document.createElement('div');
+                particle.className = 'sand-particle';
+                
+                // Random size and position
+                const size = Math.random() * 3 + 2;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const opacity = Math.random() * 0.4 + 0.2;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}vw`;
+                particle.style.top = `${top}vh`;
+                particle.style.opacity = opacity;
+                particle.style.backgroundColor = `hsl(30, ${Math.random() * 30 + 40}%, ${Math.random() * 20 + 50}%)`;
+                
+                this.container.appendChild(particle);
+                
+                this.particles.push({
+                    element: particle,
+                    x: left,
+                    y: top,
+                    size: size,
+                    speedX: (Math.random() - 0.5) * 0.2,
+                    speedY: (Math.random() - 0.5) * 0.1,
+                    opacity: opacity
+                });
+            }
+            
+            animate() {
+                // Update each particle position based on scroll direction
+                this.particles.forEach(particle => {
+                    // Apply drift based on scroll direction
+                    particle.x += particle.speedX + (this.scrollDirection * 0.05);
+                    particle.y += particle.speedY;
+                    
+                    // Wrap particles around screen edges
+                    if (particle.x > 100) particle.x = 0;
+                    if (particle.x < 0) particle.x = 100;
+                    if (particle.y > 100) particle.y = 0;
+                    if (particle.y < 0) particle.y = 100;
+                    
+                    // Apply subtle pulsing opacity
+                    const time = Date.now() / 1000;
+                    const pulse = Math.sin(time + particle.x) * 0.1 + 0.9;
+                    particle.element.style.opacity = particle.opacity * pulse;
+                    
+                    // Update position
+                    particle.element.style.left = `${particle.x}vw`;
+                    particle.element.style.top = `${particle.y}vh`;
+                });
+                
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Parallax scrolling effect
+        class ParallaxScroller {
+            constructor() {
+                this.dunesBack = document.getElementById('dunesBack');
+                this.dunesMid = document.getElementById('dunesMid');
+                this.dunesFront = document.getElementById('dunesFront');
+                
+                this.init();
+            }
+            
+            init() {
+                window.addEventListener('scroll', () => this.onScroll());
+                // Trigger initial positioning
+                this.onScroll();
+            }
+            
+            onScroll() {
+                const scrollY = window.scrollY;
+                
+                // Different layers move at different speeds
+                const backSpeed = 0.3;
+                const midSpeed = 0.5;
+                const frontSpeed = 0.7;
+                
+                // Apply parallax effect
+                this.dunesBack.style.transform = `translateY(${scrollY * backSpeed}px)`;
+                this.dunesMid.style.transform = `translateY(${scrollY * midSpeed}px)`;
+                this.dunesFront.style.transform = `translateY(${scrollY * frontSpeed}px)`;
+            }
+        }
+
+        // Non-linear transitions for cards
+        class CardAnimator {
+            constructor() {
+                this.cards = document.querySelectorAll('.rusted-card');
+                this.init();
+            }
+            
+            init() {
+                // Set up intersection observer for card animations
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Add staggered animation with non-linear timing
+                            setTimeout(() => {
+                                entry.target.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                            }, entry.target.dataset.delay || 0);
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -100px 0px'
+                });
+                
+                // Set initial state and observe each card
+                this.cards.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
+                    card.dataset.delay = index * 100;
+                    observer.observe(card);
+                });
+            }
+        }
+
+        // Mobile menu functionality
+        class MobileMenu {
+            constructor() {
+                this.menuBtn = document.getElementById('mobileMenuBtn');
+                this.mobileNav = document.getElementById('mobileNav');
+                
+                this.init();
+            }
+            
+            init() {
+                this.menuBtn.addEventListener('click', () => this.toggleMenu());
+                
+                // Close menu when clicking a link
+                this.mobileNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => this.closeMenu());
+                });
+            }
+            
+            toggleMenu() {
+                this.mobileNav.classList.toggle('active');
+                
+                // Change icon based on state
+                if (this.mobileNav.classList.contains('active')) {
+                    this.menuBtn.innerHTML = '<i class="fas fa-times"></i>';
+                } else {
+                    this.menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            }
+            
+            closeMenu() {
+                this.mobileNav.classList.remove('active');
+                this.menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Create CSS for card tags
+            const style = document.createElement('style');
+            style.textContent = `
+                .card-footer {
+                    display: flex;
+                    gap: 0.8rem;
+                    margin-top: 1.5rem;
+                    flex-wrap: wrap;
+                }
+                
+                .card-tag {
+                    padding: 0.3rem 1rem;
+                    background-color: rgba(166, 76, 46, 0.1);
+                    color: var(--rust);
+                    font-family: 'Stint Ultra Expanded', serif;
+                    font-size: 0.9rem;
+                    border: 1px solid var(--rust);
+                }
+                
+                /* Smooth scrolling for anchor links */
+                html {
+                    scroll-behavior: smooth;
+                }
+                
+                /* Mobile nav transition */
+                .mobile-nav {
+                    transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Initialize all components
+            new SandParticleSystem();
+            new ParallaxScroller();
+            new CardAnimator();
+            new MobileMenu();
+            
+            // Add some interactive effects to cards on hover
+            document.querySelectorAll('.rusted-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                });
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,841 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Deep Space - An immersive cosmic journey with starfield particles, cosmic glass UI, and warp-speed transitions.">
+    <title>Deep Space - Cosmic Journey</title>
+    
+    <!-- Google Fonts: Syncopate for headers, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /*==============================================
+          CSS CUSTOM PROPERTIES: Design System
+        ===============================================*/
+        :root {
+            /* Color Palette: Deep Space */
+            --space-black: #000000;
+            --deep-void: #0a0a0f;
+            --cosmic-purple: #9d4edd;
+            --nebula-blue: #3a86ff;
+            --star-white: #ffffff;
+            --glass-overlay: rgba(157, 78, 221, 0.05);
+            --glow-purple: rgba(157, 78, 221, 0.6);
+            --glow-blue: rgba(58, 134, 255, 0.6);
+            
+            /* Typography */
+            --font-display: 'Syncopate', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Spacing & Sizing */
+            --section-padding: clamp(4rem, 10vw, 8rem);
+            --card-gap: clamp(1.5rem, 4vw, 3rem);
+            --border-radius: 16px;
+            
+            /* Effects */
+            --blur-intensity: 40px;
+            --glow-spread: 30px;
+            --transition-speed: 0.4s;
+            
+            /* Z-Index Layers */
+            --z-starfield: 1;
+            --z-orbits: 2;
+            --z-content: 10;
+            --z-cursor: 9999;
+        }
+        
+        /*==============================================
+          RESET & BASE STYLES
+        ===============================================*/
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--space-black);
+            color: var(--star-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            cursor: none; /* Custom cursor */
+            position: relative;
+        }
+        
+        ::selection {
+            background: var(--cosmic-purple);
+            color: var(--star-white);
+        }
+        
+        /*==============================================
+          STARFIELD CANVAS BACKGROUND
+        ===============================================*/
+        #starfield-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: var(--z-starfield);
+            pointer-events: none;
+            background: radial-gradient(
+                ellipse at center,
+                var(--deep-void) 0%,
+                var(--space-black) 100%
+            );
+        }
+        
+        /*==============================================
+          CUSTOM CURSOR
+        ===============================================*/
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--cosmic-purple);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: var(--z-cursor);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 0 20px var(--glow-purple);
+        }
+        
+        .custom-cursor.hover {
+            width: 40px;
+            height: 40px;
+            border-color: var(--nebula-blue);
+            box-shadow: 0 0 30px var(--glow-blue);
+        }
+        
+        /*==============================================
+          ORBITING DECORATIVE ELEMENTS
+        ===============================================*/
+        .orbit-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: var(--z-orbits);
+            opacity: 0.3;
+        }
+        
+        .orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid var(--cosmic-purple);
+            border-radius: 50%;
+            animation: rotate 60s linear infinite;
+        }
+        
+        .orbit-1 {
+            width: 300px;
+            height: 300px;
+            animation-duration: 40s;
+        }
+        
+        .orbit-2 {
+            width: 500px;
+            height: 500px;
+            animation-duration: 60s;
+            border-color: var(--nebula-blue);
+        }
+        
+        .orbit-3 {
+            width: 700px;
+            height: 700px;
+            animation-duration: 80s;
+        }
+        
+        .orbit-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--cosmic-purple);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--glow-purple);
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /*==============================================
+          MAIN CONTAINER
+        ===============================================*/
+        .cosmic-container {
+            position: relative;
+            z-index: var(--z-content);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 clamp(1rem, 5vw, 3rem);
+        }
+        
+        /*==============================================
+          HERO SECTION
+        ===============================================*/
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: var(--section-padding) 0;
+            position: relative;
+        }
+        
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--cosmic-purple), var(--nebula-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px var(--glow-purple));
+            }
+            50% {
+                filter: drop-shadow(0 0 40px var(--glow-blue));
+            }
+        }
+        
+        .hero p {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-weight: 300;
+            max-width: 600px;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 1.2rem 3rem;
+            background: transparent;
+            border: 2px solid var(--cosmic-purple);
+            color: var(--star-white);
+            border-radius: 50px;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-speed) ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, var(--cosmic-purple), transparent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+        
+        .cta-button:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+        
+        .cta-button span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-button:hover {
+            border-color: var(--nebula-blue);
+            box-shadow: 0 0 30px var(--glow-purple);
+            transform: translateY(-2px);
+        }
+        
+        /*==============================================
+          WARP TRANSITION OVERLAY
+        ===============================================*/
+        .warp-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--space-black);
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .warp-overlay.active {
+            opacity: 1;
+        }
+        
+        /*==============================================
+          COSMIC GLASS CARDS
+        ===============================================*/
+        .section {
+            padding: var(--section-padding) 0;
+            position: relative;
+        }
+        
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-align: center;
+            margin-bottom: 4rem;
+            text-transform: uppercase;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--card-gap);
+        }
+        
+        .cosmic-card {
+            position: relative;
+            padding: 3rem 2rem;
+            background: var(--glass-overlay);
+            backdrop-filter: blur(var(--blur-intensity));
+            -webkit-backdrop-filter: blur(var(--blur-intensity));
+            border: 1px solid transparent;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-speed) ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        /* Gradient border effect */
+        .cosmic-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--border-radius);
+            padding: 1px;
+            background: linear-gradient(135deg, var(--cosmic-purple), var(--nebula-blue));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+            transition: opacity var(--transition-speed) ease;
+        }
+        
+        .cosmic-card:hover::before {
+            opacity: 1;
+        }
+        
+        .cosmic-card:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+            box-shadow: 
+                0 20px 60px var(--glow-purple),
+                0 10px 30px var(--glow-blue);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        
+        .card-description {
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.8;
+            opacity: 0.85;
+        }
+        
+        /*==============================================
+          3D TILT EFFECT (Mouse Interaction)
+        ===============================================*/
+        .cosmic-card[data-tilt] {
+            transition: transform 0.1s ease-out;
+        }
+        
+        /*==============================================
+          FOOTER
+        ===============================================*/
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(157, 78, 221, 0.2);
+            margin-top: var(--section-padding);
+        }
+        
+        footer p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /*==============================================
+          ACCESSIBILITY: Reduced Motion
+        ===============================================*/
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            
+            .orbit {
+                animation: none;
+            }
+        }
+        
+        /*==============================================
+          RESPONSIVE DESIGN
+        ===============================================*/
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+            
+            .custom-cursor {
+                display: none;
+            }
+            
+            .orbit-container {
+                width: 400px;
+                height: 400px;
+            }
+            
+            .orbit-1 { width: 150px; height: 150px; }
+            .orbit-2 { width: 250px; height: 250px; }
+            .orbit-3 { width: 350px; height: 350px; }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Starfield Canvas Background -->
+    <canvas id="starfield-canvas"></canvas>
+    
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+    
+    <!-- Orbiting Decorative Elements -->
+    <div class="orbit-container">
+        <div class="orbit orbit-1">
+            <div class="orbit-particle"></div>
+        </div>
+        <div class="orbit orbit-2">
+            <div class="orbit-particle"></div>
+        </div>
+        <div class="orbit orbit-3">
+            <div class="orbit-particle"></div>
+        </div>
+    </div>
+    
+    <!-- Warp Transition Overlay -->
+    <div class="warp-overlay"></div>
+    
+    <!-- Main Content -->
+    <div class="cosmic-container">
+        
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <h1>Deep Space</h1>
+            <p>Embark on an immersive cosmic journey through the infinite void, where starlight meets innovation and the universe unfolds before you.</p>
+            <a href="#features" class="cta-button">
+                <span>Begin Journey</span>
+            </a>
+        </section>
+        
+        <!-- Features Section -->
+        <section class="section" id="features">
+            <h2 class="section-title">Cosmic Features</h2>
+            <div class="card-grid">
+                
+                <div class="cosmic-card" data-tilt>
+                    <span class="card-icon">ðŸŒŒ</span>
+                    <h3 class="card-title">Infinite Void</h3>
+                    <p class="card-description">
+                        Navigate through procedurally generated starfields that respond to your every scroll, creating a unique journey through the cosmos.
+                    </p>
+                </div>
+                
+                <div class="cosmic-card" data-tilt>
+                    <span class="card-icon">âœ¨</span>
+                    <h3 class="card-title">Nebula Trails</h3>
+                    <p class="card-description">
+                        Experience ethereal particle systems that paint the void with luminescent trails, simulating the birth of distant galaxies.
+                    </p>
+                </div>
+                
+                <div class="cosmic-card" data-tilt>
+                    <span class="card-icon">ðŸš€</span>
+                    <h3 class="card-title">Warp Speed</h3>
+                    <p class="card-description">
+                        Transition between sections at lightspeed with GPU-accelerated warp effects that bend space and time itself.
+                    </p>
+                </div>
+                
+                <div class="cosmic-card" data-tilt>
+                    <span class="card-icon">ðŸª</span>
+                    <h3 class="card-title">Orbital Mechanics</h3>
+                    <p class="card-description">
+                        Watch celestial bodies orbit in harmony, governed by realistic physics simulations rendered at a silky 60 frames per second.
+                    </p>
+                </div>
+                
+                <div class="cosmic-card" data-tilt>
+                    <span class="card-icon">ðŸŒ </span>
+                    <h3 class="card-title">Cosmic Glass</h3>
+                    <p class="card-description">
+                        Content cards built with advanced glassmorphism blur the boundaries between foreground and the infinite void beyond.
+                    </p>
+                </div>
+                
+                <div class="cosmic-card" data-tilt>
+                    <span class="card-icon">ðŸ”®</span>
+                    <h3 class="card-title">3D Perspective</h3>
+                    <p class="card-description">
+                        Interactive elements respond to your cursor with subtle 3D rotations, creating depth in the two-dimensional plane.
+                    </p>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- Technology Section -->
+        <section class="section" id="technology">
+            <h2 class="section-title">Advanced Tech</h2>
+            <div class="card-grid">
+                
+                <div class="cosmic-card" data-tilt>
+                    <span class="card-icon">âš¡</span>
+                    <h3 class="card-title">60 FPS</h3>
+                    <p class="card-description">
+                        Ultra-optimized particle systems leverage requestAnimationFrame and GPU acceleration for butter-smooth animations.
+                    </p>
+                </div>
+                
+                <div class="cosmic-card" data-tilt>
+                    <span class="card-icon">ðŸŽ¨</span>
+                    <h3 class="card-title">Glassmorphism</h3>
+                    <p class="card-description">
+                        High-blur backdrop filters create the signature cosmic glass effect with purple-to-blue gradient glow borders.
+                    </p>
+                </div>
+                
+                <div class="cosmic-card" data-tilt>
+                    <span class="card-icon">ðŸ“±</span>
+                    <h3 class="card-title">Responsive</h3>
+                    <p class="card-description">
+                        Fully adaptive design scales seamlessly from mobile to 4K displays without compromising visual fidelity.
+                    </p>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 Deep Space Experience. Engineered with precision for the cosmos.</p>
+        </footer>
+        
+    </div>
+    
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        /*==============================================
+          STARFIELD PARTICLE SYSTEM
+          Optimized canvas-based starfield with parallax
+        ===============================================*/
+        const canvas = document.getElementById('starfield-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let stars = [];
+        let scrollY = 0;
+        const STAR_COUNT = 800;
+        const SCROLL_SPEED_MULTIPLIER = 0.3;
+        
+        // Initialize canvas dimensions
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        
+        // Star constructor
+        class Star {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.z = Math.random() * 1000; // Depth (parallax)
+                this.size = Math.random() * 2;
+                this.speed = (1000 - this.z) * 0.0005;
+            }
+            
+            update(scrollDelta) {
+                // Scroll-driven movement
+                this.y += this.speed + (scrollDelta * SCROLL_SPEED_MULTIPLIER * (1000 - this.z) / 1000);
+                
+                // Wrap around screen
+                if (this.y > height) {
+                    this.y = 0;
+                    this.x = Math.random() * width;
+                }
+                if (this.y < 0) {
+                    this.y = height;
+                    this.x = Math.random() * width;
+                }
+            }
+            
+            draw() {
+                // Parallax opacity and size based on depth
+                const opacity = (1000 - this.z) / 1000;
+                const size = this.size * (1000 - this.z) / 1000;
+                
+                ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Add glow for closer stars
+                if (this.z < 300) {
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = 'rgba(157, 78, 221, 0.5)';
+                }
+            }
+        }
+        
+        // Initialize stars
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push(new Star());
+            }
+        }
+        
+        // Track scroll for starfield speed
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
+        });
+        
+        // Animation loop
+        function animate() {
+            // Clear canvas with fade effect (trailing)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+            
+            const scrollDelta = scrollY - lastScrollY;
+            lastScrollY = scrollY;
+            
+            // Update and draw stars
+            stars.forEach(star => {
+                star.update(scrollDelta);
+                star.draw();
+            });
+            
+            ctx.shadowBlur = 0; // Reset shadow
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Initialize
+        resizeCanvas();
+        initStars();
+        animate();
+        
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                resizeCanvas();
+                initStars();
+            }, 200);
+        });
+        
+        /*==============================================
+          CUSTOM CURSOR
+        ===============================================*/
+        const cursor = document.querySelector('.custom-cursor');
+        let cursorX = 0, cursorY = 0;
+        let currentX = 0, currentY = 0;
+        const CURSOR_SMOOTHING = 0.15;
+        
+        // Track mouse position
+        document.addEventListener('mousemove', (e) => {
+            cursorX = e.clientX;
+            cursorY = e.clientY;
+        });
+        
+        // Smooth cursor animation
+        function animateCursor() {
+            currentX += (cursorX - currentX) * CURSOR_SMOOTHING;
+            currentY += (cursorY - currentY) * CURSOR_SMOOTHING;
+            
+            cursor.style.left = currentX + 'px';
+            cursor.style.top = currentY + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        
+        // Hover effect on interactive elements
+        const interactiveElements = document.querySelectorAll('a, .cosmic-card');
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+        
+        /*==============================================
+          3D TILT EFFECT ON COSMIC CARDS
+        ===============================================*/
+        const tiltCards = document.querySelectorAll('[data-tilt]');
+        
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * 5; // Max 5deg tilt
+                const rotateY = ((centerX - x) / centerX) * 5;
+                
+                card.style.transform = `translateY(-10px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) rotateX(0deg) rotateY(0deg)';
+            });
+        });
+        
+        /*==============================================
+          WARP SPEED SECTION TRANSITIONS
+        ===============================================*/
+        const warpOverlay = document.querySelector('.warp-overlay');
+        const ctaButton = document.querySelector('.cta-button');
+        
+        ctaButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Trigger warp effect
+            warpOverlay.classList.add('active');
+            
+            // Accelerate starfield during warp
+            const warpSpeed = 20;
+            stars.forEach(star => {
+                star.speed *= warpSpeed;
+            });
+            
+            // Navigate after warp animation
+            setTimeout(() => {
+                document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+                
+                // Reset overlay
+                setTimeout(() => {
+                    warpOverlay.classList.remove('active');
+                    
+                    // Reset starfield speed
+                    stars.forEach(star => {
+                        star.speed /= warpSpeed;
+                    });
+                }, 800);
+            }, 400);
+        });
+        
+        /*==============================================
+          PERFORMANCE MONITORING (Dev Mode)
+        ===============================================*/
+        let frameCount = 0;
+        let lastTime = performance.now();
+        let fps = 60;
+        
+        function monitorFPS() {
+            frameCount++;
+            const currentTime = performance.now();
+            
+            if (currentTime >= lastTime + 1000) {
+                fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                frameCount = 0;
+                lastTime = currentTime;
+                
+                // Log FPS to console (optional)
+                // console.log('FPS:', fps);
+            }
+            
+            requestAnimationFrame(monitorFPS);
+        }
+        monitorFPS();
+        
+        /*==============================================
+          ACCESSIBILITY: Keyboard Navigation
+        ===============================================*/
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                document.body.style.cursor = 'auto';
+                cursor.style.display = 'none';
+            }
+        });
+        
+        document.addEventListener('click', () => {
+            if (window.innerWidth > 768) {
+                document.body.style.cursor = 'none';
+                cursor.style.display = 'block';
+            }
+        });
+    </script>
+    
+<script src="../template-injector.js"></script>
+</body>
+</html>

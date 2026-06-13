@@ -1,0 +1,788 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cine-Rain & Urban Melancholy - Immersive noir landing page with realistic rain effects and wet-surface UI">
+  <title>Cine-Rain & Urban Melancholy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS VARIABLES - DESIGN SYSTEM
+       ============================================ */
+    :root {
+      /* Cine-Rain Palette */
+      --charcoal: #1A1D23;
+      --deep-navy: #0F1419;
+      --slate: #2D3238;
+      --neon-amber: #FFB627;
+      --electric-amber: #FFA000;
+      --mist-gray: #6B7280;
+      --fog-white: #E5E7EB;
+      --glass-overlay: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --shadow-deep: rgba(0, 0, 0, 0.7);
+      
+      /* Typography */
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Inter', sans-serif;
+      
+      /* Spacing */
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 1rem;
+      --spacing-md: 2rem;
+      --spacing-lg: 4rem;
+      --spacing-xl: 6rem;
+      
+      /* Animation */
+      --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+      --duration-fast: 0.2s;
+      --duration-medium: 0.4s;
+      --duration-slow: 0.8s;
+    }
+    
+    /* ============================================
+       RESET & BASE STYLES
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--fog-white);
+      background: var(--deep-navy);
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    /* ============================================
+       RAIN ANIMATION LAYER
+       ============================================ */
+    .rain-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+    
+    .rain-layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+    }
+    
+    /* Canvas for rain particles */
+    #rainCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    
+    /* ============================================
+       WINDOW DROPLET OVERLAY
+       ============================================ */
+    .droplet-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 2;
+      background-image: 
+        radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 60%, rgba(255, 255, 255, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 40% 80%, rgba(255, 255, 255, 0.07) 0%, transparent 45%);
+      filter: blur(1px);
+      animation: dropletShimmer 8s ease-in-out infinite;
+    }
+    
+    @keyframes dropletShimmer {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.5; }
+    }
+    
+    /* ============================================
+       SVG LIQUID DISPLACEMENT FILTER
+       ============================================ */
+    .svg-filters {
+      position: absolute;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+    
+    /* ============================================
+       MAIN CONTENT CONTAINER
+       ============================================ */
+    .content-wrapper {
+      position: relative;
+      z-index: 3;
+      min-height: 100vh;
+    }
+    
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: var(--spacing-md);
+      text-align: center;
+      position: relative;
+      background: linear-gradient(180deg, var(--deep-navy) 0%, var(--charcoal) 100%);
+    }
+    
+    .hero__title {
+      font-family: var(--font-mono);
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--fog-white);
+      margin-bottom: var(--spacing-md);
+      filter: url(#liquidDisplacement);
+      text-shadow: 0 4px 20px var(--shadow-deep);
+      animation: mistyClear 1.5s var(--transition-smooth) forwards;
+      opacity: 0;
+    }
+    
+    @keyframes mistyClear {
+      0% {
+        opacity: 0;
+        filter: blur(20px) url(#liquidDisplacement);
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0px) url(#liquidDisplacement);
+        transform: translateY(0);
+      }
+    }
+    
+    .hero__subtitle {
+      font-family: var(--font-sans);
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-weight: 400;
+      color: var(--mist-gray);
+      max-width: 600px;
+      margin: 0 auto var(--spacing-lg);
+      animation: fadeInUp 1.8s var(--transition-smooth) 0.3s forwards;
+      opacity: 0;
+    }
+    
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .hero__cta {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--deep-navy);
+      background: var(--neon-amber);
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all var(--duration-medium) var(--transition-smooth);
+      box-shadow: 
+        0 4px 20px rgba(255, 182, 39, 0.3),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.2);
+      animation: fadeInUp 2s var(--transition-smooth) 0.6s forwards;
+      opacity: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero__cta::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: var(--electric-amber);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s var(--transition-smooth), height 0.6s var(--transition-smooth);
+      z-index: -1;
+    }
+    
+    .hero__cta:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .hero__cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 8px 30px rgba(255, 182, 39, 0.5),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .hero__cta:active {
+      transform: translateY(0);
+    }
+    
+    /* ============================================
+       RIPPLE EFFECT (Click-triggered)
+       ============================================ */
+    .ripple {
+      position: fixed;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 182, 39, 0.4) 0%, transparent 70%);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      animation: rippleExpand 1s var(--transition-smooth) forwards;
+      z-index: 999;
+    }
+    
+    @keyframes rippleExpand {
+      0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+      }
+      100% {
+        width: 400px;
+        height: 400px;
+        opacity: 0;
+      }
+    }
+    
+    /* ============================================
+       FEATURES SECTION (Wet Surface Cards)
+       ============================================ */
+    .features {
+      padding: var(--spacing-xl) var(--spacing-md);
+      background: var(--charcoal);
+      position: relative;
+    }
+    
+    .features__title {
+      font-family: var(--font-mono);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      text-align: center;
+      color: var(--fog-white);
+      margin-bottom: var(--spacing-lg);
+      opacity: 0;
+      transition: opacity 0.8s var(--transition-smooth), transform 0.8s var(--transition-smooth);
+    }
+    
+    .features__title.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-md);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .feature-card {
+      background: linear-gradient(145deg, var(--slate), var(--charcoal));
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: var(--spacing-md);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all var(--duration-medium) var(--transition-smooth);
+      opacity: 0;
+      transform: translateY(40px);
+      
+      /* Wet Surface Effect */
+      box-shadow: 
+        0 4px 16px var(--shadow-deep),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+    }
+    
+    .feature-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* High-gloss reflection effect */
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+      transition: left 0.6s var(--transition-smooth);
+    }
+    
+    .feature-card:hover::before {
+      left: 100%;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 
+        0 12px 32px var(--shadow-deep),
+        0 0 0 1px var(--neon-amber),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+    
+    .feature-card__icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--neon-amber);
+      text-shadow: 0 2px 12px rgba(255, 182, 39, 0.5);
+    }
+    
+    .feature-card__title {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--fog-white);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .feature-card__description {
+      font-size: 1rem;
+      color: var(--mist-gray);
+      line-height: 1.6;
+    }
+    
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      padding: var(--spacing-lg) var(--spacing-md);
+      background: var(--deep-navy);
+      text-align: center;
+      border-top: 1px solid var(--glass-border);
+    }
+    
+    .footer__text {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--mist-gray);
+    }
+    
+    .footer__link {
+      color: var(--neon-amber);
+      text-decoration: none;
+      transition: color var(--duration-fast) var(--transition-smooth);
+    }
+    
+    .footer__link:hover {
+      color: var(--electric-amber);
+      text-decoration: underline;
+    }
+    
+    /* ============================================
+       ACCESSIBILITY - REDUCED MOTION
+       ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      
+      .hero__title {
+        animation: none;
+        opacity: 1;
+        filter: url(#liquidDisplacement);
+      }
+      
+      .hero__subtitle,
+      .hero__cta {
+        animation: none;
+        opacity: 1;
+      }
+    }
+    
+    /* ============================================
+       RESPONSIVE BREAKPOINTS
+       ============================================ */
+    @media (max-width: 768px) {
+      .hero {
+        padding: var(--spacing-sm);
+      }
+      
+      .features {
+        padding: var(--spacing-lg) var(--spacing-sm);
+      }
+      
+      .features__grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .hero__cta {
+        padding: 0.875rem 2rem;
+        font-size: 0.9rem;
+      }
+    }
+    
+    /* ============================================
+       CUSTOM SCROLLBAR (Wet Look)
+       ============================================ */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--deep-navy);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--slate);
+      border-radius: 6px;
+      border: 2px solid var(--deep-navy);
+      box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.1);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--neon-amber);
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG FILTERS -->
+  <svg class="svg-filters" aria-hidden="true">
+    <defs>
+      <!-- Liquid Displacement Filter -->
+      <filter id="liquidDisplacement" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence 
+          type="fractalNoise" 
+          baseFrequency="0.008" 
+          numOctaves="3" 
+          result="turbulence"
+          seed="2">
+          <animate 
+            attributeName="baseFrequency" 
+            from="0.008" 
+            to="0.012" 
+            dur="15s" 
+            repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap 
+          in="SourceGraphic" 
+          in2="turbulence" 
+          scale="5" 
+          xChannelSelector="R" 
+          yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+  
+  <!-- RAIN ANIMATION LAYER -->
+  <div class="rain-container" aria-hidden="true">
+    <canvas id="rainCanvas"></canvas>
+  </div>
+  
+  <!-- WINDOW DROPLET OVERLAY -->
+  <div class="droplet-overlay" aria-hidden="true"></div>
+  
+  <!-- MAIN CONTENT -->
+  <div class="content-wrapper">
+    <!-- HERO SECTION -->
+    <header class="hero" role="banner">
+      <h1 class="hero__title">Cine-Rain & Urban Melancholy</h1>
+      <p class="hero__subtitle">
+        An immersive noir experience where rain meets code. 
+        Every click, a ripple. Every scroll, a story.
+      </p>
+      <a href="#features" class="hero__cta" aria-label="Explore features">Enter the Rain</a>
+    </header>
+    
+    <!-- FEATURES SECTION -->
+    <section id="features" class="features">
+      <h2 class="features__title" data-reveal>Wet Surface Interface</h2>
+      
+      <div class="features__grid">
+        <article class="feature-card" data-reveal>
+          <div class="feature-card__icon" aria-hidden="true">ðŸŒ§ï¸</div>
+          <h3 class="feature-card__title">Realistic Rain</h3>
+          <p class="feature-card__description">
+            Canvas-powered particle system with 150+ raindrops, 
+            optimized for 60fps performance across all devices.
+          </p>
+        </article>
+        
+        <article class="feature-card" data-reveal>
+          <div class="feature-card__icon" aria-hidden="true">ðŸ’§</div>
+          <h3 class="feature-card__title">Window Droplets</h3>
+          <p class="feature-card__description">
+            Layered CSS gradients simulate water droplets on glass, 
+            creating depth and atmospheric immersion.
+          </p>
+        </article>
+        
+        <article class="feature-card" data-reveal>
+          <div class="feature-card__icon" aria-hidden="true">âœ¨</div>
+          <h3 class="feature-card__title">Liquid Displacement</h3>
+          <p class="feature-card__description">
+            SVG turbulence filters create ripple effects on typography, 
+            mimicking the distortion of rain on glass.
+          </p>
+        </article>
+        
+        <article class="feature-card" data-reveal>
+          <div class="feature-card__icon" aria-hidden="true">ðŸŽ¯</div>
+          <h3 class="feature-card__title">Interactive Ripples</h3>
+          <p class="feature-card__description">
+            Click anywhere to trigger radial ripples with gradient falloff, 
+            engineered with requestAnimationFrame.
+          </p>
+        </article>
+        
+        <article class="feature-card" data-reveal>
+          <div class="feature-card__icon" aria-hidden="true">ðŸ–¥ï¸</div>
+          <h3 class="feature-card__title">High-Gloss UI</h3>
+          <p class="feature-card__description">
+            Wet-surface cards with inner shadows, reflection gradients, 
+            and neon-amber accents for tech noir aesthetics.
+          </p>
+        </article>
+        
+        <article class="feature-card" data-reveal>
+          <div class="feature-card__icon" aria-hidden="true">â™¿</div>
+          <h3 class="feature-card__title">Accessible Design</h3>
+          <p class="feature-card__description">
+            WCAG 2.1 AA compliant with semantic HTML5, keyboard navigation, 
+            and reduced-motion support for all users.
+          </p>
+        </article>
+      </div>
+    </section>
+    
+    <!-- FOOTER -->
+    <footer class="footer" role="contentinfo">
+      <p class="footer__text">
+        Engineered with â˜” by <a href="#" class="footer__link">Senior Technical Architect</a> &copy; 2026
+      </p>
+    </footer>
+  </div>
+  
+  <!-- JAVASCRIPT -->
+  <script>
+    // ============================================
+    // RAIN PARTICLE SYSTEM
+    // ============================================
+    class RainSystem {
+      constructor(canvas, particleCount = 150) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.particleCount = particleCount;
+        this.animationId = null;
+        
+        this.resize();
+        this.init();
+        this.animate();
+        
+        // Debounced resize handler
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => this.resize(), 200);
+        });
+      }
+      
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      }
+      
+      init() {
+        this.particles = [];
+        for (let i = 0; i < this.particleCount; i++) {
+          this.particles.push(this.createParticle());
+        }
+      }
+      
+      createParticle() {
+        return {
+          x: Math.random() * this.canvas.width,
+          y: Math.random() * this.canvas.height,
+          length: Math.random() * 20 + 10,
+          speed: Math.random() * 3 + 5,
+          opacity: Math.random() * 0.3 + 0.2
+        };
+      }
+      
+      update() {
+        this.particles.forEach(particle => {
+          particle.y += particle.speed;
+          
+          // Reset particle when it goes off-screen
+          if (particle.y > this.canvas.height) {
+            particle.y = -particle.length;
+            particle.x = Math.random() * this.canvas.width;
+          }
+        });
+      }
+      
+      draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.particles.forEach(particle => {
+          this.ctx.beginPath();
+          this.ctx.strokeStyle = `rgba(200, 220, 255, ${particle.opacity})`;
+          this.ctx.lineWidth = 1;
+          this.ctx.moveTo(particle.x, particle.y);
+          this.ctx.lineTo(particle.x, particle.y + particle.length);
+          this.ctx.stroke();
+        });
+      }
+      
+      animate() {
+        this.update();
+        this.draw();
+        this.animationId = requestAnimationFrame(() => this.animate());
+      }
+      
+      destroy() {
+        if (this.animationId) {
+          cancelAnimationFrame(this.animationId);
+        }
+      }
+    }
+    
+    // Initialize rain system
+    const rainCanvas = document.getElementById('rainCanvas');
+    const rainSystem = new RainSystem(rainCanvas, window.innerWidth > 768 ? 150 : 80);
+    
+    // ============================================
+    // RIPPLE EFFECT ON CLICK
+    // ============================================
+    function createRipple(x, y) {
+      const ripple = document.createElement('div');
+      ripple.classList.add('ripple');
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      document.body.appendChild(ripple);
+      
+      // Remove after animation completes
+      setTimeout(() => {
+        ripple.remove();
+      }, 1000);
+    }
+    
+    document.addEventListener('click', (e) => {
+      createRipple(e.clientX, e.clientY);
+    });
+    
+    // ============================================
+    // INTERSECTION OBSERVER - REVEAL ANIMATIONS
+    // ============================================
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          // Stagger animation delays for cards
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, index * 100);
+          
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    // Observe all elements with data-reveal attribute
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      revealObserver.observe(el);
+    });
+    
+    // ============================================
+    // SMOOTH SCROLL FOR ANCHOR LINKS
+    // ============================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+    
+    // ============================================
+    // ACCESSIBILITY - KEYBOARD FOCUS INDICATORS
+    // ============================================
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        document.body.classList.add('keyboard-nav');
+      }
+    });
+    
+    document.addEventListener('mousedown', () => {
+      document.body.classList.remove('keyboard-nav');
+    });
+    
+    // ============================================
+    // PERFORMANCE MONITORING (DEV)
+    // ============================================
+    if (window.performance && window.performance.getEntriesByType) {
+      window.addEventListener('load', () => {
+        const perfData = window.performance.getEntriesByType('navigation')[0];
+        console.log('ðŸŽ¨ Cine-Rain Performance Metrics:');
+        console.log(`DOM Content Loaded: ${perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart}ms`);
+        console.log(`Page Load: ${perfData.loadEventEnd - perfData.loadEventStart}ms`);
+      });
+    }
+    
+    // ============================================
+    // CLEANUP ON PAGE UNLOAD
+    // ============================================
+    window.addEventListener('beforeunload', () => {
+      rainSystem.destroy();
+    });
+  </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

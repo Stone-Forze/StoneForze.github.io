@@ -1,0 +1,243 @@
+﻿ <!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER // Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text: #f8fafc;
+            --accent: #38bdf8;
+            --sidebar-width: 80px;
+            --sidebar-expand: 240px;
+        }
+
+        [data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --glass: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --text: #0f172a;
+            --accent: #0ea5e9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
+        }
+
+        /* --- Sidebar --- */
+        nav {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        nav:hover { width: var(--sidebar-expand); }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 28px;
+            text-decoration: none;
+            color: var(--text);
+            gap: 20px;
+            white-space: nowrap;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover { background: var(--glass-border); color: var(--accent); }
+        .nav-icon { min-width: 24px; font-size: 1.2rem; }
+
+        /* --- Main Content --- */
+        main {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 40px 5%;
+            transition: margin 0.4s ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* --- Glass Cards --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            animation: slideUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .stat-value { font-size: 2rem; font-weight: 700; margin: 10px 0; }
+        .stat-label { font-size: 0.8rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- SVG Animated Chart --- */
+        .chart-container {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            padding-top: 20px;
+        }
+
+        .bar {
+            flex: 1;
+            background: var(--accent);
+            border-radius: 8px 8px 0 0;
+            height: 0;
+            transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0.8;
+        }
+
+        /* --- Theme Toggle --- */
+        .theme-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 12px;
+            color: var(--text);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        @media (max-width: 768px) {
+            nav { width: 0; }
+            nav:hover { width: var(--sidebar-expand); }
+            main { margin-left: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="sidebar">
+        <a href="#" class="nav-item"><span class="nav-icon">ðŸ“Š</span><span>Dashboard</span></a>
+        <a href="#" class="nav-item"><span class="nav-icon">ðŸ“ˆ</span><span>Analytics</span></a>
+        <a href="#" class="nav-item"><span class="nav-icon">ðŸ‘¤</span><span>Customers</span></a>
+        <a href="#" class="nav-item"><span class="nav-icon">âš™ï¸</span><span>Settings</span></a>
+    </nav>
+
+    <main>
+        <div class="header">
+            <div>
+                <h1>Aether Dashboard</h1>
+                <p style="opacity: 0.6;">Welcome back, Admin</p>
+            </div>
+            <button class="theme-btn" id="theme-toggle">ðŸŒ“ Switch Theme</button>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card" style="animation-delay: 0.1s;">
+                <p class="stat-label">Total Revenue</p>
+                <h2 class="stat-value">$42,920</h2>
+                <p style="color: #22c55e; font-size: 0.8rem;">â–² 12.5% from last month</p>
+            </div>
+            <div class="card" style="animation-delay: 0.2s;">
+                <p class="stat-label">Active Users</p>
+                <h2 class="stat-value">1,284</h2>
+                <p style="color: #22c55e; font-size: 0.8rem;">â–² 3.2% from yesterday</p>
+            </div>
+            <div class="card" style="animation-delay: 0.3s;">
+                <p class="stat-label">Conversion Rate</p>
+                <h2 class="stat-value">4.8%</h2>
+                <p style="color: #ef4444; font-size: 0.8rem;">â–¼ 0.4% from average</p>
+            </div>
+        </div>
+
+        <div class="card" style="animation-delay: 0.4s; grid-column: span 3;">
+            <p class="stat-label">Weekly Activity</p>
+            <div class="chart-container" id="activity-chart">
+                <div class="bar" data-val="60%"></div>
+                <div class="bar" data-val="85%"></div>
+                <div class="bar" data-val="40%"></div>
+                <div class="bar" data-val="95%"></div>
+                <div class="bar" data-val="70%"></div>
+                <div class="bar" data-val="55%"></div>
+                <div class="bar" data-val="80%"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- Theme Toggle ---
+        const themeBtn = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+        });
+
+        // --- Chart Animation ---
+        function animateChart() {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach((bar, index) => {
+                setTimeout(() => {
+                    bar.style.height = bar.getAttribute('data-val');
+                }, index * 100);
+            });
+        }
+
+        // Run animation when page loads
+        window.onload = animateChart;
+
+        // --- Glass Parallax Effect ---
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.card');
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            
+            cards.forEach(card => {
+                card.style.transform = `translateX(${x}px) translateY(${y}px)`;
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

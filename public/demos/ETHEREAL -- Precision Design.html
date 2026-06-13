@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETHEREAL // Precision Design</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0a0a0a;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --accent: #ffffff;
+            --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+            --tracking: 0.1em;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: -apple-system, "SF Pro Display", "Inter", sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #222; }
+
+        /* --- Layout Structures --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 40px 0;
+            z-index: 1000;
+            background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            letter-spacing: var(--tracking);
+            text-transform: uppercase;
+            max-width: 600px;
+            opacity: 0;
+        }
+
+        /* --- The Precision Grid --- */
+        .luxury-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+            padding: 150px 0;
+        }
+
+        .card {
+            grid-column: span 6;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 80px 60px;
+            position: relative;
+            overflow: hidden;
+            transition: border 0.6s var(--ease-luxury);
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .card-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        /* --- Soft Reveal Animation --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s var(--ease-luxury);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Interactive Light Glow --- */
+        #light-cursor {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            will-change: transform;
+        }
+
+        footer {
+            padding: 100px 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            .card { grid-column: span 12; padding: 40px; }
+            .hero h1 { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="light-cursor"></div>
+
+    <header>
+        <div class="container nav-inner">
+            <div class="logo">ETHEREAL_</div>
+            <div style="font-size: 0.7rem; letter-spacing: 0.2em; opacity: 0.5;">EST. 2026</div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero container">
+            <h1 id="hero-title">Quiet Excellence.</h1>
+            <p id="hero-sub">The convergence of art and precision engineering.</p>
+        </section>
+
+        <section class="container">
+            <div class="luxury-grid">
+                <div class="card reveal">
+                    <span class="card-label">Philosophy</span>
+                    <h3>The beauty of less.</h3>
+                    <p style="color: var(--text-dim);">Removing the noise to reveal the essence of the core experience.</p>
+                </div>
+                <div class="card reveal" style="transition-delay: 0.2s;">
+                    <span class="card-label">Precision</span>
+                    <h3>Dampened Motion.</h3>
+                    <p style="color: var(--text-dim);">Every transition is tuned to 1.618s for natural, rhythmic flow.</p>
+                </div>
+                <div class="card reveal" style="grid-column: span 12; text-align: center; padding: 120px 0;">
+                    <span class="card-label">Archive</span>
+                    <h3 style="font-size: 2.5rem;">Curated Collections</h3>
+                    <div style="width: 1px; height: 80px; background: var(--border); margin: 40px auto;"></div>
+                    <p style="color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.3em; font-size: 0.7rem;">Explore the Works</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        Â© 2026 ETHEREAL DESIGN GROUP. ALL RIGHTS RESERVED.
+    </footer>
+
+    <script>
+        // --- Intro Sequence ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const h1 = document.getElementById('hero-title');
+            const p = document.getElementById('hero-sub');
+            
+            setTimeout(() => {
+                h1.style.opacity = '1';
+                h1.style.transform = 'translateY(0)';
+            }, 500);
+
+            setTimeout(() => {
+                p.style.opacity = '1';
+            }, 1200);
+        });
+
+        // --- Light Follower ---
+        const cursor = document.getElementById('light-cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // --- Scroll Reveal Logic ---
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -100px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Dampened Scroll (Subtle Parallax) ---
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.getElementById('hero-title');
+            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            hero.style.opacity = 1 - (scrolled / 600);
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

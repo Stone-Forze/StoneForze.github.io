@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NATIVE_FLUX // App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #121212;
+            --text: #ffffff;
+            --accent: #007AFF; /* iOS Blue */
+            --nav-height: 70px;
+            --safe-area-bottom: env(safe-area-inset-bottom);
+        }
+
+        [data-theme="light"] {
+            --bg: #F2F2F7;
+            --surface: #ffffff;
+            --text: #000000;
+            --accent: #007AFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow: hidden; /* Prevent body scroll */
+            height: 100vh;
+        }
+
+        /* --- App Header --- */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background: var(--surface);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* --- Page Viewport (The Swiper) --- */
+        #app-viewport {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: none; /* Hide scrollbar */
+        }
+
+        #app-viewport::-webkit-scrollbar { display: none; }
+
+        .page {
+            flex: 0 0 100vw;
+            height: 100%;
+            scroll-snap-align: start;
+            padding: 80px 20px calc(var(--nav-height) + 20px);
+            overflow-y: auto;
+        }
+
+        /* --- Bottom Navigation --- */
+        nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: calc(var(--nav-height) + var(--safe-area-bottom));
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: var(--safe-area-bottom);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text);
+            opacity: 0.4;
+            text-decoration: none;
+            font-size: 0.7rem;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        .nav-icon {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+
+        /* --- Components --- */
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .theme-toggle {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* --- Animations --- */
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div style="font-weight: 700;">FLUX_</div>
+        <button class="theme-toggle" id="theme-btn">Light Mode</button>
+    </header>
+
+    <div id="app-viewport">
+        <section class="page" id="page-home">
+            <h1 style="margin-bottom: 20px;">Discovery</h1>
+            <div class="card fade-in">
+                <h3>System Status</h3>
+                <p style="opacity: 0.6; font-size: 0.9rem;">All nodes operating at peak efficiency.</p>
+            </div>
+            <div class="card fade-in" style="animation-delay: 0.1s;">
+                <h3>Recent Activity</h3>
+                <p style="opacity: 0.6; font-size: 0.9rem;">Neural link established 2m ago.</p>
+            </div>
+        </section>
+
+        <section class="page" id="page-charts">
+            <h1 style="margin-bottom: 20px;">Analytics</h1>
+            <div class="card">
+                <div style="height: 150px; background: linear-gradient(to top, var(--accent), transparent); opacity: 0.3; border-radius: 8px;"></div>
+                <p style="margin-top: 10px;">Weekly Performance</p>
+            </div>
+        </section>
+
+        <section class="page" id="page-profile">
+            <h1 style="margin-bottom: 20px;">Settings</h1>
+            <div class="card">
+                <p>Push Notifications</p>
+                <div style="margin-top: 10px; height: 2px; background: var(--accent); width: 40%;"></div>
+            </div>
+        </section>
+    </div>
+
+    <nav>
+        <div class="nav-item active" onclick="scrollToPage(0)">
+            <span class="nav-icon">ðŸ </span>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="scrollToPage(1)">
+            <span class="nav-icon">ðŸ“Š</span>
+            <span>Stats</span>
+        </div>
+        <div class="nav-item" onclick="scrollToPage(2)">
+            <span class="nav-icon">ðŸ‘¤</span>
+            <span>Profile</span>
+        </div>
+    </nav>
+
+    <script>
+        const viewport = document.getElementById('app-viewport');
+        const navItems = document.querySelectorAll('.nav-item');
+        const themeBtn = document.getElementById('theme-btn');
+
+        // --- Navigation Logic ---
+        function scrollToPage(index) {
+            const width = window.innerWidth;
+            viewport.scrollTo({
+                left: width * index,
+                behavior: 'smooth'
+            });
+        }
+
+        // Update nav active state on scroll
+        viewport.addEventListener('scroll', () => {
+            const index = Math.round(viewport.scrollLeft / window.innerWidth);
+            navItems.forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+        });
+
+        // --- Theme Toggle ---
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            themeBtn.innerText = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+        });
+
+        // --- PWA-style Gesture Prevention ---
+        // Prevent bounce scroll on iOS
+        document.addEventListener('touchmove', (e) => {
+            if (e.scale !== 1) e.preventDefault();
+        }, { passive: false });
+
+        // --- Simulated Offline Cache ---
+        if ('serviceWorker' in navigator) {
+            console.log("Offline readiness initialized.");
+            // In a real PWA, you would register a sw.js here
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

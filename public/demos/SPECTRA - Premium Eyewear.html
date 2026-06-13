@@ -1,0 +1,454 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPECTRA - Premium Eyewear</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- CSS VARIABLES (THEMING) --- */
+        :root {
+            /* Light Mode Default */
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-main: #1a1a1a;
+            --text-sec: #666666;
+            --accent: #ff4757;
+            --border: #e0e0e0;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode Overrides */
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-sec: #a0a0a0;
+            --accent: #ff6b81;
+            --border: #333333;
+            --shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        /* --- HEADER & NAV --- */
+        header {
+            background-color: var(--card-bg);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 8px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #1e90ff, #ff4757);
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 { font-size: 3rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.2rem; opacity: 0.9; }
+
+        /* --- CATEGORY TABS --- */
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+
+        .cat-btn {
+            padding: 10px 25px;
+            border: none;
+            background: var(--card-bg);
+            color: var(--text-main);
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .cat-btn.active, .cat-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* --- PRODUCT GRID --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+
+        .product-img-box {
+            height: 200px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-img {
+            max-width: 80%;
+            transition: transform 0.3s;
+            /* Placeholder for image styling if real images were used */
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--accent);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .product-details {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-category {
+            color: var(--text-sec);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .add-btn {
+            background: var(--text-main);
+            color: var(--bg-color);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .add-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--card-bg);
+            padding: 40px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            margin-top: 50px;
+        }
+
+        /* Responsive Fix */
+        @media(max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">SPECTRA<span>.</span></div>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="themeBtn" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Vision Redefined</h1>
+        <p>Premium eyewear for every style and activity.</p>
+    </section>
+
+    <div class="container">
+        <div class="categories">
+            <button class="cat-btn active" onclick="filterProducts('all')">All</button>
+            <button class="cat-btn" onclick="filterProducts('sun')">Sunglasses</button>
+            <button class="cat-btn" onclick="filterProducts('computer')">Computer</button>
+            <button class="cat-btn" onclick="filterProducts('sports')">Sports</button>
+            <button class="cat-btn" onclick="filterProducts('ski')">Ski Goggles</button>
+        </div>
+
+        <div class="grid" id="productGrid">
+            </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Spectra Eyewear. Styled for the modern eye.</p>
+    </footer>
+
+    <script>
+        // --- PRODUCT DATA ---
+        const products = [
+            {
+                id: 1,
+                name: "Aviator Classic",
+                category: "sun",
+                price: 129,
+                badge: "Best Seller",
+                image: "https://cdn-icons-png.flaticon.com/512/88/88994.png" 
+            },
+            {
+                id: 2,
+                name: "BlueBlock Pro",
+                category: "computer",
+                price: 89,
+                badge: "New",
+                image: "https://cdn-icons-png.flaticon.com/512/2806/2806161.png"
+            },
+            {
+                id: 3,
+                name: "Velocity Racer",
+                category: "sports",
+                price: 150,
+                badge: "Sale",
+                image: "https://cdn-icons-png.flaticon.com/512/2301/2301145.png"
+            },
+            {
+                id: 4,
+                name: "Alpine Snow",
+                category: "ski",
+                price: 210,
+                badge: "Premium",
+                image: "https://cdn-icons-png.flaticon.com/512/2555/2555547.png"
+            },
+            {
+                id: 5,
+                name: "Retro Round",
+                category: "sun",
+                price: 110,
+                badge: null,
+                image: "https://cdn-icons-png.flaticon.com/512/4359/4359784.png"
+            },
+            {
+                id: 6,
+                name: "Gamer Vision X",
+                category: "computer",
+                price: 95,
+                badge: "Trending",
+                image: "https://cdn-icons-png.flaticon.com/512/861/861066.png"
+            },
+            {
+                id: 7,
+                name: "Trail Blazer",
+                category: "sports",
+                price: 135,
+                badge: null,
+                image: "https://cdn-icons-png.flaticon.com/512/3063/3063073.png"
+            },
+            {
+                id: 8,
+                name: "Polarized Wayfarer",
+                category: "sun",
+                price: 145,
+                badge: "Hot",
+                image: "https://cdn-icons-png.flaticon.com/512/3229/3229958.png"
+            }
+        ];
+
+        // --- DARK MODE TOGGLE ---
+        const themeBtn = document.getElementById('themeBtn');
+        const icon = themeBtn.querySelector('i');
+        
+        // Check local storage for preference
+        if(localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            let currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+
+        // --- RENDER PRODUCTS ---
+        const productGrid = document.getElementById('productGrid');
+        const btns = document.querySelectorAll('.cat-btn');
+
+        function renderProducts(filter = 'all') {
+            productGrid.innerHTML = '';
+            
+            const filtered = products.filter(p => filter === 'all' || p.category === filter);
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-img-box">
+                        ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
+                        <img src="${p.image}" alt="${p.name}" class="product-img" width="120">
+                    </div>
+                    <div class="product-details">
+                        <span class="product-category">${p.category}</span>
+                        <h3 class="product-title">${p.name}</h3>
+                        <div class="price-row">
+                            <span class="price">$${p.price}</span>
+                            <button class="add-btn" onclick="addToCart()">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                // Add staggered animation
+                card.style.animation = 'fadeIn 0.5s ease-in-out';
+                productGrid.appendChild(card);
+            });
+        }
+
+        // --- FILTER FUNCTION ---
+        function filterProducts(category) {
+            // Update Active Button State
+            btns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Re-render
+            renderProducts(category);
+        }
+
+        // --- CART LOGIC (Visual Only) ---
+        let cartCount = 0;
+        const cartBadge = document.querySelector('.cart-count');
+
+        function addToCart() {
+            cartCount++;
+            cartBadge.innerText = cartCount;
+            
+            // Simple bounce animation on cart icon
+            const cartIcon = document.querySelector('.cart-icon');
+            cartIcon.style.transform = 'scale(1.2)';
+            setTimeout(() => cartIcon.style.transform = 'scale(1)', 200);
+        }
+
+        // Initial Render
+        renderProducts();
+
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

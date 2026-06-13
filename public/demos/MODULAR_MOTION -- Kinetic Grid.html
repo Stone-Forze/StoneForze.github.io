@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MODULAR_MOTION // Kinetic Grid</title>
+    <style>
+        :root {
+            --bg: #0a0a0b;
+            --card-bg: #161618;
+            --text: #ffffff;
+            --accent: #6366f1;
+            --transition: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f4f5;
+            --card-bg: #ffffff;
+            --text: #18181b;
+            --accent: #4f46e5;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background 0.5s var(--transition);
+            overflow-x: hidden;
+            padding: 40px 5%;
+        }
+
+        /* --- Header & Controls --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+
+        .controls { display: flex; gap: 15px; }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        button:hover { background: var(--accent); color: white; }
+
+        /* --- Modular Grid --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            perspective: 1000px;
+        }
+
+        /* --- Base Card Styling --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            transition: transform 0.6s var(--transition), 
+                        box-shadow 0.6s var(--transition), 
+                        background 0.3s;
+            cursor: pointer;
+        }
+
+        /* --- Motion Identity: The "Float" --- */
+        .motion-float:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.3);
+        }
+
+        /* --- Motion Identity: The "Expand" --- */
+        .motion-expand:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        /* --- Motion Identity: The "Tilt" (Driven by JS) --- */
+        .motion-tilt { transform-style: preserve-3d; }
+        
+        /* --- Motion Identity: The "Glitch" --- */
+        .motion-glitch:hover {
+            animation: glitch 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+
+        .card h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        .card p { opacity: 0.6; line-height: 1.5; }
+        .card-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* --- Scroll Reveal --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 0.8s var(--transition);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>MODULAR_GRID</h1>
+            <p style="opacity: 0.5">Unique motion identities per component.</p>
+        </div>
+        <div class="controls">
+            <button id="theme-toggle">SWITCH_THEME</button>
+            <button id="shuffle-grid">SHUFFLE_LAYOUT</button>
+        </div>
+    </header>
+
+    <main class="grid" id="main-grid">
+        <div class="card motion-float reveal">
+            <div>
+                <span class="card-tag">Identity: Float</span>
+                <h3>Kinetic Lift</h3>
+                <p>Responds with vertical displacement and slight X-axis rotation to simulate buoyancy.</p>
+            </div>
+        </div>
+
+        <div class="card motion-tilt reveal" id="tilt-card">
+            <div>
+                <span class="card-tag">Identity: Tilt</span>
+                <h3>Spatial Logic</h3>
+                <p>Uses real-time cursor tracking to calculate 3D orientation based on proximity.</p>
+            </div>
+        </div>
+
+        <div class="card motion-expand reveal">
+            <div>
+                <span class="card-tag">Identity: Expand</span>
+                <h3>Focus State</h3>
+                <p>Scales outward to claim visual hierarchy without disrupting grid alignment.</p>
+            </div>
+        </div>
+
+        <div class="card motion-glitch reveal">
+            <div>
+                <span class="card-tag">Identity: Glitch</span>
+                <h3>High Energy</h3>
+                <p>Rapid positional vibration mimicking digital interference on interaction.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- Theme Toggle ---
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.addEventListener('click', () => {
+            const html = document.documentElement;
+            const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+        });
+
+        // --- Shuffle Layout Logic ---
+        const shuffleBtn = document.getElementById('shuffle-grid');
+        const grid = document.getElementById('main-grid');
+        
+        shuffleBtn.addEventListener('click', () => {
+            const cards = Array.from(grid.children);
+            cards.sort(() => Math.random() - 0.5);
+            
+            // Smooth reflow animation
+            grid.style.opacity = '0';
+            setTimeout(() => {
+                cards.forEach(card => grid.appendChild(card));
+                grid.style.opacity = '1';
+            }, 300);
+        });
+
+        // --- Motion Identity: Tilt Calculation ---
+        const tiltCard = document.getElementById('tilt-card');
+        tiltCard.addEventListener('mousemove', (e) => {
+            const rect = tiltCard.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (centerY - y) / 10;
+            const rotateY = (x - centerX) / 10;
+            
+            tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        });
+
+        tiltCard.addEventListener('mouseleave', () => {
+            tiltCard.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+        });
+
+        // --- Intersection Observer for Scroll Reveal ---
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

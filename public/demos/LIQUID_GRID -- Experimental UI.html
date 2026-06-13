@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIQUID_GRID // Experimental UI</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --text: #ffffff;
+            --accent: #3b82f6;
+            --liquid-ease: cubic-bezier(0.7, 0, 0.3, 1);
+            --grad-1: #3b82f6;
+            --grad-2: #8b5cf6;
+        }
+
+        [data-theme="light"] {
+            --bg: #f5f5f7;
+            --surface: #ffffff;
+            --text: #1d1d1f;
+            --accent: #0071e3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.8s var(--liquid-ease);
+        }
+
+        /* --- Custom Scroll Snapping --- */
+        .snap-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        section {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5%;
+        }
+
+        /* --- UI Elements --- */
+        nav {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 2rem;
+            padding: 1rem 2rem;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .theme-toggle {
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* --- Hero Styling --- */
+        .hero-text {
+            font-size: clamp(3rem, 12vw, 8rem);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            text-align: center;
+            background: linear-gradient(135deg, var(--grad-1), var(--grad-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: drift 10s infinite alternate ease-in-out;
+        }
+
+        @keyframes drift {
+            from { filter: hue-rotate(0deg); transform: translateY(0); }
+            to { filter: hue-rotate(45deg); transform: translateY(-20px); }
+        }
+
+        /* --- The Liquid Grid --- */
+        .liquid-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 300px);
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .grid-item {
+            background: var(--surface);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+            transition: 
+                transform 0.6s var(--liquid-ease), 
+                border-radius 0.6s var(--liquid-ease),
+                box-shadow 0.6s var(--liquid-ease);
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+        }
+
+        /* The "Morph" Effect */
+        .grid-item:hover {
+            transform: scale(0.98) translateY(-5px);
+            border-radius: 60px 20px 60px 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .grid-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--x) var(--y), rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* --- Typography & Reveals --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 1s var(--liquid-ease);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        p { opacity: 0.6; font-size: 0.9rem; line-height: 1.4; }
+
+        @media (max-width: 768px) {
+            .liquid-grid { 
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            section { height: auto; min-height: 100vh; padding: 100px 5%; }
+            .hero-text { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div style="font-weight: 800; display: flex; align-items: center;">L_G</div>
+        <button class="theme-toggle" id="themeBtn">TOGGLE_MODE</button>
+    </nav>
+
+    <div class="snap-container">
+        <section id="hero">
+            <h1 class="hero-text">FLUID<br>DYNAMICS</h1>
+        </section>
+
+        <section id="grid">
+            <div class="liquid-grid">
+                <div class="grid-item reveal" style="grid-column: span 2;">
+                    <h3>01 / Elasticity</h3>
+                    <p>Interfaces that move like liquid, reacting to every micro-interaction with weighted physics.</p>
+                </div>
+                <div class="grid-item reveal">
+                    <h3>02 / Depth</h3>
+                    <p>Layered glassmorphism with dynamic light tracking.</p>
+                </div>
+                <div class="grid-item reveal">
+                    <h3>03 / Flow</h3>
+                    <p>Continuous scroll snapping for cinematic storytelling.</p>
+                </div>
+                <div class="grid-item reveal" style="grid-column: span 2;">
+                    <h3>04 / Adaptation</h3>
+                    <p>Mobile-first grid logic that morphs based on viewport constraints.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta">
+            <div class="reveal" style="text-align: center;">
+                <h2 style="font-size: 3rem; margin-bottom: 2rem;">Ready to liquefy?</h2>
+                <div style="width: 80px; height: 80px; background: var(--text); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 800; cursor: pointer;">GO</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- Magnetic Light Effect ---
+        const items = document.querySelectorAll('.grid-item');
+        items.forEach(item => {
+            item.addEventListener('mousemove', e => {
+                const rect = item.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                item.style.setProperty('--x', `${x}%`);
+                item.style.setProperty('--y', `${y}%`);
+            });
+        });
+
+        // --- Theme Toggle Logic ---
+        const themeBtn = document.getElementById('themeBtn');
+        const root = document.documentElement;
+
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', newTheme);
+            
+            // Subtle button bounce
+            themeBtn.animate([
+                { transform: 'scale(1)' },
+                { transform: 'scale(0.9)' },
+                { transform: 'scale(1)' }
+            ], { duration: 300 });
+        });
+
+        // --- Intersection Observer for Reveals ---
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    // Optional: remove class to re-trigger animation
+                    // entry.target.classList.remove('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Kinetic Scroll Effect ---
+        const container = document.querySelector('.snap-container');
+        let lastScroll = 0;
+
+        container.addEventListener('scroll', () => {
+            const currentScroll = container.scrollTop;
+            const diff = currentScroll - lastScroll;
+            const skew = diff * 0.1;
+            
+            // Only apply skew to text for performance
+            document.querySelectorAll('.hero-text').forEach(t => {
+                t.style.transform = `skewY(${Math.min(Math.max(skew, -5), 5)}deg)`;
+            });
+            
+            lastScroll = currentScroll;
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

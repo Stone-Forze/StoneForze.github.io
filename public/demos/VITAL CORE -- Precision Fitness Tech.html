@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vital Core - Intelligence-driven fitness for the modern athlete.">
+    <title>VITAL CORE // Precision Fitness Tech</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barchive&family=Inter:wght@300;400;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f9f9fb;
+            --primary: #d4ff00; /* Electric Lime */
+            --primary-dark: #b8de00;
+            --text: #0a0a0a;
+            --text-dim: #666666;
+            --border: #eeeeee;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #050505;
+            --surface: #0f0f0f;
+            --text: #ffffff;
+            --text-dim: #999999;
+            --border: #1a1a1a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            line-height: 1.5;
+            transition: background 0.4s var(--ease);
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- Navigation --- */
+        nav {
+            padding: 30px 0; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: rgba(var(--bg), 0.8); backdrop-filter: blur(12px); z-index: 1000;
+        }
+        .logo { font-weight: 900; font-size: 1.5rem; letter-spacing: -1.5px; font-style: italic; }
+
+        /* --- Hero --- */
+        .hero { padding: 120px 0 80px; position: relative; }
+        .hero h1 { 
+            font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.9; 
+            letter-spacing: -4px; text-transform: uppercase; margin-bottom: 30px;
+        }
+        .hero p { font-size: 1.25rem; color: var(--text-dim); max-width: 550px; margin-bottom: 40px; }
+
+        /* --- Stats Widget --- */
+        .stats-marquee {
+            display: flex; gap: 20px; overflow: hidden; padding: 20px 0;
+            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+        }
+        .stat-pill {
+            padding: 10px 25px; border-radius: 100px; border: 1px solid var(--border);
+            font-family: var(--font-mono); font-size: 0.8rem; white-space: nowrap;
+        }
+
+        /* --- Biometric Dashboard --- */
+        .bio-dashboard {
+            background: var(--surface); border-radius: 32px; padding: 40px;
+            margin: 60px 0; border: 1px solid var(--border);
+            display: grid; grid-template-columns: 1fr 2fr; gap: 40px;
+        }
+        .heart-rate {
+            font-size: 4rem; font-weight: 900; color: var(--primary);
+            font-family: var(--font-mono); display: flex; align-items: center; gap: 10px;
+        }
+        .pulse { 
+            width: 20px; height: 20px; background: #ff3e3e; border-radius: 50%; 
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+
+        /* --- Plans --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin: 100px 0; }
+        .card { 
+            padding: 50px 40px; border-radius: 24px; background: var(--surface); 
+            border: 1px solid var(--border); transition: 0.3s var(--ease);
+        }
+        .card:hover { border-color: var(--primary); transform: translateY(-10px); }
+        .card.featured { background: var(--text); color: var(--bg); border: none; }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block; padding: 18px 40px; border-radius: 100px;
+            font-weight: 800; text-decoration: none; transition: 0.3s;
+            cursor: pointer; border: none; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-primary:hover { background: var(--primary-dark); transform: scale(1.05); }
+
+        /* --- Animations --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .theme-toggle { background: none; border: 1px solid var(--border); padding: 8px 15px; border-radius: 50px; cursor: pointer; color: var(--text); font-weight: 700; }
+
+        @media (max-width: 768px) { .bio-dashboard { grid-template-columns: 1fr; } .hero h1 { font-size: 3.5rem; } }
+    </style>
+</head>
+<body>
+
+    <nav class="container">
+        <div class="logo">VITAL_CORE</div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <button class="theme-toggle" id="themeBtn">â— MODE</button>
+            <a href="#" class="btn btn-primary" style="padding: 10px 25px; font-size: 0.7rem;">Get App</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1 class="reveal">Move with <br> <span style="color: var(--primary); -webkit-text-stroke: 1px var(--text); -webkit-text-fill-color: transparent;">Intelligence.</span></h1>
+            <p class="reveal" style="transition-delay: 0.1s;">Next-generation biometric tracking meets adaptive AI coaching. We don't just track your movement; we optimize your biology.</p>
+            <div class="reveal" style="transition-delay: 0.2s;">
+                <a href="#plans" class="btn btn-primary">Start Training</a>
+            </div>
+        </section>
+
+        <div class="stats-marquee">
+            <div class="stat-pill">VO2_MAX: 54.2</div>
+            <div class="stat-pill">RECOVERY: 92%</div>
+            <div class="stat-pill">HRV: 78ms</div>
+            <div class="stat-pill">STRAIN: 14.5</div>
+            <div class="stat-pill">CAL_BURN: 2.4k</div>
+            <div class="stat-pill">SLEEP_SCORE: 88</div>
+        </div>
+
+        
+        <section class="bio-dashboard reveal">
+            <div>
+                <h4 style="text-transform: uppercase; font-size: 0.7rem; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 10px;">Live Biometrics</h4>
+                <div class="heart-rate">
+                    <span id="hr-value">72</span> <small style="font-size: 1rem;">BPM</small>
+                    <div class="pulse"></div>
+                </div>
+                <p style="margin-top: 20px; font-size: 0.9rem; color: var(--text-dim);">Neural-sync active. Tracking cardiovascular efficiency in real-time.</p>
+            </div>
+            <div style="display: flex; align-items: flex-end; gap: 10px; height: 150px;">
+                <div style="flex:1; background: var(--primary); height: 40%; border-radius: 4px;"></div>
+                <div style="flex:1; background: var(--primary); height: 65%; border-radius: 4px;"></div>
+                <div style="flex:1; background: var(--primary); height: 50%; border-radius: 4px;"></div>
+                <div style="flex:1; background: var(--primary); height: 85%; border-radius: 4px;"></div>
+                <div style="flex:1; background: var(--primary); height: 70%; border-radius: 4px;"></div>
+            </div>
+        </section>
+
+        <section id="plans" class="grid">
+            <div class="card reveal">
+                <h3>Base_Core</h3>
+                <div style="font-size: 2.5rem; font-weight: 900; margin: 20px 0;">$19<span style="font-size: 1rem; font-weight: 400; color: var(--text-dim);">/mo</span></div>
+                <ul style="list-style: none; color: var(--text-dim); line-height: 2; margin-bottom: 30px;">
+                    <li>âœ“ Biometric Sync</li>
+                    <li>âœ“ AI Workout Library</li>
+                    <li>âœ“ Basic Recovery Data</li>
+                </ul>
+                <a href="#" class="btn btn-primary" style="width: 100%; text-align: center; background: var(--text); color: var(--bg);">Select</a>
+            </div>
+            <div class="card featured reveal" style="transition-delay: 0.1s;">
+                <h3 style="color: var(--primary);">Elite_Sync</h3>
+                <div style="font-size: 2.5rem; font-weight: 900; margin: 20px 0;">$49<span style="font-size: 1rem; font-weight: 400; opacity: 0.6;">/mo</span></div>
+                <ul style="list-style: none; opacity: 0.8; line-height: 2; margin-bottom: 30px;">
+                    <li>âœ“ Real-time AI Coaching</li>
+                    <li>âœ“ Metabolic Tracking</li>
+                    <li>âœ“ Genetic Lab Integration</li>
+                    <li>âœ“ 24/7 Human Support</li>
+                </ul>
+                <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Join Elite</a>
+            </div>
+        </section>
+
+        <section style="background: var(--primary); padding: 100px 40px; border-radius: 40px; text-align: center; margin-bottom: 100px;" class="reveal">
+            <h2 style="font-size: 3rem; font-weight: 900; color: #000; letter-spacing: -2px; line-height: 1;">BEYOND <br> LIMITS.</h2>
+            <p style="color: rgba(0,0,0,0.6); margin: 20px 0 40px;">Join 500k+ athletes optimizing their performance daily.</p>
+            <a href="#" class="btn" style="background: #000; color: #fff;">Get Started Now</a>
+        </section>
+    </main>
+
+    <footer style="padding: 60px 0; border-top: 1px solid var(--border); text-align: center; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim); letter-spacing: 2px;">
+        &copy; 2026 VITAL_CORE // BIOMETRIC_ENCRYPTION_ENABLED // VERSION_4.0.2
+    </footer>
+
+    <script>
+        // --- Theme Toggle ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+        });
+
+        // --- Heart Rate Simulator ---
+        const hrValue = document.getElementById('hr-value');
+        setInterval(() => {
+            const base = 72;
+            const diff = Math.floor(Math.random() * 5) - 2;
+            hrValue.innerText = base + diff;
+        }, 2000);
+
+        // --- Scroll Reveal ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

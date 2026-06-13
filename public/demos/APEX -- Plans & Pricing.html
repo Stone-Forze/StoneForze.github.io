@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Apex SaaS - Flexible pricing for teams of all sizes.">
+    <title>APEX // Plans & Pricing</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f9fafb;
+            --text: #111827;
+            --text-dim: #6b7280;
+            --primary: #000000;
+            --accent: #2563eb;
+            --border: #e5e7eb;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --font-main: 'Geist', sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg: #030303;
+            --surface: #0a0a0a;
+            --text: #f9fafb;
+            --text-dim: #9ca3af;
+            --primary: #ffffff;
+            --border: #262626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            line-height: 1.5;
+            transition: background 0.3s ease;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- Header --- */
+        nav {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -1px; }
+
+        /* --- Pricing Toggle --- */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 40px 0;
+        }
+        .switch {
+            width: 50px; height: 26px; background: var(--border);
+            border-radius: 100px; position: relative; cursor: pointer;
+        }
+        .switch::after {
+            content: ''; position: absolute; top: 3px; left: 3px;
+            width: 20px; height: 20px; background: var(--primary);
+            border-radius: 50%; transition: 0.3s var(--ease);
+        }
+        .switch.active::after { left: 27px; }
+
+        /* --- Pricing Grid --- */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .price-card {
+            padding: 40px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 12px;
+            transition: transform 0.3s var(--ease), border-color 0.3s;
+            position: relative;
+        }
+        .price-card.featured { border: 2px solid var(--accent); transform: scale(1.02); }
+        .price-card:hover { transform: translateY(-4px); }
+
+        .price-value { font-size: 3.5rem; font-weight: 800; letter-spacing: -2px; margin: 20px 0; }
+        .price-period { font-size: 1rem; color: var(--text-dim); font-weight: 400; }
+
+        /* --- Comparison Table --- */
+        .comparison-table {
+            width: 100%; border-collapse: collapse; margin: 80px 0;
+            text-align: left;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 20px; border-bottom: 1px solid var(--border);
+        }
+        .feature-check { color: var(--accent); font-weight: 800; }
+
+        /* --- FAQ Accordion --- */
+        .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; cursor: pointer; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: 0.3s var(--ease); color: var(--text-dim); }
+        .faq-item.active .faq-answer { max-height: 100px; padding-top: 10px; }
+
+        /* --- Components --- */
+        .btn {
+            display: block; width: 100%; padding: 14px; text-align: center;
+            background: var(--primary); color: var(--bg);
+            text-decoration: none; font-weight: 600; border-radius: 6px;
+            transition: 0.2s;
+        }
+        .btn:hover { opacity: 0.8; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+
+        .reveal { opacity: 0; transform: translateY(20px); transition: 0.6s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .pricing-grid { grid-template-columns: 1fr; }
+            .price-card.featured { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <div class="logo">APEX.</div>
+            <button id="themeBtn" style="background:none; border:none; cursor:pointer; color:var(--text);">â—</button>
+        </nav>
+
+        <header style="text-align: center; padding: 60px 0;">
+            <h1 class="reveal" style="font-size: 4rem; font-weight: 800; letter-spacing: -2px;">Plans for every team.</h1>
+            <p class="reveal" style="color: var(--text-dim); font-size: 1.2rem; margin-top: 16px;">Transparent pricing. No hidden fees. Cancel anytime.</p>
+            
+            <div class="toggle-container reveal">
+                <span>Monthly</span>
+                <div class="switch" id="billSwitch"></div>
+                <span>Yearly <small style="color: var(--accent); font-weight: 600;">(Save 20%)</small></span>
+            </div>
+        </header>
+
+        
+
+        <section class="pricing-grid">
+            <div class="price-card reveal">
+                <h3>Starter</h3>
+                <div class="price-value">$<span id="price-starter">29</span><span class="price-period">/mo</span></div>
+                <p style="color: var(--text-dim); margin-bottom: 30px;">Perfect for freelancers and side projects.</p>
+                <ul style="list-style: none; margin-bottom: 40px; line-height: 2;">
+                    <li>âœ“ 5 Projects</li>
+                    <li>âœ“ Basic Analytics</li>
+                    <li>âœ“ 48h Support</li>
+                </ul>
+                <a href="#" class="btn btn-outline">Start Free Trial</a>
+            </div>
+
+            <div class="price-card featured reveal" style="transition-delay: 0.1s;">
+                <div style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 100px; font-size: 0.7rem; font-weight: 800; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);">MOST POPULAR</div>
+                <h3>Professional</h3>
+                <div class="price-value">$<span id="price-pro">79</span><span class="price-period">/mo</span></div>
+                <p style="color: var(--text-dim); margin-bottom: 30px;">Everything you need to scale your agency.</p>
+                <ul style="list-style: none; margin-bottom: 40px; line-height: 2;">
+                    <li>âœ“ Unlimited Projects</li>
+                    <li>âœ“ Advanced AI Insights</li>
+                    <li>âœ“ Priority Support</li>
+                    <li>âœ“ Custom Domains</li>
+                </ul>
+                <a href="#" class="btn">Get Started</a>
+            </div>
+
+            <div class="price-card reveal" style="transition-delay: 0.2s;">
+                <h3>Enterprise</h3>
+                <div class="price-value">Custom</div>
+                <p style="color: var(--text-dim); margin-bottom: 30px;">Advanced security and controls for large orgs.</p>
+                <ul style="list-style: none; margin-bottom: 40px; line-height: 2;">
+                    <li>âœ“ Dedicated Manager</li>
+                    <li>âœ“ Custom Integrations</li>
+                    <li>âœ“ 99.9% Uptime SLA</li>
+                    <li>âœ“ SSO & SAML</li>
+                </ul>
+                <a href="#" class="btn btn-outline">Contact Sales</a>
+            </div>
+        </section>
+
+        <section style="max-width: 800px; margin: 0 auto 100px;">
+            <h2 style="text-align: center; margin-bottom: 40px;">Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <div class="faq-question">Can I switch plans later? â–¾</div>
+                <div class="faq-answer">Yes, you can upgrade or downgrade your plan at any time from your dashboard settings.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">What payment methods do you accept? â–¾</div>
+                <div class="faq-answer">We accept all major credit cards, PayPal, and bank transfers for enterprise customers.</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- Pricing Logic ---
+        const billSwitch = document.getElementById('billSwitch');
+        const starter = document.getElementById('price-starter');
+        const pro = document.getElementById('price-pro');
+        let isYearly = false;
+
+        billSwitch.addEventListener('click', () => {
+            isYearly = !isYearly;
+            billSwitch.classList.toggle('active');
+            starter.innerText = isYearly ? '23' : '29';
+            pro.innerText = isYearly ? '63' : '79';
+        });
+
+        // --- FAQ Logic ---
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => item.classList.toggle('active'));
+        });
+
+        // --- Reveal Logic ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Theme Logic ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

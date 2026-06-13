@@ -1,0 +1,389 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AETHER AI - Enterprise Command Center for Autonomous Intelligence.">
+    <title>AETHER // Enterprise AI Command</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Theme: Dark (Default) */
+            --bg: #050505;
+            --surface: #0f0f12;
+            --surface-hover: #16161a;
+            --text-main: #ffffff;
+            --text-dim: #88888e;
+            --accent: #ffffff;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(255, 255, 255, 0.03);
+            
+            /* Motion */
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: 0.6s var(--ease-out);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8f8f8;
+            --surface: #ffffff;
+            --surface-hover: #f1f1f1;
+            --text-main: #000000;
+            --text-dim: #666666;
+            --accent: #000000;
+            --border: rgba(0, 0, 0, 0.08);
+            --glass: rgba(0, 0, 0, 0.02);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
+        }
+
+        /* --- Custom Loader --- */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s var(--ease-out);
+        }
+        .loader-bar {
+            width: 100px;
+            height: 1px;
+            background: var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--text-main);
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading { to { left: 100%; } }
+
+        /* --- Header & Navigation --- */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 24px 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-weight: 700; letter-spacing: -1px; font-size: 1.25rem; }
+        .nav-actions { display: flex; gap: 20px; align-items: center; }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 200px 0 100px;
+            text-align: center;
+            min-height: 80vh;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 10vw, 6rem);
+            line-height: 1;
+            margin-bottom: 24px;
+            opacity: 0; transform: translateY(30px);
+        }
+        .hero p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            opacity: 0;
+        }
+
+        /* --- Command Center Grid (Dashboard) --- */
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 2px; /* Apple-style sharp precision */
+            padding: 30px;
+            grid-column: span 4;
+            transition: var(--transition);
+        }
+        .card:hover { border-color: var(--text-dim); background: var(--surface-hover); }
+        .card-large { grid-column: span 8; }
+        .kpi-label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 10px; display: block; }
+        .kpi-value { font-size: 2.5rem; font-weight: 600; }
+
+        /* --- Chart Simulation --- */
+        .chart-container {
+            height: 200px;
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .chart-bar {
+            flex: 1;
+            background: var(--border);
+            transition: height 1.5s var(--ease-out);
+            position: relative;
+        }
+        .chart-bar:hover { background: var(--text-main); }
+
+        /* --- Interactive Elements --- */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 1px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--text-main);
+            background: var(--text-main);
+            color: var(--bg);
+        }
+        .btn-outline { background: transparent; color: var(--text-main); }
+        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        .theme-toggle {
+            background: none; border: none; cursor: pointer; color: var(--text-main);
+        }
+
+        /* --- Responsive Reveal --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1s var(--ease-out); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .card { grid-column: span 12; }
+            .hero { padding-top: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader"><div class="loader-bar"></div></div>
+
+    <header>
+        <div class="nav-inner">
+            <div class="logo">AETHER_OS</div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeSwitcher">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                </button>
+                <a href="#" class="btn btn-outline">Console</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1 id="hero-title">Autonomous <br> Intelligence.</h1>
+            <p id="hero-p">The predictive command layer for modern enterprise infrastructure. Scale beyond human constraints.</p>
+            <div id="hero-cta" style="opacity: 0;">
+                <a href="#dashboard" class="btn">Deploy Command</a>
+            </div>
+        </section>
+
+        <section class="dashboard" id="dashboard">
+            <div class="card reveal">
+                <span class="kpi-label">System Integrity</span>
+                <div class="kpi-value">99.98%</div>
+                <div style="color: #00ff88; font-size: 0.8rem; margin-top: 5px;">+0.02% Increase</div>
+            </div>
+            
+            <div class="card reveal" style="transition-delay: 0.1s;">
+                <span class="kpi-label">Compute Efficiency</span>
+                <div class="kpi-value">1.2ms</div>
+                <div style="color: var(--text-dim); font-size: 0.8rem; margin-top: 5px;">Latency Average</div>
+            </div>
+
+            <div class="card reveal" style="transition-delay: 0.2s;">
+                <span class="kpi-label">Active Nodes</span>
+                <div class="kpi-value" id="node-counter">0</div>
+                <div style="color: var(--text-dim); font-size: 0.8rem; margin-top: 5px;">Global Distributed</div>
+            </div>
+
+            <div class="card card-large reveal">
+                <span class="kpi-label">Neural Throughput // 24H</span>
+                <div class="chart-container" id="throughputChart">
+                    </div>
+            </div>
+
+            <div class="card reveal">
+                <span class="kpi-label">Security Protocol</span>
+                <div style="margin-top: 20px;">
+                    <p style="font-size: 0.9rem; color: var(--text-dim);">AES-256 Quantum Shield Active</p>
+                    <div style="width: 100%; height: 2px; background: var(--border); margin-top: 15px;">
+                        <div style="width: 85%; height: 100%; background: var(--text-main);"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard" style="padding-top: 100px;">
+            <div class="card reveal" style="grid-column: span 6;">
+                <span class="kpi-label">Professional</span>
+                <h3 style="font-size: 2rem; margin: 15px 0;">$2,400<span style="font-size: 1rem; color: var(--text-dim);">/mo</span></h3>
+                <ul style="list-style: none; color: var(--text-dim); font-size: 0.9rem; line-height: 2;">
+                    <li>â€” Dedicated Neural Link</li>
+                    <li>â€” 10TB Predictive Storage</li>
+                    <li>â€” 24/7 Priority Ops</li>
+                </ul>
+                <a href="#" class="btn btn-outline" style="display: block; text-align: center; margin-top: 30px;">Initialize</a>
+            </div>
+            <div class="card reveal" style="grid-column: span 6; background: var(--text-main); color: var(--bg);">
+                <span class="kpi-label" style="color: var(--bg); opacity: 0.6;">Enterprise</span>
+                <h3 style="font-size: 2rem; margin: 15px 0;">Custom</h3>
+                <ul style="list-style: none; opacity: 0.7; font-size: 0.9rem; line-height: 2;">
+                    <li>â€” Unlimited Node Deployment</li>
+                    <li>â€” Custom LLM Training</li>
+                    <li>â€” On-Premise Airgap</li>
+                </ul>
+                <a href="#" class="btn" style="display: block; text-align: center; margin-top: 30px; background: var(--bg); color: var(--text-main);">Contact Sales</a>
+            </div>
+        </section>
+    </main>
+
+    <footer style="padding: 100px 40px; text-align: center; color: var(--text-dim); font-size: 0.8rem; letter-spacing: 2px;">
+        &copy; 2026 AETHER SYSTEMS. ALL RIGHTS RESERVED. // COMMAND CENTER V.4.0.2
+    </footer>
+
+    <script>
+        // --- Initialization & Loader ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 800);
+                startEntranceAnimations();
+            }, 1000);
+
+            generateChart();
+            initScrollReveal();
+            initCounter();
+        });
+
+        // --- Entrance Animations ---
+        function startEntranceAnimations() {
+            const h1 = document.getElementById('hero-title');
+            const p = document.getElementById('hero-p');
+            const cta = document.getElementById('hero-cta');
+
+            h1.style.opacity = '1';
+            h1.style.transform = 'translateY(0)';
+            h1.style.transition = '1s var(--ease-out)';
+
+            setTimeout(() => {
+                p.style.opacity = '1';
+                p.style.transition = '1s var(--ease-out)';
+            }, 200);
+
+            setTimeout(() => {
+                cta.style.opacity = '1';
+                cta.style.transition = '1s var(--ease-out)';
+            }, 400);
+        }
+
+        // --- Chart Simulation ---
+        function generateChart() {
+            const chart = document.getElementById('throughputChart');
+            for(let i = 0; i < 20; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                const height = Math.floor(Math.random() * 80) + 10;
+                chart.appendChild(bar);
+                setTimeout(() => {
+                    bar.style.height = height + '%';
+                }, i * 50 + 1200);
+            }
+        }
+
+        // --- Scroll Reveal ---
+        function initScrollReveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            reveals.forEach(el => observer.observe(el));
+        }
+
+        // --- Node Counter Animation ---
+        function initCounter() {
+            const counter = document.getElementById('node-counter');
+            let count = 0;
+            const target = 1420;
+            const speed = 20;
+
+            const updateCount = () => {
+                const inc = target / 100;
+                if(count < target) {
+                    count += inc;
+                    counter.innerText = Math.ceil(count);
+                    setTimeout(updateCount, speed);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+
+            // Trigger when visible
+            const observer = new IntersectionObserver((entries) => {
+                if(entries[0].isIntersecting) updateCount();
+            });
+            observer.observe(counter);
+        }
+
+        // --- Theme Switcher ---
+        const themeBtn = document.getElementById('themeSwitcher');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+        });
+
+        // --- Micro-interactions ---
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

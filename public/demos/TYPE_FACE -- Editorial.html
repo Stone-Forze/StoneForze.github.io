@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TYPE_FACE // Editorial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Playfair+Display:ital,wght@0,400;0,900;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f2f0e9;
+            --text: #1a1a1a;
+            --accent: #d94625;
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Sticky Mix-Blend Header --- */
+        nav {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            z-index: 100;
+            mix-blend-mode: difference;
+            color: white; /* Difference mode flips this to black on white bg */
+            font-weight: 600;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+        }
+
+        /* --- Typography Components --- */
+        .section {
+            min-height: 100vh;
+            padding: 100px 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .mega-type {
+            font-size: clamp(4rem, 18vw, 15rem);
+            line-height: 0.85;
+            letter-spacing: -0.06em;
+            font-weight: 100; /* Starting weight */
+            will-change: font-weight;
+            margin-bottom: 2rem;
+        }
+
+        .editorial-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.2;
+            max-width: 1200px;
+            margin-left: auto;
+        }
+
+        /* --- Line Reveal Animation --- */
+        .line-wrap {
+            overflow: hidden;
+            display: block;
+        }
+
+        .line-inner {
+            display: block;
+            transform: translateY(100%);
+            transition: transform 1.2s var(--ease);
+        }
+
+        .reveal-active .line-inner {
+            transform: translateY(0);
+        }
+
+        /* --- Hover Distortion --- */
+        .distort-link {
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.4s var(--ease), color 0.3s;
+            transform-origin: left center;
+        }
+
+        .distort-link:hover {
+            transform: scaleX(1.1) skewX(-10deg);
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* --- Scrolling Marquee --- */
+        .marquee {
+            white-space: nowrap;
+            overflow: hidden;
+            border-top: 2px solid var(--text);
+            border-bottom: 2px solid var(--text);
+            padding: 2rem 0;
+            font-size: 5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        
+        .marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll-left 20s linear infinite;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>Vol. 01 â€” Typography</nav>
+
+    <section class="section">
+        <h1 class="mega-type" id="variable-type">
+            Form<br>
+            Follows<br>
+            Function
+        </h1>
+    </section>
+
+    <section class="section">
+        <div class="editorial-text" id="split-text">
+            Design is the silent ambassador of your brand.
+            Typography is the voice.
+            Make it clear.
+            Make it <span class="distort-link">loud</span>.
+        </div>
+    </section>
+
+    <div class="marquee">
+        <span>Bold â€¢ Minimal â€¢ Timeless â€¢ Kinetic â€¢ Expressive â€¢ </span>
+    </div>
+
+    <section class="section" style="align-items: flex-end; text-align: right;">
+        <h2 style="font-size: 8rem; line-height: 0.8; letter-spacing: -0.05em;">
+            The<br>End.
+        </h2>
+    </section>
+
+    <script>
+        // --- Scroll-Based Variable Font Weight ---
+        const variableText = document.getElementById('variable-type');
+        let currentWeight = 100;
+        let targetWeight = 100;
+
+        // Linear Interpolation for smoothness
+        const lerp = (start, end, factor) => start + (end - start) * factor;
+
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const maxScroll = window.innerHeight;
+            
+            // Map scroll (0 to viewport height) to weight (100 to 900)
+            const percentage = Math.min(scrolled / maxScroll, 1);
+            targetWeight = 100 + (percentage * 800);
+        });
+
+        function animateType() {
+            currentWeight = lerp(currentWeight, targetWeight, 0.1);
+            variableText.style.fontWeight = Math.round(currentWeight);
+            
+            // Subtle skew based on velocity
+            const diff = targetWeight - currentWeight;
+            variableText.style.transform = `skewY(${diff * 0.02}deg)`;
+
+            requestAnimationFrame(animateType);
+        }
+        animateType();
+
+        // --- Line-by-Line Reveal Logic ---
+        const textContainer = document.getElementById('split-text');
+        
+        // 1. Split text into lines (simulated by splitting periods for this demo)
+        const rawText = textContainer.innerHTML.trim();
+        // A robust implementation uses a library like SplitType, 
+        // but here is a simple regex split for the demo.
+        const sentences = rawText.split('.').filter(s => s.trim().length > 0);
+        
+        textContainer.innerHTML = '';
+        sentences.forEach((sentence, index) => {
+            // Re-wrap structure
+            const lineWrap = document.createElement('span');
+            lineWrap.className = 'line-wrap';
+            
+            const lineInner = document.createElement('span');
+            lineInner.className = 'line-inner';
+            lineInner.innerHTML = sentence.trim() + '.'; // Add period back
+            
+            // Check for our interactive span logic
+            if(sentence.includes('loud')) {
+                 lineInner.innerHTML = sentence.replace('loud', '<span class="distort-link">loud</span>') + '.';
+            }
+
+            lineWrap.appendChild(lineInner);
+            textContainer.appendChild(lineWrap);
+            // Add a space or break
+            textContainer.appendChild(document.createTextNode(' '));
+        });
+
+        // 2. Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const lines = entry.target.querySelectorAll('.line-wrap');
+                    lines.forEach((line, i) => {
+                        setTimeout(() => {
+                            line.classList.add('reveal-active');
+                        }, i * 150); // Stagger delay
+                    });
+                }
+            });
+        }, { threshold: 0.2 });
+
+        observer.observe(textContainer);
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

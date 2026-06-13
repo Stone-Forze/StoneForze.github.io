@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PULSE // Scaling the Future</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --bg-alt: #f8fafc;
+            --ease: cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Components --- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 5%; }
+        
+        .btn {
+            padding: 14px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s var(--ease);
+            display: inline-block;
+        }
+
+        .btn-primary { background: var(--accent); color: white; box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.4); }
+
+        /* --- Hero --- */
+        .hero {
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            background: radial-gradient(circle at top right, #f1f5f9, #ffffff);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+
+        /* --- Stats Section --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            padding: 80px 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .stat-item h2 { font-size: 3rem; color: var(--accent); font-weight: 800; }
+
+        /* --- Timeline --- */
+        .timeline { padding: 100px 0; background: var(--bg-alt); }
+        .timeline-item {
+            display: flex;
+            gap: 40px;
+            padding-bottom: 60px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 7px; top: 10px; bottom: 0;
+            width: 2px; background: #e2e8f0;
+        }
+        .dot {
+            width: 16px; height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-top: 8px;
+            z-index: 1;
+        }
+
+        /* --- Animations --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <div class="container">
+            <span style="color: var(--accent); font-weight: 600; letter-spacing: 2px;">SERIES A PITCH</span>
+            <h1>Re-imagining the <br>Global Supply Stack.</h1>
+            <p style="font-size: 1.25rem; color: var(--text-light); max-width: 600px; margin-bottom: 40px;">
+                Pulse is the first autonomous logistics engine that predicts market shifts before they happen.
+            </p>
+            <a href="#deck" class="btn btn-primary">Request Access to Deck</a>
+        </div>
+    </section>
+
+    <section class="container reveal">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h2 class="counter" data-target="140">0</h2>
+                <p>Enterprise Clients</p>
+            </div>
+            <div class="stat-item">
+                <h2 class="counter" data-target="98">0</h2>
+                <p>Retention Rate %</p>
+            </div>
+            <div class="stat-item">
+                <h2 class="counter" data-target="12">0</h2>
+                <p>ARR Growth (x)</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="timeline">
+        <div class="container">
+            <h2 style="font-size: 2.5rem; margin-bottom: 60px;">The Roadmap</h2>
+            <div class="timeline-item reveal">
+                <div class="dot"></div>
+                <div>
+                    <h3>Q1 2025: Market Penetration</h3>
+                    <p style="color: var(--text-light);">Expanded to EU and SEA markets with 40 new pilot programs.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="dot"></div>
+                <div>
+                    <h3>Q3 2025: Autonomous V2</h3>
+                    <p style="color: var(--text-light);">Deployment of neural forecasting models across all nodes.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="dot"></div>
+                <div>
+                    <h3>Q2 2026: Series B Target</h3>
+                    <p style="color: var(--text-light);">Projected $50M ARR benchmark and global infrastructure expansion.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: 100px 0; text-align: center;" class="reveal">
+        <div class="container">
+            <h2 style="font-size: 3rem; margin-bottom: 20px;">Ready to Scale?</h2>
+            <p style="margin-bottom: 40px; color: var(--text-light);">Join the syndicate of investors backing the future of commerce.</p>
+            <a href="mailto:invest@pulse.io" class="btn btn-primary">Contact Investor Relations</a>
+        </div>
+    </section>
+
+    <script>
+        // --- Counter Animation ---
+        const animateCounters = () => {
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = target / 100;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(animateCounters, 20);
+                } else {
+                    counter.innerText = target + (counter.getAttribute('data-target') === '12' ? 'x' : '+');
+                }
+            });
+        };
+
+        // --- Intersection Observer ---
+        const observerOptions = { threshold: 0.25 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if(entry.target.querySelector('.counter')) animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

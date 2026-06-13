@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUX // The Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --accent: #fff;
+            --easing: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.8s var(--easing);
+            overflow: hidden; /* Prevent manual scrollbar interference */
+        }
+
+        /* --- Scroll Snap Container --- */
+        .container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        section {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 0 10%;
+            overflow: hidden;
+        }
+
+        /* --- UI Overlays --- */
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 1000;
+            width: 0%;
+            transition: background-color 0.5s;
+        }
+
+        .nav-dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border: 1px solid var(--text-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .dot.active {
+            background: var(--text-color);
+            transform: scale(1.5);
+        }
+
+        /* --- Content Animations --- */
+        .content {
+            text-align: center;
+            transition: transform 1.2s var(--easing), opacity 1.2s var(--easing), filter 1.2s var(--easing);
+            transform: scale(0.8) translateY(50px);
+            opacity: 0;
+            filter: blur(10px);
+        }
+
+        section.active .content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            filter: blur(0px);
+        }
+
+        h1 {
+            font-size: clamp(3rem, 12vw, 8rem);
+            font-weight: 800;
+            letter-spacing: -3px;
+            line-height: 0.9;
+        }
+
+        /* --- Parallax Layers --- */
+        .parallax-bg {
+            position: absolute;
+            font-size: 25vh;
+            font-weight: 800;
+            opacity: 0.05;
+            white-space: nowrap;
+            z-index: -1;
+            transition: transform 1.5s var(--easing);
+        }
+
+        /* --- SVG Icon Animation --- */
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .animated-path {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            transition: stroke-dashoffset 2s var(--easing) 0.5s;
+        }
+
+        section.active .animated-path {
+            stroke-dashoffset: 0;
+        }
+
+        /* --- Section Themes --- */
+        [data-theme="blue"] { --bg-color: #0a1128; --accent: #007aff; }
+        [data-theme="purple"] { --bg-color: #1a0a28; --accent: #af52de; }
+        [data-theme="white"] { --bg-color: #f5f5f7; --text-color: #000; --accent: #000; }
+    </style>
+</head>
+<body>
+
+    <div class="progress-bar" id="progress"></div>
+    
+    <div class="nav-dots" id="dots">
+        <div class="dot active" data-index="0"></div>
+        <div class="dot" data-index="1"></div>
+        <div class="dot" data-index="2"></div>
+        <div class="dot" data-index="3"></div>
+    </div>
+
+    <div class="container" id="scroll-container">
+        
+        <section class="active" data-theme="dark">
+            <div class="parallax-bg">INTRODUCTION</div>
+            <div class="content">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="9" class="animated-path"/>
+                        <path d="M12 8v8M8 12h8" class="animated-path"/>
+                    </svg>
+                </div>
+                <h1>EMERGE.</h1>
+                <p>Scroll to begin the transmission.</p>
+            </div>
+        </section>
+
+        <section data-theme="blue">
+            <div class="parallax-bg">VELOCITY</div>
+            <div class="content">
+                <h1>FLOW.</h1>
+                <p>Smooth transitions at 60 frames per second.</p>
+            </div>
+        </section>
+
+        <section data-theme="purple">
+            <div class="parallax-bg">PRECISION</div>
+            <div class="content">
+                <h1>CRAFT.</h1>
+                <p>The beauty of layered transformations.</p>
+            </div>
+        </section>
+
+        <section data-theme="white">
+            <div class="parallax-bg">MINIMALISM</div>
+            <div class="content">
+                <h1>PURE.</h1>
+                <p>Luxury is the absence of noise.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const container = document.getElementById('scroll-container');
+        const sections = document.querySelectorAll('section');
+        const dots = document.querySelectorAll('.dot');
+        const progress = document.getElementById('progress');
+
+        // --- Intersection Observer for Active States ---
+        const observerOptions = {
+            threshold: 0.6
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const idx = Array.from(sections).indexOf(entry.target);
+                    
+                    // Update Active Classes
+                    sections.forEach(s => s.classList.remove('active'));
+                    entry.target.classList.add('active');
+
+                    // Update Dots
+                    dots.forEach(d => d.classList.remove('active'));
+                    dots[idx].classList.add('active');
+
+                    // Update Theme
+                    const theme = entry.target.getAttribute('data-theme');
+                    document.body.setAttribute('data-theme', theme);
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+
+        // --- Progress Bar & Parallax Effect ---
+        container.addEventListener('scroll', () => {
+            const scrollTop = container.scrollTop;
+            const scrollHeight = container.scrollHeight - container.clientHeight;
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            
+            progress.style.width = scrollPercent + '%';
+
+            // Parallax movement for background text
+            const parallaxTexts = document.querySelectorAll('.parallax-bg');
+            parallaxTexts.forEach((text, i) => {
+                const speed = (i + 1) * 0.2;
+                text.style.transform = `translateX(${-(scrollTop * speed)}px)`;
+            });
+        });
+
+        // --- Navigation Dot Clicks ---
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const index = dot.getAttribute('data-index');
+                sections[index].scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // --- Keyboard Support ---
+        window.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowDown") {
+                container.scrollBy(0, window.innerHeight);
+            } else if (e.key === "ArrowUp") {
+                container.scrollBy(0, -window.innerHeight);
+            }
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

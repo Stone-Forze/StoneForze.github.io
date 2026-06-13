@@ -1,0 +1,1367 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aeon Antiquities | Neo-Classical Luxury</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --marble-white: #F8F7F4;
+            --marble-grey: #E8E6E1;
+            --vein-grey: #D1CEC7;
+            --gold-dark: #C5A030;
+            --gold-mid: #D4B44A;
+            --gold-light: #E5C86A;
+            --gold-shimmer: #F4DC91;
+            --shadow-heavy: rgba(0, 0, 0, 0.15);
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --text-dark: #2C2C2C;
+            --text-light: #5A5A5A;
+            --gallery-shadow: rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--marble-white);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--marble-white);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+            letter-spacing: 0.3px;
+        }
+
+        /* Marble background with shifting veins */
+        .marble-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                linear-gradient(45deg, var(--marble-white) 25%, transparent 25%) -50px 0,
+                linear-gradient(-45deg, var(--marble-white) 25%, transparent 25%) -50px 0,
+                linear-gradient(45deg, transparent 75%, var(--marble-white) 75%),
+                linear-gradient(-45deg, transparent 75%, var(--marble-white) 75%);
+            background-size: 100px 100px;
+            background-color: var(--marble-grey);
+            overflow: hidden;
+        }
+
+        .marble-veins {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(90deg, transparent 20%, var(--vein-grey) 50%, transparent 80%),
+                linear-gradient(60deg, transparent 30%, rgba(209, 206, 199, 0.7) 50%, transparent 70%),
+                linear-gradient(120deg, transparent 40%, rgba(209, 206, 199, 0.5) 60%, transparent 80%);
+            background-size: 300px 300px, 400px 400px, 500px 500px;
+            opacity: 0.3;
+            animation: marble-shift 20s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes marble-shift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-50px, -50px) rotate(0.5deg); }
+        }
+
+        /* Shimmer effect container */
+        .shimmer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), 
+                      transparent 10%, 
+                      rgba(244, 220, 145, 0.03) 40%, 
+                      transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            mix-blend-mode: overlay;
+        }
+
+        /* Gilded header */
+        .gilded-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(248, 247, 244, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(197, 160, 48, 0.2);
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+            position: relative;
+            letter-spacing: 2px;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--gold-dark), 
+                var(--gold-light), 
+                var(--gold-dark), 
+                transparent);
+            background-size: 200% 100%;
+            animation: gilded-flow 3s infinite linear;
+        }
+
+        @keyframes gilded-flow {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-link {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+            transition: width 0.4s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-dark);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: rgba(197, 160, 48, 0.1);
+        }
+
+        /* Hero section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: 5.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px var(--shadow-light);
+            position: relative;
+            max-width: 900px;
+        }
+
+        .hero-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-light);
+            max-width: 700px;
+            line-height: 1.8;
+            letter-spacing: 1px;
+            margin-bottom: 3rem;
+        }
+
+        /* Gilded button */
+        .gilded-button {
+            display: inline-block;
+            padding: 1.3rem 3.2rem;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-mid), var(--gold-light));
+            color: var(--text-dark);
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 
+                0 8px 32px rgba(197, 160, 48, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                0 0 20px rgba(244, 220, 145, 0.2);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .gilded-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            transition: left 0.7s ease;
+        }
+
+        .gilded-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 40px rgba(197, 160, 48, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                0 0 30px rgba(244, 220, 145, 0.4);
+        }
+
+        .gilded-button:hover::before {
+            left: 100%;
+        }
+
+        /* Museum gallery frames */
+        .gallery-section {
+            padding: 8rem 4rem;
+            position: relative;
+            z-index: 2;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            position: relative;
+            letter-spacing: 2px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold-dark), transparent);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 4rem;
+            margin-bottom: 8rem;
+        }
+
+        /* Museum frame with tilt effect */
+        .museum-frame {
+            background-color: var(--marble-white);
+            border-radius: 4px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 
+                inset 0 0 0 1px rgba(197, 160, 48, 0.2),
+                0 20px 60px var(--gallery-shadow),
+                0 0 0 15px var(--marble-white);
+            transition: transform 0.2s ease-out;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .frame-inner {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background-color: #F0EEE8;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .frame-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .museum-frame:hover .frame-inner img {
+            transform: scale(1.05);
+        }
+
+        /* Gilded frame border */
+        .museum-frame::before {
+            content: '';
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            right: 0.5rem;
+            bottom: 0.5rem;
+            border: 2px solid transparent;
+            background: linear-gradient(var(--marble-white), var(--marble-white)) padding-box,
+                      linear-gradient(135deg, var(--gold-dark), var(--gold-light)) border-box;
+            border-radius: 2px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .museum-frame::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 4px;
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .frame-label {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .artifact-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .artifact-era {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* Collections showcase */
+        .collections-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4rem;
+            margin: 6rem 0;
+        }
+
+        .collection-card {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--marble-white);
+            border-radius: 8px;
+            padding: 3rem;
+            position: relative;
+            box-shadow: 
+                0 20px 60px var(--shadow-heavy),
+                inset 0 0 0 1px rgba(197, 160, 48, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .collection-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 
+                0 30px 80px var(--shadow-heavy),
+                inset 0 0 0 1px rgba(197, 160, 48, 0.2);
+        }
+
+        .collection-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            color: var(--marble-white);
+            box-shadow: 0 10px 30px rgba(197, 160, 48, 0.3);
+        }
+
+        .collection-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .collection-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        /* Gilded divider */
+        .gilded-divider {
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--gold-dark), 
+                var(--gold-light), 
+                var(--gold-dark), 
+                transparent);
+            margin: 6rem 0;
+            position: relative;
+        }
+
+        .divider-ornament {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background-color: var(--marble-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--gold-dark);
+            box-shadow: 0 0 0 10px var(--marble-white);
+        }
+
+        /* Museum info panels */
+        .info-panels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .info-panel {
+            background-color: var(--marble-white);
+            border-radius: 8px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 15px 50px var(--shadow-light),
+                inset 0 0 0 1px rgba(197, 160, 48, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+        }
+
+        .panel-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .panel-content {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        /* Gilded footer */
+        .gilded-footer {
+            margin-top: 8rem;
+            padding: 5rem 4rem 3rem;
+            background-color: rgba(248, 247, 244, 0.9);
+            border-top: 1px solid rgba(197, 160, 48, 0.2);
+            position: relative;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .footer-ornament {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 40px;
+            background-color: var(--marble-white);
+            border-radius: 40px 40px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--gold-dark);
+            box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 0;
+        }
+
+        .footer-links a::before {
+            content: 'âœ¦';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            color: var(--gold-dark);
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-dark);
+            padding-left: 25px;
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: 0;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(197, 160, 48, 0.1);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            letter-spacing: 1px;
+        }
+
+        /* Mobile navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: var(--marble-white);
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            box-shadow: -5px 0 30px var(--shadow-heavy);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .mobile-nav.active {
+            transform: translateX(0);
+        }
+
+        .mobile-nav-close {
+            align-self: flex-end;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .mobile-nav-close:hover {
+            background-color: rgba(197, 160, 48, 0.1);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .hero-title {
+                font-size: 4.5rem;
+            }
+            
+            .section-title {
+                font-size: 3.5rem;
+            }
+            
+            .gallery-section {
+                padding: 6rem 2rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 3.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .gilded-header {
+                padding: 1.5rem 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .section-title {
+                font-size: 2.8rem;
+            }
+            
+            .museum-frame {
+                padding: 1.5rem;
+            }
+            
+            .gilded-footer {
+                padding: 4rem 2rem 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .gilded-button {
+                padding: 1.1rem 2.5rem;
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .marble-veins,
+            .logo::after,
+            .gilded-button::before,
+            .museum-frame,
+            .collection-card {
+                animation: none !important;
+                transition: none !important;
+            }
+            
+            .frame-inner img {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Marble background -->
+    <div class="marble-bg">
+        <div class="marble-veins"></div>
+    </div>
+    
+    <!-- Shimmer overlay -->
+    <div class="shimmer-overlay" id="shimmerOverlay"></div>
+
+    <!-- Mobile navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="#gallery" class="nav-link">Gallery</a>
+        <a href="#collections" class="nav-link">Collections</a>
+        <a href="#history" class="nav-link">History</a>
+        <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+
+    <!-- Header -->
+    <header class="gilded-header">
+        <a href="#" class="logo">AEON ANTIQUITIES</a>
+        
+        <nav class="nav-links">
+            <a href="#gallery" class="nav-link">Gallery</a>
+            <a href="#collections" class="nav-link">Collections</a>
+            <a href="#history" class="nav-link">History</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- Hero section -->
+    <section class="hero-section">
+        <h1 class="hero-title">WHERE ANCIENT ELEGANCE MEETS MODERN CURIOSITY</h1>
+        <p class="hero-subtitle">
+            A curated collection of neo-classical artifacts and antiquities, 
+            meticulously preserved and presented for the contemporary connoisseur. 
+            Each piece tells a story of artistry, history, and timeless beauty.
+        </p>
+        <a href="#gallery" class="gilded-button">EXPLORE THE COLLECTION</a>
+    </section>
+
+    <!-- Gallery section -->
+    <section class="gallery-section" id="gallery">
+        <h2 class="section-title">MUSEUM GALLERY</h2>
+        
+        <div class="gallery-grid">
+            <!-- Artifact 1 -->
+            <div class="museum-frame" data-tilt>
+                <div class="frame-inner">
+                    <img src="https://images.unsplash.com/photo-1530133532239-eda6f53fcf0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Ancient Greek sculpture">
+                </div>
+                <div class="frame-label">
+                    <h3 class="artifact-title">Aphrodite of Milos</h3>
+                    <p class="artifact-era">Hellenistic Period, 150-125 BCE</p>
+                </div>
+            </div>
+            
+            <!-- Artifact 2 -->
+            <div class="museum-frame" data-tilt>
+                <div class="frame-inner">
+                    <img src="https://images.unsplash.com/photo-1545231027-637d2f6210f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Roman mosaic">
+                </div>
+                <div class="frame-label">
+                    <h3 class="artifact-title">Roman Floor Mosaic</h3>
+                    <p class="artifact-era">Roman Empire, 2nd Century CE</p>
+                </div>
+            </div>
+            
+            <!-- Artifact 3 -->
+            <div class="museum-frame" data-tilt>
+                <div class="frame-inner">
+                    <img src="https://images.unsplash.com/photo-1600480505021-e9cfb58327e1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Egyptian sarcophagus">
+                </div>
+                <div class="frame-label">
+                    <h3 class="artifact-title">Sarcophagus of Amun</h3>
+                    <p class="artifact-era">New Kingdom, 18th Dynasty</p>
+                </div>
+            </div>
+            
+            <!-- Artifact 4 -->
+            <div class="museum-frame" data-tilt>
+                <div class="frame-inner">
+                    <img src="https://images.unsplash.com/photo-1544957992-2058f2a3c437?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Ancient manuscript">
+                </div>
+                <div class="frame-label">
+                    <h3 class="artifact-title">Illuminated Manuscript</h3>
+                    <p class="artifact-era">Byzantine Empire, 11th Century</p>
+                </div>
+            </div>
+            
+            <!-- Artifact 5 -->
+            <div class="museum-frame" data-tilt>
+                <div class="frame-inner">
+                    <img src="https://images.unsplash.com/photo-1553545204-5336c9c4ae63?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Ancient jewelry">
+                </div>
+                <div class="frame-label">
+                    <h3 class="artifact-title">Gold Laurel Wreath</h3>
+                    <p class="artifact-era">Hellenistic Period, 4th Century BCE</p>
+                </div>
+            </div>
+            
+            <!-- Artifact 6 -->
+            <div class="museum-frame" data-tilt>
+                <div class="frame-inner">
+                    <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Ancient sculpture">
+                </div>
+                <div class="frame-label">
+                    <h3 class="artifact-title">Bust of Emperor Augustus</h3>
+                    <p class="artifact-era">Roman Empire, 1st Century CE</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gilded divider -->
+    <div class="gilded-divider">
+        <div class="divider-ornament">âœ¦</div>
+    </div>
+
+    <!-- Collections section -->
+    <section class="gallery-section" id="collections">
+        <h2 class="section-title">CURATED COLLECTIONS</h2>
+        
+        <div class="collections-showcase">
+            <div class="collection-card">
+                <div class="collection-icon">ðŸ›ï¸</div>
+                <h3 class="collection-title">Greco-Roman</h3>
+                <p class="collection-description">
+                    Sculptures, mosaics, and artifacts from ancient Greece and Rome, 
+                    showcasing the artistic achievements that shaped Western civilization.
+                </p>
+                <a href="#" class="gilded-button" style="padding: 1rem 2rem; font-size: 1rem;">View Collection</a>
+            </div>
+            
+            <div class="collection-card">
+                <div class="collection-icon">ðŸ•</div>
+                <h3 class="collection-title">Egyptian Dynasties</h3>
+                <p class="collection-description">
+                    Artifacts spanning 3,000 years of Egyptian history, from predynastic 
+                    pottery to Ptolemaic temple reliefs and funerary objects.
+                </p>
+                <a href="#" class="gilded-button" style="padding: 1rem 2rem; font-size: 1rem;">View Collection</a>
+            </div>
+            
+            <div class="collection-card">
+                <div class="collection-icon">âš”ï¸</div>
+                <h3 class="collection-title">Medieval Treasury</h3>
+                <p class="collection-description">
+                    Illuminated manuscripts, liturgical objects, and decorative arts 
+                    from the Byzantine, Romanesque, and Gothic periods.
+                </p>
+                <a href="#" class="gilded-button" style="padding: 1rem 2rem; font-size: 1rem;">View Collection</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- History section -->
+    <section class="gallery-section" id="history">
+        <h2 class="section-title">ARCHAEOLOGICAL HISTORY</h2>
+        
+        <div class="info-panels">
+            <div class="info-panel">
+                <h3 class="panel-title">Preservation Philosophy</h3>
+                <p class="panel-content">
+                    Each artifact in our collection undergoes meticulous conservation 
+                    using both traditional techniques and cutting-edge technology. 
+                    Our team of conservators works to stabilize, document, and preserve 
+                    these pieces for future generations while maintaining historical integrity.
+                </p>
+            </div>
+            
+            <div class="info-panel">
+                <h3 class="panel-title">Provenance Research</h3>
+                <p class="panel-content">
+                    We maintain complete documentation of each artifact's history, 
+                    from archaeological excavation to current ownership. Our provenance 
+                    research follows strict ethical guidelines to ensure all items 
+                    were legally acquired and properly documented.
+                </p>
+            </div>
+            
+            <div class="info-panel">
+                <h3 class="panel-title">Digital Archaeology</h3>
+                <p class="panel-content">
+                    Utilizing 3D scanning, photogrammetry, and virtual reality, 
+                    we create digital twins of our artifacts. This allows for 
+                    detailed study, virtual exhibitions, and preservation of 
+                    objects too fragile for regular display.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="gilded-footer" id="contact">
+        <div class="footer-ornament">âœ¦</div>
+        
+        <div class="footer-content">
+            <div>
+                <h4 class="footer-column-title">AEON ANTIQUITIES</h4>
+                <p style="margin-top: 1.5rem; color: var(--text-light); line-height: 1.8;">
+                    A digital museum bridging ancient artistry with modern technology. 
+                    Each artifact is presented with scholarly context and technological 
+                    enhancement for the contemporary audience.
+                </p>
+            </div>
+            
+            <div>
+                <h4 class="footer-column-title">VISIT</h4>
+                <ul class="footer-links">
+                    <li><a href="#gallery">Virtual Gallery</a></li>
+                    <li><a href="#collections">Collections</a></li>
+                    <li><a href="#">Digital Archives</a></li>
+                    <li><a href="#">Research Portal</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="footer-column-title">LEARN</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Archaeological Methods</a></li>
+                    <li><a href="#">Artifact Conservation</a></li>
+                    <li><a href="#">Historical Context</a></li>
+                    <li><a href="#">Digital Reconstruction</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="footer-column-title">CONNECT</h4>
+                <ul class="footer-links">
+                    <li><a href="mailto:curator@aeonantiquities.com">curator@aeonantiquities.com</a></li>
+                    <li><a href="#">Academic Partnerships</a></li>
+                    <li><a href="#">Research Inquiries</a></li>
+                    <li><a href="#">Support Preservation</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            AEON ANTIQUITIES Â© 2024 | A DIGITAL PRESERVATION INITIATIVE
+        </div>
+    </footer>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script>
+        // Tilt.js effect for museum frames
+        class TiltEffect {
+            constructor() {
+                this.frames = document.querySelectorAll('.museum-frame');
+                this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                
+                if (!this.isReducedMotion) {
+                    this.init();
+                }
+            }
+            
+            init() {
+                this.frames.forEach(frame => {
+                    frame.addEventListener('mousemove', (e) => this.handleMouseMove(e, frame));
+                    frame.addEventListener('mouseleave', () => this.resetFrame(frame));
+                    frame.addEventListener('mouseenter', () => this.activateFrame(frame));
+                });
+            }
+            
+            handleMouseMove(e, frame) {
+                const rect = frame.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const mouseX = e.clientX - centerX;
+                const mouseY = e.clientY - centerY;
+                
+                // Calculate rotation based on mouse position relative to center
+                const rotateY = (mouseX / (rect.width / 2)) * 3; // Max 3 degrees
+                const rotateX = -(mouseY / (rect.height / 2)) * 3; // Max 3 degrees
+                
+                // Calculate perspective shift
+                const perspectiveX = mouseX * 0.02;
+                const perspectiveY = mouseY * 0.02;
+                
+                // Apply transform
+                frame.style.transform = `
+                    perspective(1000px)
+                    rotateX(${rotateX}deg)
+                    rotateY(${rotateY}deg)
+                    translateX(${perspectiveX}px)
+                    translateY(${perspectiveY}px)
+                    translateZ(10px)
+                `;
+                
+                // Adjust shadow based on tilt
+                const shadowIntensity = Math.abs(rotateY) * 0.5 + Math.abs(rotateX) * 0.5;
+                frame.style.boxShadow = `
+                    inset 0 0 0 1px rgba(197, 160, 48, 0.2),
+                    0 ${20 + shadowIntensity}px ${60 + shadowIntensity * 2}px var(--gallery-shadow),
+                    0 0 0 15px var(--marble-white)
+                `;
+            }
+            
+            resetFrame(frame) {
+                frame.style.transform = `
+                    perspective(1000px)
+                    rotateX(0deg)
+                    rotateY(0deg)
+                    translateX(0)
+                    translateY(0)
+                    translateZ(0)
+                `;
+                frame.style.boxShadow = `
+                    inset 0 0 0 1px rgba(197, 160, 48, 0.2),
+                    0 20px 60px var(--gallery-shadow),
+                    0 0 0 15px var(--marble-white)
+                `;
+            }
+            
+            activateFrame(frame) {
+                // Add subtle scale effect on hover
+                frame.style.transition = 'transform 0.2s ease-out, box-shadow 0.2s ease-out';
+            }
+        }
+        
+        // Shimmer effect that follows mouse
+        class ShimmerEffect {
+            constructor() {
+                this.overlay = document.getElementById('shimmerOverlay');
+                this.isActive = false;
+                
+                this.init();
+            }
+            
+            init() {
+                // Track mouse movement
+                document.addEventListener('mousemove', (e) => this.updateShimmer(e));
+                
+                // Activate on gilded elements hover
+                const gildedElements = document.querySelectorAll('.gilded-button, .nav-link, .museum-frame, .collection-card');
+                
+                gildedElements.forEach(el => {
+                    el.addEventListener('mouseenter', () => {
+                        this.isActive = true;
+                        this.overlay.style.opacity = '1';
+                    });
+                    
+                    el.addEventListener('mouseleave', () => {
+                        this.isActive = false;
+                        this.overlay.style.opacity = '0';
+                    });
+                });
+            }
+            
+            updateShimmer(e) {
+                if (!this.isActive) return;
+                
+                const x = e.clientX;
+                const y = e.clientY;
+                
+                // Update CSS variables for shimmer position
+                document.documentElement.style.setProperty('--mouse-x', `${x}px`);
+                document.documentElement.style.setProperty('--mouse-y', `${y}px`);
+            }
+        }
+        
+        // Scroll-based marble vein shifting
+        class MarbleParallax {
+            constructor() {
+                this.veins = document.querySelector('.marble-veins');
+                this.lastScrollY = window.scrollY;
+                this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                
+                if (!this.isReducedMotion) {
+                    this.init();
+                }
+            }
+            
+            init() {
+                // Listen to scroll with throttling
+                let ticking = false;
+                
+                window.addEventListener('scroll', () => {
+                    this.lastScrollY = window.scrollY;
+                    
+                    if (!ticking) {
+                        window.requestAnimationFrame(() => {
+                            this.updateParallax();
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                }, { passive: true });
+            }
+            
+            updateParallax() {
+                const scrollY = this.lastScrollY;
+                
+                // Calculate parallax offset
+                const parallaxX = scrollY * 0.05;
+                const parallaxY = scrollY * 0.02;
+                const rotation = scrollY * 0.001;
+                
+                // Apply transform to marble veins
+                this.veins.style.transform = `
+                    translate(${-parallaxX}px, ${-parallaxY}px)
+                    rotate(${rotation}deg)
+                `;
+            }
+        }
+        
+        // Mobile menu functionality
+        class MobileMenu {
+            constructor() {
+                this.menuBtn = document.getElementById('mobileMenuBtn');
+                this.mobileNav = document.getElementById('mobileNav');
+                this.closeBtn = document.getElementById('mobileNavClose');
+                
+                this.init();
+            }
+            
+            init() {
+                this.menuBtn.addEventListener('click', () => this.openMenu());
+                this.closeBtn.addEventListener('click', () => this.closeMenu());
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!this.mobileNav.contains(e.target) && 
+                        !this.menuBtn.contains(e.target) && 
+                        this.mobileNav.classList.contains('active')) {
+                        this.closeMenu();
+                    }
+                });
+                
+                // Close menu on escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.mobileNav.classList.contains('active')) {
+                        this.closeMenu();
+                    }
+                });
+                
+                // Close menu when clicking a link
+                this.mobileNav.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => this.closeMenu());
+                });
+            }
+            
+            openMenu() {
+                this.mobileNav.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            closeMenu() {
+                this.mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Gilded button press effect
+        class GildedButtonEffect {
+            constructor() {
+                this.buttons = document.querySelectorAll('.gilded-button');
+                this.init();
+            }
+            
+            init() {
+                this.buttons.forEach(button => {
+                    button.addEventListener('mousedown', () => this.pressButton(button));
+                    button.addEventListener('mouseup', () => this.releaseButton(button));
+                    button.addEventListener('mouseleave', () => this.releaseButton(button));
+                    
+                    // Keyboard support
+                    button.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.pressButton(button);
+                        }
+                    });
+                    
+                    button.addEventListener('keyup', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.releaseButton(button);
+                            if (e.key === 'Enter') button.click();
+                        }
+                    });
+                });
+            }
+            
+            pressButton(button) {
+                button.style.transform = 'translateY(2px) scale(0.98)';
+                button.style.boxShadow = 
+                    '0 4px 16px rgba(197, 160, 48, 0.3), ' +
+                    'inset 0 1px 0 rgba(255, 255, 255, 0.4), ' +
+                    '0 0 10px rgba(244, 220, 145, 0.2)';
+                
+                // Add haptic feedback if available
+                if (navigator.vibrate) {
+                    navigator.vibrate(20);
+                }
+            }
+            
+            releaseButton(button) {
+                button.style.transform = '';
+                button.style.boxShadow = '';
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize all effects
+            const tiltEffect = new TiltEffect();
+            const shimmerEffect = new ShimmerEffect();
+            const marbleParallax = new MarbleParallax();
+            const mobileMenu = new MobileMenu();
+            const buttonEffect = new GildedButtonEffect();
+            
+            // Add smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    
+                    if (href !== '#') {
+                        e.preventDefault();
+                        
+                        // Close mobile menu if open
+                        if (mobileMenu.mobileNav.classList.contains('active')) {
+                            mobileMenu.closeMenu();
+                        }
+                        
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            const headerHeight = document.querySelector('.gilded-header').offsetHeight;
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                            
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Add focus styles for accessibility
+            const focusStyles = document.createElement('style');
+            focusStyles.textContent = `
+                .gilded-button:focus,
+                .nav-link:focus {
+                    outline: 2px solid var(--gold-dark);
+                    outline-offset: 4px;
+                }
+                
+                /* Reduced motion adjustments */
+                @media (prefers-reduced-motion: reduce) {
+                    .marble-veins {
+                        animation: none !important;
+                    }
+                    
+                    .museum-frame {
+                        transition: none !important;
+                    }
+                }
+            `;
+            document.head.appendChild(focusStyles);
+            
+            // Preload images for smoother experience
+            this.preloadImages();
+        });
+        
+        // Image preloading
+        function preloadImages() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                const src = img.getAttribute('src');
+                if (src) {
+                    const preload = new Image();
+                    preload.src = src;
+                }
+            });
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CURATED â€” The definitive directory for high-end professional tools.">
+    <title>CURATED // Editorial Tool Directory</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f9f9f9;
+            --text: #0a0a0a;
+            --text-dim: #666666;
+            --primary: #000000;
+            --accent: #5e5ce6;
+            --border: #e5e5e5;
+            --font-serif: 'DM Serif Display', serif;
+            --font-sans: 'Inter', sans-serif;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #050505;
+            --surface: #111111;
+            --text: #ffffff;
+            --text-dim: #a1a1a1;
+            --primary: #ffffff;
+            --border: #222222;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            transition: background 0.4s var(--ease);
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 30px; }
+
+        /* --- Navigation --- */
+        nav {
+            padding: 40px 0; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-family: var(--font-serif); font-size: 1.8rem; letter-spacing: -0.5px; }
+
+        /* --- Hero --- */
+        .hero { padding: 100px 0 60px; text-align: center; }
+        .hero h1 { 
+            font-family: var(--font-serif); font-size: clamp(3rem, 10vw, 6.5rem); 
+            line-height: 0.9; margin-bottom: 30px; letter-spacing: -2px;
+        }
+        .hero p { font-size: 1.1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto; }
+
+        /* --- Filter System --- */
+        .filter-bar {
+            display: flex; justify-content: center; gap: 15px; margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 24px; border-radius: 100px; border: 1px solid var(--border);
+            background: var(--bg); color: var(--text); cursor: pointer;
+            font-weight: 600; font-size: 0.85rem; transition: 0.3s var(--ease);
+        }
+        .filter-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+        /* --- Tool Grid --- */
+        .tool-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
+            gap: 30px; margin-bottom: 100px;
+        }
+        .tool-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 20px; padding: 30px; transition: 0.4s var(--ease);
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .tool-card:hover { transform: translateY(-8px); border-color: var(--text); }
+        .tool-meta { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .category-tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 800; color: var(--text-dim); }
+        .tool-card h3 { font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 15px; }
+        .tool-card p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 25px; }
+
+        /* --- Pricing --- */
+        .pricing-section { background: var(--surface); padding: 100px 0; border-top: 1px solid var(--border); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .price-card {
+            padding: 60px 40px; background: var(--bg); border: 1px solid var(--border);
+            border-radius: 24px; text-align: center;
+        }
+        .price-card.featured { border: 2px solid var(--text); transform: scale(1.05); }
+
+        /* --- UI Elements --- */
+        .btn {
+            display: inline-block; padding: 16px 35px; border-radius: 100px;
+            font-weight: 700; text-decoration: none; transition: 0.3s;
+            cursor: pointer; border: none; font-size: 0.9rem;
+        }
+        .btn-primary { background: var(--primary); color: var(--bg); }
+        .btn-outline { background: transparent; border: 1px solid var(--text); color: var(--text); }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .theme-toggle { background: none; border: 1px solid var(--border); padding: 10px 18px; border-radius: 50px; cursor: pointer; color: var(--text); font-weight: 700; font-size: 0.7rem; }
+
+        @media (max-width: 768px) { .hero h1 { font-size: 3.5rem; } .pricing-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <nav class="container">
+        <div class="logo">CURATED_</div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <button class="theme-toggle" id="themeBtn">THEME_SWITCH</button>
+            <a href="#" class="btn btn-primary" style="padding: 10px 25px;">Submit Tool</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1 class="reveal">Tools for the <br> <i>Modern Pioneer.</i></h1>
+            <p class="reveal" style="transition-delay: 0.1s;">A strictly curated collection of professional-grade software and hardware designed for elite performance.</p>
+        </section>
+
+        <div class="filter-bar reveal" style="transition-delay: 0.2s;">
+            <button class="filter-btn active" data-filter="all">All Tools</button>
+            <button class="filter-btn" data-filter="creative">Creative</button>
+            <button class="filter-btn" data-filter="dev">Development</button>
+            <button class="filter-btn" data-filter="productivity">Productivity</button>
+        </div>
+
+        <section class="tool-grid" id="toolGrid">
+            <div class="tool-card reveal" data-category="creative">
+                <div class="tool-meta">
+                    <span class="category-tag">Creative</span>
+                    <span style="font-size: 0.8rem; font-weight: 700;">â˜… 4.9</span>
+                </div>
+                <h3>Lumina Flow</h3>
+                <p>Next-generation motion design suite with neural engine integration for hyper-realistic physics.</p>
+                <a href="#" class="btn btn-outline" style="width: 100%; text-align: center;">View Details</a>
+            </div>
+
+            <div class="tool-card reveal" data-category="dev" style="transition-delay: 0.1s;">
+                <div class="tool-meta">
+                    <span class="category-tag">Development</span>
+                    <span style="font-size: 0.8rem; font-weight: 700;">â˜… 5.0</span>
+                </div>
+                <h3>Vector Code</h3>
+                <p>The first IDE designed specifically for spatial computing and 3D architectural programming.</p>
+                <a href="#" class="btn btn-outline" style="width: 100%; text-align: center;">View Details</a>
+            </div>
+
+            <div class="tool-card reveal" data-category="productivity" style="transition-delay: 0.2s;">
+                <div class="tool-meta">
+                    <span class="category-tag">Productivity</span>
+                    <span style="font-size: 0.8rem; font-weight: 700;">â˜… 4.8</span>
+                </div>
+                <h3>Syncron OS</h3>
+                <p>An minimalist operating layer that aggregates your entire digital life into one high-speed interface.</p>
+                <a href="#" class="btn btn-outline" style="width: 100%; text-align: center;">View Details</a>
+            </div>
+        </section>
+    </main>
+
+    <section class="pricing-section">
+        <div class="container">
+            <h2 style="font-family: var(--font-serif); font-size: 3rem; text-align: center; margin-bottom: 60px;">Partner with Us.</h2>
+            <div class="pricing-grid">
+                <div class="price-card reveal">
+                    <h4>Basic Listing</h4>
+                    <div style="font-size: 3rem; font-family: var(--font-serif); margin: 20px 0;">Free</div>
+                    <ul style="list-style: none; color: var(--text-dim); margin-bottom: 40px; line-height: 2;">
+                        <li>Standard Placement</li>
+                        <li>Community Reviews</li>
+                        <li>Analytics Dashboard</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%;">Submit Free</button>
+                </div>
+                <div class="price-card featured reveal" style="transition-delay: 0.1s;">
+                    <h4>Premium Feature</h4>
+                    <div style="font-size: 3rem; font-family: var(--font-serif); margin: 20px 0;">$199<span style="font-size: 1rem;">/mo</span></div>
+                    <ul style="list-style: none; color: var(--text-dim); margin-bottom: 40px; line-height: 2;">
+                        <li>Top Tier Placement</li>
+                        <li>Editorial Review Article</li>
+                        <li>Newsletter Spotlight</li>
+                        <li>Verified Badge</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;">Get Featured</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="padding: 100px 0; text-align: center; border-top: 1px solid var(--border);">
+        <div class="logo" style="margin-bottom: 20px; opacity: 0.3;">CURATED_</div>
+        <p style="color: var(--text-dim); font-size: 0.8rem; letter-spacing: 1px;">&copy; 2026 CURATED MEDIA GROUP. NO ALGORITHMS. ONLY TASTE.</p>
+    </footer>
+
+    <script>
+        // --- Theme Switcher ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+        });
+
+        // --- Live Filtering ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const toolCards = document.querySelectorAll('.tool-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // UI Toggle
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Logic
+                const filter = btn.getAttribute('data-filter');
+                toolCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'flex';
+                        setTimeout(() => card.style.opacity = '1', 10);
+                    } else {
+                        card.style.opacity = '0';
+                        setTimeout(() => card.style.display = 'none', 300);
+                    }
+                });
+            });
+        });
+
+        // --- Scroll Reveal ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

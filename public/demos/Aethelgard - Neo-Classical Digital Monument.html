@@ -1,0 +1,290 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aethelgard | Neo-Classical Digital Monument</title>
+    <!-- Typography: Cinzel for Headers, Montserrat for Body -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --marble-white: #fdfdfd;
+            --vein-grey: rgba(180, 180, 180, 0.15);
+            --mouse-x: 50%;
+            --mouse-y: 50%;
+            --transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--marble-white);
+            font-family: 'Montserrat', sans-serif;
+            color: #222;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- CSS GENERATED MARBLE TEXTURE --- */
+        .marble-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: var(--marble-white);
+            background-image: 
+                linear-gradient(30deg, transparent 40%, var(--vein-grey) 41%, transparent 42%),
+                linear-gradient(150deg, transparent 50%, var(--vein-grey) 51%, transparent 52%),
+                linear-gradient(210deg, transparent 30%, var(--vein-grey) 31%, transparent 32%);
+            background-size: 200% 200%;
+            filter: url(#marbleFilter); /* SVG Noise for organic texture */
+            transition: transform 0.1s ease-out;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 700;
+        }
+
+        p {
+            font-weight: 200;
+            letter-spacing: 1px;
+            color: #555;
+        }
+
+        /* --- GILDED UI ELEMENTS --- */
+        .gilded-btn {
+            position: relative;
+            padding: 1rem 2.5rem;
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            transition: var(--transition);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Gilded border & Shimmer that follows mouse */
+        .gilded-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 2px; /* Border thickness */
+            background: var(--gold);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: destination-out;
+        }
+
+        /* The Shimmer Layer */
+        .shimmer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.8) 0%, transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .gilded-btn:hover .shimmer {
+            opacity: 0.4;
+        }
+
+        /* --- LAYOUT SECTIONS --- */
+        nav {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--vein-grey);
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 700; }
+
+        section {
+            padding: 8rem 10%;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            margin-bottom: 1.5rem;
+            background: var(--gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        /* --- MUSEUM GALLERY --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 4rem;
+            width: 100%;
+            margin-top: 4rem;
+        }
+
+        .museum-frame {
+            position: relative;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 
+                0 30px 60px -12px rgba(50, 50, 93, 0.25), 
+                0 18px 36px -18px rgba(0, 0, 0, 0.3),
+                inset 0 0 10px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            transform-style: preserve-3d;
+            cursor: crosshair;
+        }
+
+        .museum-frame img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            filter: sepia(0.2) contrast(1.1);
+            transition: filter 0.5s;
+        }
+
+        .museum-frame:hover img {
+            filter: sepia(0) contrast(1.2);
+        }
+
+        .frame-caption {
+            margin-top: 1.5rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            transform: translateZ(30px); /* Pop out effect */
+        }
+
+        footer {
+            padding: 4rem;
+            text-align: center;
+            border-top: 1px solid var(--vein-grey);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            section { padding: 4rem 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Procedural Background Filter -->
+    <svg style="display:none;">
+        <filter id="marbleFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="10" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="15" />
+        </filter>
+    </svg>
+
+    <div class="marble-bg" id="marbleBg"></div>
+
+    <nav>
+        <div class="logo">AETHELGARD</div>
+        <div class="nav-links">
+            <button class="gilded-btn">
+                <span class="shimmer"></span>
+                Enter Archive
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h1>The Eternal Digital</h1>
+            <p>Blending the architectural symmetry of the ancients with the fluid dynamics of the future. Welcome to a sanctuary of neo-classical luxury.</p>
+            <button class="gilded-btn">
+                <span class="shimmer"></span>
+                Curate Collection
+            </button>
+        </section>
+
+        <section id="gallery">
+            <h2>The Museum Gallery</h2>
+            <div class="gallery-grid">
+                <!-- Frame 1 -->
+                <div class="museum-frame" data-tilt data-tilt-max="10" data-tilt-speed="1000" data-tilt-perspective="1000">
+                    <img src="https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&q=80&w=800" alt="Classical Sculpture">
+                    <div class="frame-caption">I. The Olympian Breath</div>
+                </div>
+
+                <!-- Frame 2 -->
+                <div class="museum-frame" data-tilt data-tilt-max="10" data-tilt-speed="1000" data-tilt-perspective="1000">
+                    <img src="https://images.unsplash.com/photo-1543489822-c995c42a904d?auto=format&fit=crop&q=80&w=800" alt="Marble Architecture">
+                    <div class="frame-caption">II. Corinthian Echoes</div>
+                </div>
+
+                <!-- Frame 3 -->
+                <div class="museum-frame" data-tilt data-tilt-max="10" data-tilt-speed="1000" data-tilt-perspective="1000">
+                    <img src="https://images.unsplash.com/photo-1615529328331-f8917597711f?auto=format&fit=crop&q=80&w=800" alt="Luxury Interior">
+                    <div class="frame-caption">III. Gilded Silence</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2024 Aethelgard &bull; Created for the Sophisticated Web
+    </footer>
+
+    <!-- Tilt.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+    
+    <script>
+        // 1. Mouse Tracking for Shimmer Effects
+        document.addEventListener('mousemove', (e) => {
+            const buttons = document.querySelectorAll('.gilded-btn');
+            buttons.forEach(btn => {
+                const rect = btn.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                btn.style.setProperty('--mouse-x', x + '%');
+                btn.style.setProperty('--mouse-y', y + '%');
+            });
+        });
+
+        // 2. Scroll Parallax for Marble Background
+        const marbleBg = document.getElementById('marbleBg');
+        window.addEventListener('scroll', () => {
+            const offset = window.pageYOffset * 0.15;
+            marbleBg.style.transform = `translateY(${offset}px)`;
+            // Subtle vein shift
+            marbleBg.style.backgroundPosition = `0% ${window.pageYOffset * 0.05}%`;
+        });
+
+        // 3. Initialize Museum Frames
+        VanillaTilt.init(document.querySelectorAll(".museum-frame"), {
+            max: 15,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.2,
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

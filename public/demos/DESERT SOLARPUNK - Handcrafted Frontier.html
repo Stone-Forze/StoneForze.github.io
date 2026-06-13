@@ -1,0 +1,1028 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Desert Solarpunk - Handcrafted ruggedness meets sustainable innovation in the sun-drenched frontier">
+    <title>DESERT SOLARPUNK - Handcrafted Frontier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Stint+Ultra+Expanded&family=Roboto+Slab:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           RESET & BASE STYLES
+           ======================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Desert Solarpunk Palette */
+            --burnt-sienna: #D76838;
+            --ochre: #D4A450;
+            --sand-tan: #E8D5B7;
+            --rust-red: #A0522D;
+            --deep-sand: #8B7355;
+            --desert-sky: #F5DEB3;
+            --shadow-black: #2C1810;
+            --sun-glow: #FFA54F;
+            
+            /* Typography */
+            --font-display: 'Stint Ultra Expanded', serif;
+            --font-body: 'Roboto Slab', serif;
+            
+            /* Spacing */
+            --section-padding: clamp(4rem, 10vw, 12rem);
+            --card-padding: clamp(2rem, 4vw, 3rem);
+            
+            /* Effects */
+            --grain-opacity: 0.15;
+            --shadow-harsh: 8px 8px 0 var(--shadow-black);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(180deg, 
+                var(--desert-sky) 0%, 
+                var(--sand-tan) 40%, 
+                var(--ochre) 100%);
+            color: var(--shadow-black);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* ========================================
+           GRAINY TEXTURE OVERLAY
+           ======================================== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10000;
+            opacity: var(--grain-opacity);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            animation: grainShift 8s steps(10) infinite;
+        }
+
+        @keyframes grainShift {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -5%); }
+            20% { transform: translate(-10%, 5%); }
+            30% { transform: translate(5%, -10%); }
+            40% { transform: translate(-5%, 15%); }
+            50% { transform: translate(-15%, 5%); }
+            60% { transform: translate(15%, 0%); }
+            70% { transform: translate(0%, 10%); }
+            80% { transform: translate(-10%, 0%); }
+            90% { transform: translate(10%, 5%); }
+        }
+
+        /* ========================================
+           SVG FILTERS - HEAT HAZE DISTORTION
+           ======================================== */
+        .svg-filters {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+
+        .heat-haze-text {
+            filter: url(#heatHaze);
+            animation: heatWave 6s ease-in-out infinite;
+        }
+
+        @keyframes heatWave {
+            0%, 100% { 
+                filter: url(#heatHaze) brightness(1); 
+                transform: translateY(0);
+            }
+            50% { 
+                filter: url(#heatHaze) brightness(1.05); 
+                transform: translateY(-3px);
+            }
+        }
+
+        /* ========================================
+           SAND DRIFT PARTICLE SYSTEM
+           ======================================== */
+        #sandCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.6;
+        }
+
+        /* ========================================
+           PARALLAX LAYERS
+           ======================================== */
+        .parallax-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.1s ease-out;
+        }
+
+        .dune-layer-1 {
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        .dune-layer-2 {
+            z-index: 2;
+            opacity: 0.5;
+        }
+
+        .dune-layer-3 {
+            z-index: 3;
+            opacity: 0.7;
+        }
+
+        .dune {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(180deg, transparent 0%, var(--deep-sand) 100%);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+
+        /* ========================================
+           HEADER & NAVIGATION
+           ======================================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.5rem var(--section-padding);
+            background: rgba(232, 213, 183, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid var(--shadow-black);
+            box-shadow: 0 4px 0 var(--rust-red);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            letter-spacing: 0.15em;
+            color: var(--shadow-black);
+            text-decoration: none;
+            text-shadow: 3px 3px 0 var(--ochre);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            color: var(--shadow-black);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--burnt-sienna);
+            transition: width 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        nav a:hover {
+            color: var(--burnt-sienna);
+            transform: translateY(-2px);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* ========================================
+           HERO SECTION - HEAT HAZE & PARALLAX
+           ======================================== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--section-padding);
+            padding-top: calc(var(--section-padding) + 80px);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 1000px;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: heroFadeIn 1.5s ease-out 0.3s forwards;
+        }
+
+        @keyframes heroFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 10vw, 7rem);
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            color: var(--shadow-black);
+            text-shadow: 
+                4px 4px 0 var(--ochre),
+                8px 8px 0 var(--rust-red);
+            letter-spacing: 0.05em;
+        }
+
+        .hero .tagline {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            color: var(--deep-sand);
+            margin-bottom: 3rem;
+            letter-spacing: 0.02em;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.5rem 4rem;
+            background: var(--burnt-sienna);
+            border: 4px solid var(--shadow-black);
+            color: var(--sand-tan);
+            font-family: var(--font-body);
+            font-weight: 900;
+            font-size: 1.2rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            box-shadow: var(--shadow-harsh);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 2px solid var(--ochre);
+            pointer-events: none;
+        }
+
+        .cta-button:hover {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0 var(--shadow-black);
+            background: var(--rust-red);
+        }
+
+        .cta-button:active {
+            transform: translate(8px, 8px);
+            box-shadow: 0 0 0 var(--shadow-black);
+        }
+
+        /* ========================================
+           RUSTED SLATE CARDS
+           ======================================== */
+        .cards-section {
+            padding: var(--section-padding);
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--shadow-black);
+            text-shadow: 3px 3px 0 var(--ochre);
+            letter-spacing: 0.08em;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .rusted-card {
+            background: linear-gradient(135deg, 
+                rgba(215, 104, 56, 0.15) 0%, 
+                rgba(139, 115, 85, 0.15) 100%);
+            border: 4px solid var(--shadow-black);
+            padding: var(--card-padding);
+            box-shadow: var(--shadow-harsh);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            opacity: 0;
+            transform: translateY(60px) scale(0.95);
+        }
+
+        .rusted-card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .rusted-card::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border: 2px solid var(--rust-red);
+            pointer-events: none;
+        }
+
+        .rusted-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M30 5 L35 15 M50 25 L55 30 M70 15 L75 22 M85 8 L90 18' stroke='%238B7355' stroke-width='0.5' opacity='0.3'/%3E%3C/svg%3E");
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .rusted-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 12px 12px 0 var(--shadow-black);
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(3px 3px 0 var(--rust-red));
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 1rem;
+            color: var(--shadow-black);
+            letter-spacing: 0.05em;
+            line-height: 1.2;
+        }
+
+        .card-description {
+            font-size: 1.1rem;
+            color: var(--deep-sand);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .card-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.8rem 2rem;
+            background: var(--ochre);
+            border: 3px solid var(--shadow-black);
+            color: var(--shadow-black);
+            font-weight: 900;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.08em;
+            box-shadow: 4px 4px 0 var(--shadow-black);
+            transition: all 0.3s ease;
+        }
+
+        .card-link:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--shadow-black);
+        }
+
+        /* ========================================
+           FEATURES SECTION - WEATHERED DESIGN
+           ======================================== */
+        .features-section {
+            padding: var(--section-padding);
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(180deg, 
+                transparent 0%, 
+                rgba(139, 115, 85, 0.1) 100%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 2rem;
+            border: 3px solid var(--shadow-black);
+            background: rgba(232, 213, 183, 0.5);
+            position: relative;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .feature-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            width: 20px;
+            height: 20px;
+            border-left: 3px solid var(--rust-red);
+            border-top: 3px solid var(--rust-red);
+        }
+
+        .feature-item::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            border-right: 3px solid var(--rust-red);
+            border-bottom: 3px solid var(--rust-red);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(2px 2px 0 var(--rust-red));
+        }
+
+        .feature-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            color: var(--shadow-black);
+            letter-spacing: 0.05em;
+        }
+
+        .feature-description {
+            font-size: 0.95rem;
+            color: var(--deep-sand);
+            line-height: 1.5;
+        }
+
+        /* ========================================
+           FOOTER - RUGGED DESIGN
+           ======================================== */
+        footer {
+            padding: 3rem var(--section-padding);
+            background: linear-gradient(180deg, 
+                rgba(139, 115, 85, 0.3) 0%, 
+                rgba(44, 24, 16, 0.8) 100%);
+            border-top: 4px solid var(--shadow-black);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        footer p {
+            color: var(--sand-tan);
+            font-size: 1rem;
+            text-shadow: 2px 2px 0 var(--shadow-black);
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1.5rem;
+            }
+
+            nav a {
+                font-size: 0.85rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero h1 {
+                text-shadow: 
+                    3px 3px 0 var(--ochre),
+                    6px 6px 0 var(--rust-red);
+            }
+
+            .cta-button {
+                padding: 1.2rem 2.5rem;
+                font-size: 1rem;
+            }
+
+            #sandCanvas {
+                display: none;
+            }
+        }
+
+        /* ========================================
+           ACCESSIBILITY
+           ======================================== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* ========================================
+           PERFORMANCE OPTIMIZATIONS
+           ======================================== */
+        .gpu-accelerated {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Filters for Heat Haze Effect -->
+    <svg class="svg-filters" aria-hidden="true">
+        <defs>
+            <filter id="heatHaze">
+                <feTurbulence 
+                    type="turbulence" 
+                    baseFrequency="0.02 0.03" 
+                    numOctaves="2" 
+                    result="turbulence">
+                    <animate 
+                        attributeName="baseFrequency" 
+                        dur="8s" 
+                        values="0.02 0.03;0.025 0.035;0.02 0.03" 
+                        repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap 
+                    in="SourceGraphic" 
+                    in2="turbulence" 
+                    scale="3" 
+                    xChannelSelector="R" 
+                    yChannelSelector="G"/>
+                <feGaussianBlur stdDeviation="0.5"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Sand Drift Particle Canvas -->
+    <canvas id="sandCanvas" aria-hidden="true"></canvas>
+
+    <!-- ========================================
+         HEADER & NAVIGATION
+         ======================================== -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">SOLARA</a>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#craft">Craft</a></li>
+                    <li><a href="#ethos">Ethos</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========================================
+         HERO SECTION WITH PARALLAX
+         ======================================== -->
+    <section class="hero parallax-container" id="hero">
+        <!-- Parallax Dune Layers -->
+        <div class="parallax-layer dune-layer-1" data-speed="0.3">
+            <div class="dune" style="left: -10%; width: 120%; bottom: -5%;"></div>
+        </div>
+        <div class="parallax-layer dune-layer-2" data-speed="0.5">
+            <div class="dune" style="left: 5%; width: 90%; bottom: 0;"></div>
+        </div>
+        <div class="parallax-layer dune-layer-3" data-speed="0.7">
+            <div class="dune" style="left: 10%; width: 80%; bottom: 5%;"></div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="heat-haze-text">DESERT<br>SOLARPUNK</h1>
+            <p class="tagline">Handcrafted Innovation. Sun-Drenched Resilience.</p>
+            <a href="#projects" class="cta-button">Explore the Frontier</a>
+        </div>
+    </section>
+
+    <!-- ========================================
+         RUSTED SLATE CARDS SECTION
+         ======================================== -->
+    <section class="cards-section" id="projects">
+        <h2 class="section-title">FRONTIER PROJECTS</h2>
+        <div class="cards-grid">
+            <article class="rusted-card">
+                <div class="card-icon">â˜€ï¸</div>
+                <h3 class="card-title">SOLAR FORGE</h3>
+                <p class="card-description">
+                    Harnessing the relentless desert sun through hand-welded solar arrays. 
+                    Each panel crafted with precision, weathered by intention.
+                </p>
+                <a href="#" class="card-link">Learn More</a>
+            </article>
+
+            <article class="rusted-card">
+                <div class="card-icon">ðŸœï¸</div>
+                <h3 class="card-title">NOMAD SHELTERS</h3>
+                <p class="card-description">
+                    Modular structures built from reclaimed steel and desert sandstone. 
+                    Portable sanctuaries designed for the shifting sands.
+                </p>
+                <a href="#" class="card-link">Discover</a>
+            </article>
+
+            <article class="rusted-card">
+                <div class="card-icon">ðŸ’§</div>
+                <h3 class="card-title">OASIS SYSTEMS</h3>
+                <p class="card-description">
+                    Revolutionary water reclamation using ancient desert wisdom and modern 
+                    engineering. Every drop preserved, every cycle honored.
+                </p>
+                <a href="#" class="card-link">Explore Tech</a>
+            </article>
+
+            <article class="rusted-card">
+                <div class="card-icon">ðŸ”¥</div>
+                <h3 class="card-title">FORGE COLLECTIVE</h3>
+                <p class="card-description">
+                    A community of makers, welders, and builders creating rugged tools 
+                    and structures for sustainable desert living.
+                </p>
+                <a href="#" class="card-link">Join Us</a>
+            </article>
+
+            <article class="rusted-card">
+                <div class="card-icon">ðŸŒµ</div>
+                <h3 class="card-title">DESERT GARDENS</h3>
+                <p class="card-description">
+                    Xeriscaping expertise combined with permaculture principles. 
+                    Growing life where others see only barren land.
+                </p>
+                <a href="#" class="card-link">View Gardens</a>
+            </article>
+
+            <article class="rusted-card">
+                <div class="card-icon">âš™ï¸</div>
+                <h3 class="card-title">RUST & GRIT</h3>
+                <p class="card-description">
+                    Hand-forged tools and equipment built to last generations. 
+                    Weathered aesthetics meet uncompromising functionality.
+                </p>
+                <a href="#" class="card-link">Shop Tools</a>
+            </article>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FEATURES SECTION
+         ======================================== -->
+    <section class="features-section" id="craft">
+        <h2 class="section-title">OUR CRAFT</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">ðŸ”¨</div>
+                <h3 class="feature-title">HANDCRAFTED</h3>
+                <p class="feature-description">
+                    Every piece shaped by skilled hands. No mass production, only intentional creation.
+                </p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">â™»ï¸</div>
+                <h3 class="feature-title">RECLAIMED</h3>
+                <p class="feature-description">
+                    Materials salvaged from the desert. Rust becomes patina, wear becomes character.
+                </p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">ðŸŒž</div>
+                <h3 class="feature-title">SUN-POWERED</h3>
+                <p class="feature-description">
+                    Energy harvested from endless skies. Clean power for a rugged future.
+                </p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">ðŸ—ï¸</div>
+                <h3 class="feature-title">BUILT TO LAST</h3>
+                <p class="feature-description">
+                    Designed to withstand harsh conditions. Structures that outlive their makers.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer id="ethos">
+        <p>&copy; 2026 SOLARA - Desert Solarpunk Collective</p>
+        <p>Handcrafted with Rust & Grit. Powered by the Sun.</p>
+    </footer>
+
+    <!-- ========================================
+         JAVASCRIPT - INTERACTIONS & ANIMATIONS
+         ======================================== -->
+    <script>
+        // ========================================
+        // PARALLAX SCROLLING
+        // ========================================
+        const parallaxLayers = document.querySelectorAll('.parallax-layer');
+        
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            
+            parallaxLayers.forEach(layer => {
+                const speed = layer.getAttribute('data-speed');
+                const yPos = -(scrolled * speed);
+                layer.style.transform = `translate3d(0, ${yPos}px, 0)`;
+            });
+        }
+
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateParallax();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // ========================================
+        // SAND DRIFT PARTICLE SYSTEM
+        // ========================================
+        const canvas = document.getElementById('sandCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class SandParticle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height;
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -10;
+                this.size = Math.random() * 2 + 1;
+                this.speedY = Math.random() * 1 + 0.5;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+
+            update(scrollDirection) {
+                // Respond to scroll direction
+                this.y += this.speedY + (scrollDirection * 0.5);
+                this.x += this.speedX + (scrollDirection * 0.1);
+                
+                // Add slight horizontal drift
+                this.x += Math.sin(this.y * 0.01) * 0.2;
+
+                // Reset when off screen
+                if (this.y > canvas.height + 10) {
+                    this.reset();
+                } else if (this.y < -10) {
+                    this.reset();
+                    this.y = canvas.height + 10;
+                }
+
+                if (this.x > canvas.width + 10) {
+                    this.x = -10;
+                } else if (this.x < -10) {
+                    this.x = canvas.width + 10;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(212, 164, 80, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Create particles
+        const particles = [];
+        const particleCount = 80;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new SandParticle());
+        }
+
+        // Track scroll direction
+        let lastScrollY = window.pageYOffset;
+        let scrollDirection = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.pageYOffset;
+            scrollDirection = (currentScrollY - lastScrollY) * 0.1;
+            lastScrollY = currentScrollY;
+        });
+
+        // Animation loop
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update(scrollDirection);
+                particle.draw();
+            });
+
+            // Decay scroll influence
+            scrollDirection *= 0.95;
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+
+        // Resize canvas
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // ========================================
+        // INTERSECTION OBSERVER - CARD ANIMATIONS
+        // ========================================
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe rusted cards
+        document.querySelectorAll('.rusted-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Observe feature items
+        document.querySelectorAll('.feature-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // ========================================
+        // SMOOTH SCROLL WITH OFFSET
+        // ========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 100;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ========================================
+        // CARD LINK INTERACTIONS
+        // ========================================
+        document.querySelectorAll('.card-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Visual feedback
+                this.style.transform = 'translate(4px, 4px)';
+                this.style.boxShadow = '0 0 0 var(--shadow-black)';
+                
+                setTimeout(() => {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                }, 150);
+            });
+        });
+
+        // ========================================
+        // ACCESSIBILITY - KEYBOARD NAVIGATION
+        // ========================================
+        document.querySelectorAll('.card-link, .cta-button').forEach(button => {
+            button.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    button.click();
+                }
+            });
+        });
+
+        // ========================================
+        // PERFORMANCE: DEBOUNCE RESIZE
+        // ========================================
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                console.log('Window resized - recalculating layouts');
+            }, 250);
+        });
+
+        // ========================================
+        // INITIAL PARALLAX POSITION
+        // ========================================
+        updateParallax();
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

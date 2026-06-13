@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PROTO â€” The next generation of programmable infrastructure.">
+    <title>PROTO // The Future of Infrastructure</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&family=Syne:wght@800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --accent: #ff4d00; /* High-energy orange */
+            --accent-2: #00ff66; /* Neon green */
+            --border-width: 3px;
+            --shadow-dist: 6px;
+            --font-main: 'Space Grotesk', sans-serif;
+            --font-heading: 'Syne', sans-serif;
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #000000;
+            --text: #ffffff;
+            --accent: #ff4d00;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            line-height: 1.4;
+            overflow-x: hidden;
+            transition: background 0.3s ease;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* --- Neo-Brutalist Components --- */
+        .brutal-card {
+            background: var(--bg);
+            border: var(--border-width) solid var(--text);
+            padding: 40px;
+            box-shadow: var(--shadow-dist) var(--shadow-dist) 0px 0px var(--text);
+            transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+        }
+
+        .brutal-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px 0px var(--text);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: var(--accent);
+            color: #000;
+            text-decoration: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: var(--border-width) solid var(--text);
+            box-shadow: 4px 4px 0px 0px var(--text);
+            transition: 0.1s;
+            cursor: pointer;
+        }
+
+        .btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px var(--text);
+        }
+
+        /* --- Header --- */
+        nav {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: var(--border-width) solid var(--text);
+        }
+
+        .logo { font-family: var(--font-heading); font-size: 1.8rem; letter-spacing: -1px; }
+
+        /* --- Hero --- */
+        .hero {
+            padding: 120px 0;
+            text-align: left;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 12vw, 8rem);
+            line-height: 0.9;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        /* --- Metrics Grid --- */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 100px;
+        }
+
+        .metric-val {
+            font-family: var(--font-heading);
+            font-size: 4rem;
+            display: block;
+            color: var(--accent);
+        }
+
+        /* --- Feature Section --- */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+            padding: 100px 0;
+        }
+
+        .feature-item { grid-column: span 4; }
+        .feature-item.large { grid-column: span 8; background: var(--accent-2); color: #000; }
+
+        /* --- Animations --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 0.6s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .theme-toggle {
+            padding: 8px;
+            border: 2px solid var(--text);
+            background: var(--bg);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .feature-item, .feature-item.large { grid-column: span 12; }
+            .hero h1 { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <div class="logo">PROTO.</div>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <button class="theme-toggle" id="themeBtn">SWITCH_MODE</button>
+                <a href="#" class="btn" style="padding: 10px 20px;">Pitch Deck</a>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1 class="reveal">Built to <br> Scale <span style="color: var(--accent);">Fast.</span></h1>
+            <p class="reveal">The first programmable infrastructure layer for high-density compute. Backed by Tier-1 VCs.</p>
+            <div class="reveal">
+                <a href="#" class="btn">Join the Round</a>
+            </div>
+        </section>
+
+        <section class="metrics">
+            <div class="brutal-card reveal">
+                <span class="metric-val">$1.2M</span>
+                <strong>Current ARR</strong>
+            </div>
+            <div class="brutal-card reveal" style="transition-delay: 0.1s;">
+                <span class="metric-val">140%</span>
+                <strong>Net Retention</strong>
+            </div>
+            <div class="brutal-card reveal" style="transition-delay: 0.2s;">
+                <span class="metric-val">22k</span>
+                <strong>Waitlist</strong>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="brutal-card feature-item large reveal">
+                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Zero-Latency Compute</h2>
+                <p>Distributed nodes across 14 global regions. Automated failover. Infinite scaling with one line of code.</p>
+            </div>
+            <div class="brutal-card feature-item reveal">
+                <h3>Edge Security</h3>
+                <p>Post-quantum encryption by default.</p>
+            </div>
+            <div class="brutal-card feature-item reveal">
+                <h3>Enterprise SSO</h3>
+                <p>Native SAML and RBAC support.</p>
+            </div>
+            <div class="brutal-card feature-item large reveal">
+                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">One API. <br> Every Cloud.</h2>
+                <p>Connect AWS, Azure, and GCP without the configuration hell.</p>
+            </div>
+        </section>
+
+        <section style="padding: 100px 0; text-align: center;">
+            <h2 style="font-family: var(--font-heading); font-size: 3rem; margin-bottom: 50px;">Unit Economics</h2>
+            <div class="metrics">
+                <div class="brutal-card reveal">
+                    <h3>Seed</h3>
+                    <div style="font-size: 2rem; margin: 20px 0;">Free</div>
+                    <p style="margin-bottom: 20px;">For builders and early testers.</p>
+                    <a href="#" class="btn" style="width: 100%;">Deploy</a>
+                </div>
+                <div class="brutal-card reveal" style="background: var(--accent);">
+                    <h3>Series A</h3>
+                    <div style="font-size: 2rem; margin: 20px 0;">$499/mo</div>
+                    <p style="margin-bottom: 20px;">For production environments.</p>
+                    <a href="#" class="btn" style="width: 100%; background: #fff;">Scalable</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer style="padding: 60px 0; border-top: var(--border-width) solid var(--text); text-align: center;">
+        <p style="font-weight: 800;">&copy; 2026 PROTO INFRASTRUCTURE INC. / ALL SYSTEMS GO.</p>
+    </footer>
+
+    <script>
+        // --- Reveal Logic ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Theme Toggle ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+        });
+
+        // --- Interactive Mouse Hover Effect ---
+        document.querySelectorAll('.brutal-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                // Subtle shadow shift
+                card.style.boxShadow = `${x/50 + 6}px ${y/50 + 6}px 0px 0px var(--text)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.boxShadow = 'var(--shadow-dist) var(--shadow-dist) 0px 0px var(--text)';
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

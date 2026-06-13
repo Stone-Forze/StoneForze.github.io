@@ -1,0 +1,699 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cyber-Luxury: A premium dark-mode landing page with neon-glass UI, magnetic interactions, and cinematic typography">
+    <title>Cyber-Luxury | Premium Dark Interface</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           CSS CUSTOM PROPERTIES â€” DESIGN TOKENS
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        :root {
+            /* Color Palette */
+            --obsidian-black: #0a0a0f;
+            --deep-void: #12121a;
+            --midnight-grey: #1c1c28;
+            --neon-cyan: #00ffff;
+            --neon-purple: #b026ff;
+            --neon-pink: #ff0080;
+            --glass-white: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b8;
+            
+            /* Typography */
+            --font-display: 'Antonio', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+            --spacing-xl: 6rem;
+            
+            /* Effects */
+            --glow-radius: 200px;
+            --magnetic-distance: 80px;
+            --transition-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           RESET & BASE STYLES
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--obsidian-black);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        /* Grain Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255,255,255,0.03) 0px,
+                    transparent 1px,
+                    transparent 2px,
+                    rgba(255,255,255,0.03) 3px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.03) 0px,
+                    transparent 1px,
+                    transparent 2px,
+                    rgba(255,255,255,0.03) 3px
+                );
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.15;
+            animation: grainShift 8s infinite linear;
+        }
+        
+        @keyframes grainShift {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(1px, -1px); }
+            50% { transform: translate(-1px, 1px); }
+            75% { transform: translate(1px, 1px); }
+        }
+        
+        /* Animated Noise Background */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(176, 38, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+            animation: noiseFloat 20s ease-in-out infinite;
+        }
+        
+        @keyframes noiseFloat {
+            0%, 100% { 
+                background-position: 0% 0%, 100% 100%;
+                opacity: 0.6;
+            }
+            50% { 
+                background-position: 100% 100%, 0% 0%;
+                opacity: 0.8;
+            }
+        }
+        
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           TYPOGRAPHY
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+        
+        h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(15deg); }
+        }
+        
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: var(--neon-cyan);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        p {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-weight: 300;
+        }
+        
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           LAYOUT
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            position: relative;
+            z-index: 10;
+        }
+        
+        section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-xl) 0;
+        }
+        
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           HERO SECTION
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        .hero {
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero__content {
+            animation: fadeInUp 1s var(--transition-smooth) forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+        
+        .hero__subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--neon-purple);
+            letter-spacing: 0.2em;
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .hero__description {
+            max-width: 700px;
+            margin: var(--spacing-md) auto var(--spacing-lg);
+        }
+        
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           NEON-GLASS CARDS
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .neon-card {
+            background: var(--glass-white);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: var(--spacing-md);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s var(--transition-smooth);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        
+        /* Proximity Glow Effect */
+        .neon-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.4s var(--transition-smooth);
+            z-index: -1;
+            filter: blur(8px);
+        }
+        
+        .neon-card.glow-active::before {
+            opacity: 0.6;
+        }
+        
+        .neon-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 255, 255, 0.3);
+        }
+        
+        .card__icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .card__title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .card__description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           MAGNETIC BUTTONS
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            color: var(--obsidian-black);
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s var(--transition-smooth);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.3),
+                0 8px 16px rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            box-shadow: 
+                0 0 40px rgba(0, 255, 255, 0.6),
+                0 12px 24px rgba(0, 0, 0, 0.6);
+            transform: translateY(-4px) scale(1.05);
+        }
+        
+        .btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+        
+        /* Magnetic Effect Container */
+        .btn-magnetic-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+        
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           FEATURES SECTION
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        .features {
+            background: linear-gradient(180deg, var(--obsidian-black), var(--deep-void));
+        }
+        
+        .features__content {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           FOOTER
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        footer {
+            background: var(--midnight-grey);
+            padding: var(--spacing-md) 0;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+        }
+        
+        footer p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           RESPONSIVE DESIGN
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        @media (max-width: 768px) {
+            :root {
+                --spacing-lg: 3rem;
+                --spacing-xl: 4rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            section {
+                min-height: auto;
+                padding: var(--spacing-lg) 0;
+            }
+            
+            .btn {
+                padding: 0.875rem 2rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           ACCESSIBILITY
+           â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Focus Styles */
+        a:focus,
+        button:focus {
+            outline: 2px solid var(--neon-cyan);
+            outline-offset: 4px;
+        }
+        
+        /* Screen Reader Only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+         HERO SECTION
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero__content">
+                <p class="hero__subtitle" role="doc-subtitle">Premium Dark Interface</p>
+                <h1>Cyber Luxury</h1>
+                <p class="hero__description">
+                    Experience the future of digital design. Where obsidian elegance meets neon innovation. 
+                    A premium dark-mode interface crafted for those who demand perfection.
+                </p>
+                
+                <div class="btn-magnetic-wrapper">
+                    <a href="#features" class="btn btn-magnetic" aria-label="Explore features">
+                        Explore Features
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+         FEATURES SECTION
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="features__content">
+                <h2>Premium Features</h2>
+                <p style="max-width: 700px; margin: 0 auto;">
+                    Engineered with cutting-edge web technologies to deliver 
+                    a seamless, high-performance user experience.
+                </p>
+            </div>
+            
+            <div class="cards-grid">
+                <!-- Card 1 -->
+                <article class="neon-card" data-card>
+                    <div class="card__icon" aria-hidden="true">âœ¦</div>
+                    <h3 class="card__title">Neon-Glass UI</h3>
+                    <p class="card__description">
+                        Razor-thin 1px borders that glow with cyan-to-purple gradients 
+                        when your cursor approaches. Pure visual luxury.
+                    </p>
+                </article>
+                
+                <!-- Card 2 -->
+                <article class="neon-card" data-card>
+                    <div class="card__icon" aria-hidden="true">âš¡</div>
+                    <h3 class="card__title">Magnetic Interactions</h3>
+                    <p class="card__description">
+                        Buttons that subtly gravitate toward your cursor, creating 
+                        an intuitive and satisfying interaction paradigm.
+                    </p>
+                </article>
+                
+                <!-- Card 3 -->
+                <article class="neon-card" data-card>
+                    <div class="card__icon" aria-hidden="true">â—ˆ</div>
+                    <h3 class="card__title">Cinematic Typography</h3>
+                    <p class="card__description">
+                        Wide, stark sans-serif fonts deliver a high-fashion, 
+                        editorial aesthetic that commands attention.
+                    </p>
+                </article>
+                
+                <!-- Card 4 -->
+                <article class="neon-card" data-card>
+                    <div class="card__icon" aria-hidden="true">â—‰</div>
+                    <h3 class="card__title">Physical Depth</h3>
+                    <p class="card__description">
+                        Moving grain and noise textures add tactile realism 
+                        to the digital canvas. Feel the screen.
+                    </p>
+                </article>
+                
+                <!-- Card 5 -->
+                <article class="neon-card" data-card>
+                    <div class="card__icon" aria-hidden="true">â—</div>
+                    <h3 class="card__title">60fps Performance</h3>
+                    <p class="card__description">
+                        GPU-accelerated animations and optimized JavaScript 
+                        ensure buttery-smooth 60fps across all devices.
+                    </p>
+                </article>
+                
+                <!-- Card 6 -->
+                <article class="neon-card" data-card>
+                    <div class="card__icon" aria-hidden="true">â—Ž</div>
+                    <h3 class="card__title">WCAG AA Accessible</h3>
+                    <p class="card__description">
+                        High-contrast ratios, semantic HTML, and keyboard navigation 
+                        ensure accessibility for all users.
+                    </p>
+                </article>
+            </div>
+            
+            <div style="text-align: center; margin-top: var(--spacing-xl);">
+                <div class="btn-magnetic-wrapper">
+                    <a href="#hero" class="btn btn-magnetic" aria-label="Get started">
+                        Get Started
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+         FOOTER
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Cyber Luxury. Crafted with precision by a Lead Creative Technologist.</p>
+        </div>
+    </footer>
+    
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+         JAVASCRIPT â€” INTERACTIVE FEATURES
+         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <script>
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // MAGNETIC BUTTON EFFECT
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        const magneticButtons = document.querySelectorAll('.btn-magnetic');
+        const MAGNETIC_DISTANCE = 80; // Distance in pixels for magnetic effect
+        
+        magneticButtons.forEach(button => {
+            button.addEventListener('mousemove', (e) => {
+                const rect = button.getBoundingClientRect();
+                const buttonCenterX = rect.left + rect.width / 2;
+                const buttonCenterY = rect.top + rect.height / 2;
+                
+                const distanceX = e.clientX - buttonCenterX;
+                const distanceY = e.clientY - buttonCenterY;
+                const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
+                
+                if (distance < MAGNETIC_DISTANCE) {
+                    const strength = 1 - (distance / MAGNETIC_DISTANCE);
+                    const moveX = distanceX * strength * 0.3;
+                    const moveY = distanceY * strength * 0.3;
+                    
+                    button.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                } else {
+                    button.style.transform = 'translate(0, 0)';
+                }
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'translate(0, 0)';
+            });
+        });
+        
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // PROXIMITY GLOW EFFECT ON CARDS
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        const neonCards = document.querySelectorAll('[data-card]');
+        const GLOW_DISTANCE = 150; // Distance for glow activation
+        
+        let rafId = null;
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            if (!rafId) {
+                rafId = requestAnimationFrame(updateCardGlows);
+            }
+        });
+        
+        function updateCardGlows() {
+            neonCards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardCenterX = rect.left + rect.width / 2;
+                const cardCenterY = rect.top + rect.height / 2;
+                
+                const distanceX = mouseX - cardCenterX;
+                const distanceY = mouseY - cardCenterY;
+                const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
+                
+                if (distance < GLOW_DISTANCE) {
+                    card.classList.add('glow-active');
+                } else {
+                    card.classList.remove('glow-active');
+                }
+            });
+            
+            rafId = null;
+        }
+        
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // INTERSECTION OBSERVER FOR FADE-IN ANIMATIONS
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all cards with staggered animation
+        neonCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = `all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) ${index * 0.1}s`;
+            observer.observe(card);
+        });
+        
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // SMOOTH SCROLL ENHANCEMENT
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // PERFORMANCE MONITORING (DEVELOPMENT)
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                console.log('ðŸš€ Performance Metrics:');
+                console.log(`   DOM Content Loaded: ${(perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart).toFixed(2)}ms`);
+                console.log(`   Page Load Time: ${(perfData.loadEventEnd - perfData.loadEventStart).toFixed(2)}ms`);
+            });
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

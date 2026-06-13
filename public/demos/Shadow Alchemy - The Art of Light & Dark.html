@@ -1,0 +1,1354 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Alchemy | The Art of Light & Dark</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pitch-black: #000000;
+            --deep-shadow: #0A0A0A;
+            --shadow-glow: rgba(255, 255, 255, 0.05);
+            --faint-grey: #888888;
+            --bright-white: #FFFFFF;
+            --flashlight-glow: rgba(255, 255, 255, 0.15);
+            --text-dim: #666666;
+            --text-bright: #EEEEEE;
+            --accent-glow: rgba(255, 255, 255, 0.2);
+            --ink-blue: #1A1A2E;
+            --smoke-grey: #2A2A3A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--pitch-black);
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--pitch-black);
+            color: var(--faint-grey);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            cursor: none;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Canvas for ink-in-water background */
+        #inkCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Flashlight cursor effect */
+        .flashlight-cursor {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at center,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 30%,
+                transparent 70%
+            );
+            pointer-events: none;
+            z-index: 999;
+            mix-blend-mode: screen;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+            box-shadow: 0 0 80px var(--flashlight-glow);
+            filter: blur(20px);
+        }
+
+        .cursor-center {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: var(--bright-white);
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px var(--bright-white);
+        }
+
+        /* Hidden content that reveals with flashlight */
+        .hidden-content {
+            opacity: 0.1;
+            transition: opacity 0.5s ease;
+        }
+
+        .hidden-content.revealed {
+            opacity: 1;
+        }
+
+        /* Shadow-morphism header */
+        .shadow-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px var(--shadow-glow);
+            border-bottom: 1px solid transparent;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.02), transparent);
+        }
+
+        .logo {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--faint-grey);
+            text-decoration: none;
+            letter-spacing: 3px;
+            transition: all 0.4s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .logo:hover {
+            color: var(--bright-white);
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--bright-white), transparent);
+            transition: width 0.5s ease;
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 400;
+            color: var(--faint-grey);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--bright-white), transparent);
+            transition: width 0.4s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--bright-white);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--faint-grey);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--bright-white);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Main content area */
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        /* Hero section */
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+            margin-bottom: 6rem;
+        }
+
+        .hero-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 5rem;
+            font-weight: 300;
+            color: var(--faint-grey);
+            margin-bottom: 1.5rem;
+            letter-spacing: 4px;
+            transition: all 0.5s ease;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .hero-title:hover {
+            color: var(--bright-white);
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-dim);
+            max-width: 700px;
+            line-height: 1.8;
+            letter-spacing: 1px;
+            margin-bottom: 3rem;
+            transition: all 0.5s ease;
+        }
+
+        .hero-subtitle:hover {
+            color: var(--text-bright);
+        }
+
+        /* Shadow-morphism cards */
+        .shadow-card {
+            background-color: rgba(10, 10, 10, 0.7);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            box-shadow: 
+                0 0 60px rgba(255, 255, 255, 0.03),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.5s ease;
+            border: 1px solid transparent;
+        }
+
+        .shadow-card:hover {
+            box-shadow: 
+                0 0 80px rgba(255, 255, 255, 0.05),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Card title with reveal effect */
+        .card-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 3rem;
+            font-weight: 300;
+            color: var(--faint-grey);
+            margin-bottom: 1.5rem;
+            transition: all 0.5s ease;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--bright-white), transparent);
+            transition: width 0.6s ease;
+        }
+
+        .shadow-card:hover .card-title {
+            color: var(--bright-white);
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .shadow-card:hover .card-title::after {
+            width: 150px;
+        }
+
+        .card-content {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            font-weight: 300;
+            transition: all 0.5s ease;
+        }
+
+        .shadow-card:hover .card-content {
+            color: var(--text-bright);
+        }
+
+        /* Alchemical symbols */
+        .alchemy-symbol {
+            font-size: 4rem;
+            color: var(--faint-grey);
+            text-align: center;
+            margin: 2rem 0;
+            transition: all 0.5s ease;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .shadow-card:hover .alchemy-symbol {
+            color: var(--bright-white);
+            text-shadow: 0 0 20px var(--accent-glow);
+            transform: scale(1.1);
+        }
+
+        /* Shadow grid for principles */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .principle-card {
+            background-color: rgba(10, 10, 10, 0.7);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 0 40px rgba(255, 255, 255, 0.02),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .principle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at var(--mouse-x) var(--mouse-y),
+                rgba(255, 255, 255, 0.03) 0%,
+                transparent 50%
+            );
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .principle-card:hover::before {
+            opacity: 1;
+        }
+
+        .principle-card:hover {
+            box-shadow: 
+                0 0 60px rgba(255, 255, 255, 0.04),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+            transform: translateY(-8px);
+        }
+
+        .principle-icon {
+            font-size: 3rem;
+            color: var(--faint-grey);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            transition: all 0.5s ease;
+        }
+
+        .principle-card:hover .principle-icon {
+            color: var(--bright-white);
+            text-shadow: 0 0 15px var(--accent-glow);
+            transform: scale(1.1);
+        }
+
+        .principle-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--faint-grey);
+            margin-bottom: 1rem;
+            text-align: center;
+            transition: all 0.5s ease;
+        }
+
+        .principle-card:hover .principle-title {
+            color: var(--bright-white);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .principle-description {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--text-dim);
+            text-align: center;
+            font-weight: 300;
+            transition: all 0.5s ease;
+        }
+
+        .principle-card:hover .principle-description {
+            color: var(--text-bright);
+        }
+
+        /* Quote section with reveal */
+        .alchemy-quote {
+            margin: 6rem 0;
+            padding: 4rem;
+            text-align: center;
+            position: relative;
+            border-radius: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            box-shadow: 
+                inset 0 0 60px rgba(255, 255, 255, 0.02),
+                0 0 80px rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .quote-text {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: var(--faint-grey);
+            line-height: 1.6;
+            font-style: italic;
+            margin-bottom: 2rem;
+            transition: all 0.5s ease;
+        }
+
+        .alchemy-quote:hover .quote-text {
+            color: var(--bright-white);
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .quote-author {
+            font-size: 1.3rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            transition: all 0.5s ease;
+        }
+
+        .alchemy-quote:hover .quote-author {
+            color: var(--text-bright);
+        }
+
+        /* Footer */
+        .shadow-footer {
+            margin-top: 8rem;
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 0 60px var(--shadow-glow);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .footer-column-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--faint-grey);
+            margin-bottom: 1.5rem;
+            transition: all 0.5s ease;
+        }
+
+        .footer-column:hover .footer-column-title {
+            color: var(--bright-white);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            position: relative;
+            padding-left: 0;
+            font-weight: 300;
+        }
+
+        .footer-links a::before {
+            content: 'â–¸';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            color: var(--bright-white);
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--bright-white);
+            padding-left: 25px;
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: 0;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Mobile navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            box-shadow: -5px 0 40px rgba(255, 255, 255, 0.05);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .mobile-nav.active {
+            transform: translateX(0);
+        }
+
+        .mobile-nav-close {
+            align-self: flex-end;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--faint-grey);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .mobile-nav-close:hover {
+            color: var(--bright-white);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .hero-title {
+                font-size: 4rem;
+            }
+            
+            .content-wrapper {
+                padding: 7rem 1.5rem 3rem;
+            }
+            
+            .principles-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .shadow-header {
+                padding: 1.5rem 2rem;
+            }
+            
+            .card-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .shadow-card {
+                padding: 2rem;
+            }
+            
+            .principles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .alchemy-quote {
+                padding: 3rem 2rem;
+            }
+            
+            .quote-text {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .card-title {
+                font-size: 2rem;
+            }
+            
+            .card-content {
+                font-size: 1.1rem;
+            }
+            
+            .shadow-header {
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .flashlight-cursor,
+            .hidden-content,
+            .shadow-card,
+            .principle-card,
+            .logo,
+            .nav-link,
+            .hero-title,
+            .hero-subtitle,
+            .card-title,
+            .card-content,
+            .alchemy-symbol,
+            .principle-icon,
+            .principle-title,
+            .principle-description,
+            .quote-text,
+            .quote-author,
+            .footer-column-title,
+            .footer-links a {
+                transition: none !important;
+            }
+            
+            .flashlight-cursor {
+                display: none;
+            }
+            
+            .cursor-center {
+                display: none;
+            }
+            
+            .hidden-content {
+                opacity: 1 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas for ink-in-water effect -->
+    <canvas id="inkCanvas"></canvas>
+    
+    <!-- Flashlight cursor -->
+    <div class="flashlight-cursor" id="flashlightCursor"></div>
+    <div class="cursor-center" id="cursorCenter"></div>
+
+    <!-- Mobile navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose">
+            âœ•
+        </button>
+        <a href="#principles" class="nav-link">Principles</a>
+        <a href="#alchemy" class="nav-link">Alchemy</a>
+        <a href="#manifesto" class="nav-link">Manifesto</a>
+        <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+
+    <!-- Header -->
+    <header class="shadow-header">
+        <a href="#" class="logo">SHADOW ALCHEMY</a>
+        
+        <nav class="nav-links">
+            <a href="#principles" class="nav-link">Principles</a>
+            <a href="#alchemy" class="nav-link">Alchemy</a>
+            <a href="#manifesto" class="nav-link">Manifesto</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            â˜°
+        </button>
+    </header>
+
+    <!-- Main content -->
+    <main class="content-wrapper">
+        <!-- Hero section -->
+        <section class="hero-section">
+            <h1 class="hero-title hidden-content">WHERE DARKNESS REVEALS TRUTH</h1>
+            <p class="hero-subtitle hidden-content">
+                In the interplay of shadow and light, we discover the hidden essence. 
+                Shadow Alchemy is the art of finding illumination in darkness, 
+                substance in emptiness, and meaning in the void.
+            </p>
+        </section>
+
+        <!-- Main shadow card -->
+        <section id="alchemy">
+            <article class="shadow-card hidden-content">
+                <div class="alchemy-symbol">â˜¾</div>
+                <h2 class="card-title">The Alchemy of Shadows</h2>
+                <p class="card-content">
+                    True understanding emerges not from illumination alone, 
+                    but from the delicate balance between light and darkness. 
+                    Just as ink reveals its beauty against paper, 
+                    truth reveals itself against the canvas of uncertainty. 
+                    Shadow Alchemy teaches us to see not just what is illuminated, 
+                    but what waits patiently in the spaces between.
+                </p>
+                <p class="card-content">
+                    The ancient practitioners knew this secret: 
+                    that darkness is not absence, but potential. 
+                    In the void lies infinite possibility, waiting 
+                    to be shaped by intention and attention.
+                </p>
+            </article>
+        </section>
+
+        <!-- Principles grid -->
+        <section id="principles">
+            <div class="principles-grid">
+                <!-- Principle 1 -->
+                <article class="principle-card hidden-content">
+                    <div class="principle-icon">â—‹</div>
+                    <h3 class="principle-title">Embrace the Void</h3>
+                    <p class="principle-description">
+                        True power lies in emptiness. The void contains 
+                        all possibilities, awaiting form and intention. 
+                        Learn to find comfort in uncertainty.
+                    </p>
+                </article>
+                
+                <!-- Principle 2 -->
+                <article class="principle-card hidden-content">
+                    <div class="principle-icon">â—‘</div>
+                    <h3 class="principle-title">Balance of Opposites</h3>
+                    <p class="principle-description">
+                        Light defines shadow, shadow defines light. 
+                        Neither exists without the other. Mastery comes 
+                        from embracing this essential duality.
+                    </p>
+                </article>
+                
+                <!-- Principle 3 -->
+                <article class="principle-card hidden-content">
+                    <div class="principle-icon">â—ˆ</div>
+                    <h3 class="principle-title">Subtle Revelation</h3>
+                    <p class="principle-description">
+                        Truth often reveals itself in whispers, not shouts. 
+                        Learn to perceive the subtle shifts, the gentle 
+                        movements in the darkness.
+                    </p>
+                </article>
+                
+                <!-- Principle 4 -->
+                <article class="principle-card hidden-content">
+                    <div class="principle-icon">â§–</div>
+                    <h3 class="principle-title">Patience in Darkness</h3>
+                    <p class="principle-description">
+                        Transformation occurs at its own pace. 
+                        Like seeds in dark soil, profound change 
+                        requires time and the right conditions.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Alchemy quote -->
+        <section id="manifesto">
+            <div class="alchemy-quote hidden-content">
+                <p class="quote-text">
+                    "We do not fear the darkness, for it is the womb of all creation. 
+                    We do not worship the light, for it is but one expression of truth. 
+                    We seek instead the spaces between, where both dance in eternal balance."
+                </p>
+                <p class="quote-author">â€” The Shadow Alchemist's Manifesto</p>
+            </div>
+        </section>
+
+        <!-- Practice shadow card -->
+        <article class="shadow-card hidden-content">
+            <div class="alchemy-symbol">âŒ¬</div>
+            <h2 class="card-title">The Practice of Seeing</h2>
+            <p class="card-content">
+                Shadow Alchemy is not merely philosophyâ€”it is practice. 
+                Begin by observing the world in low light. Notice how shapes 
+                transform, how edges soften, how what was certain becomes mysterious. 
+                Practice seeing not with your eyes, but with your intuition.
+            </p>
+            <p class="card-content">
+                As your perception deepens, you will begin to see the subtle 
+                energies that flow through all things. You will perceive the 
+                hidden connections, the unseen patterns, the quiet intelligence 
+                that operates in the spaces between moments.
+            </p>
+        </article>
+
+        <!-- Tools shadow card -->
+        <article class="shadow-card hidden-content">
+            <div class="alchemy-symbol">âŸ</div>
+            <h2 class="card-title">Tools of Perception</h2>
+            <p class="card-content">
+                The Shadow Alchemist needs no physical tools, only refined perception. 
+                Your primary instrument is attentionâ€”the ability to focus deeply 
+                on what others overlook. Your secondary tool is patienceâ€”the 
+                willingness to wait for revelation rather than forcing illumination.
+            </p>
+            <p class="card-content">
+                Practice these arts daily. Begin with five minutes of observing 
+                shadows at dawn or dusk. Notice how they change, how they interact 
+                with their environment. In time, you will develop the sight that 
+                sees in darkness as clearly as in light.
+            </p>
+        </article>
+
+        <!-- Footer -->
+        <footer class="shadow-footer" id="contact">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4 class="footer-column-title">SHADOW ALCHEMY</h4>
+                    <p style="margin-top: 1.5rem; color: var(--text-dim); line-height: 1.7; font-weight: 300;">
+                        An exploration of darkness as creative medium. 
+                        A practice of finding illumination in shadow. 
+                        A philosophy of balanced perception.
+                    </p>
+                </div>
+                
+                <div class="footer-column">
+                    <h4 class="footer-column-title">PATHWAYS</h4>
+                    <ul class="footer-links">
+                        <li><a href="#principles">Principles</a></li>
+                        <li><a href="#alchemy">Practice</a></li>
+                        <li><a href="#manifesto">Manifesto</a></li>
+                        <li><a href="#">Meditations</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4 class="footer-column-title">STUDY</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Shadow Journals</a></li>
+                        <li><a href="#">Visual Essays</a></li>
+                        <li><a href="#">Practice Guides</a></li>
+                        <li><a href="#">Philosophical Texts</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4 class="footer-column-title">CONTACT</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:shadow@alchemy.com">shadow@alchemy.com</a></li>
+                        <li><a href="#">Study Groups</a></li>
+                        <li><a href="#">Retreats</a></li>
+                        <li><a href="#">Inquiries</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                SHADOW ALCHEMY Â© 2024 | THE ART OF PERCEIVING WHAT LIES BETWEEN
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Ink-in-water background animation
+        class InkAnimation {
+            constructor() {
+                this.canvas = document.getElementById('inkCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.animationId = null;
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                
+                this.init();
+            }
+            
+            init() {
+                if (this.isReducedMotion) return;
+                
+                // Set canvas size
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+                
+                // Track mouse for interactive effects
+                document.addEventListener('mousemove', (e) => {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+                    
+                    // Occasionally create particles from mouse movement
+                    if (Math.random() > 0.7) {
+                        this.createParticle(this.mouseX, this.mouseY);
+                    }
+                });
+                
+                // Create initial particles
+                this.createInitialParticles();
+                
+                // Start animation
+                this.animate();
+            }
+            
+            resizeCanvas() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+            
+            createInitialParticles() {
+                const particleCount = Math.min(50, Math.floor((window.innerWidth * window.innerHeight) / 20000));
+                
+                for (let i = 0; i < particleCount; i++) {
+                    this.createParticle(
+                        Math.random() * this.canvas.width,
+                        Math.random() * this.canvas.height
+                    );
+                }
+            }
+            
+            createParticle(x, y) {
+                const size = Math.random() * 3 + 1;
+                const speedX = (Math.random() - 0.5) * 0.5;
+                const speedY = (Math.random() - 0.5) * 0.5;
+                const opacity = Math.random() * 0.1 + 0.02;
+                
+                this.particles.push({
+                    x, y,
+                    size,
+                    speedX,
+                    speedY,
+                    opacity,
+                    life: 1,
+                    decay: Math.random() * 0.002 + 0.001
+                });
+                
+                // Limit particles for performance
+                if (this.particles.length > 100) {
+                    this.particles.shift();
+                }
+            }
+            
+            animate() {
+                if (this.isReducedMotion) return;
+                
+                // Clear with fading trail effect
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Update and draw particles
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const p = this.particles[i];
+                    
+                    // Update position
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    
+                    // Apply gentle drift toward center
+                    const centerX = this.canvas.width / 2;
+                    const centerY = this.canvas.height / 2;
+                    const dx = centerX - p.x;
+                    const dy = centerY - p.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance > 100) {
+                        p.speedX += dx * 0.0001;
+                        p.speedY += dy * 0.0001;
+                    }
+                    
+                    // Apply decay
+                    p.life -= p.decay;
+                    
+                    // Remove dead particles
+                    if (p.life <= 0) {
+                        this.particles.splice(i, 1);
+                        continue;
+                    }
+                    
+                    // Draw particle
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity * p.life})`;
+                    this.ctx.fill();
+                    
+                    // Draw subtle glow
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+                    const gradient = this.ctx.createRadialGradient(
+                        p.x, p.y, p.size,
+                        p.x, p.y, p.size * 3
+                    );
+                    gradient.addColorStop(0, `rgba(255, 255, 255, ${p.opacity * p.life * 0.3})`);
+                    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.fill();
+                }
+                
+                // Occasionally create new particles
+                if (Math.random() > 0.95 && this.particles.length < 80) {
+                    this.createParticle(
+                        Math.random() * this.canvas.width,
+                        Math.random() * this.canvas.height
+                    );
+                }
+                
+                this.animationId = requestAnimationFrame(() => this.animate());
+            }
+            
+            destroy() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+            }
+        }
+        
+        // Flashlight cursor effect
+        class FlashlightCursor {
+            constructor() {
+                this.cursor = document.getElementById('flashlightCursor');
+                this.center = document.getElementById('cursorCenter');
+                this.hiddenElements = document.querySelectorAll('.hidden-content');
+                this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.cursorX = 0;
+                this.cursorY = 0;
+                
+                this.init();
+            }
+            
+            init() {
+                if (this.isReducedMotion) {
+                    // Show all content immediately
+                    this.hiddenElements.forEach(el => el.classList.add('revealed'));
+                    return;
+                }
+                
+                // Track mouse movement
+                document.addEventListener('mousemove', (e) => {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+                    this.updateCursor();
+                    this.checkReveal();
+                });
+                
+                // Handle touch devices
+                document.addEventListener('touchmove', (e) => {
+                    if (e.touches.length > 0) {
+                        this.mouseX = e.touches[0].clientX;
+                        this.mouseY = e.touches[0].clientY;
+                        this.updateCursor();
+                        this.checkReveal();
+                    }
+                }, { passive: true });
+                
+                // Hide cursor on mouse leave
+                document.addEventListener('mouseleave', () => {
+                    this.cursor.style.opacity = '0';
+                    this.center.style.opacity = '0';
+                });
+                
+                document.addEventListener('mouseenter', () => {
+                    this.cursor.style.opacity = '1';
+                    this.center.style.opacity = '1';
+                });
+                
+                // Initialize cursor position
+                this.updateCursor();
+            }
+            
+            updateCursor() {
+                // Smooth follow effect
+                this.cursorX += (this.mouseX - this.cursorX) * 0.1;
+                this.cursorY += (this.mouseY - this.cursorY) * 0.1;
+                
+                this.cursor.style.left = `${this.cursorX}px`;
+                this.cursor.style.top = `${this.cursorY}px`;
+                
+                this.center.style.left = `${this.mouseX}px`;
+                this.center.style.top = `${this.mouseY}px`;
+                
+                // Adjust cursor size based on mouse speed
+                const speed = Math.abs(this.mouseX - this.cursorX) + Math.abs(this.mouseY - this.cursorY);
+                const size = Math.max(200, Math.min(400, 300 + speed * 2));
+                
+                this.cursor.style.width = `${size}px`;
+                this.cursor.style.height = `${size}px`;
+            }
+            
+            checkReveal() {
+                this.hiddenElements.forEach(element => {
+                    const rect = element.getBoundingClientRect();
+                    const elementCenterX = rect.left + rect.width / 2;
+                    const elementCenterY = rect.top + rect.height / 2;
+                    
+                    // Calculate distance from cursor to element center
+                    const distance = Math.sqrt(
+                        Math.pow(this.mouseX - elementCenterX, 2) + 
+                        Math.pow(this.mouseY - elementCenterY, 2)
+                    );
+                    
+                    // Calculate if cursor overlaps with element
+                    const cursorRadius = parseInt(this.cursor.style.width) / 2 || 150;
+                    const elementRadius = Math.max(rect.width, rect.height) / 2;
+                    
+                    if (distance < cursorRadius + elementRadius) {
+                        element.classList.add('revealed');
+                    }
+                });
+            }
+        }
+        
+        // Mouse position tracking for principle card effects
+        class MouseTracking {
+            constructor() {
+                this.cards = document.querySelectorAll('.principle-card');
+                this.init();
+            }
+            
+            init() {
+                this.cards.forEach(card => {
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        
+                        // Update CSS variables for radial gradient position
+                        card.style.setProperty('--mouse-x', `${x}px`);
+                        card.style.setProperty('--mouse-y', `${y}px`);
+                    });
+                });
+            }
+        }
+        
+        // Mobile menu functionality
+        class MobileMenu {
+            constructor() {
+                this.menuBtn = document.getElementById('mobileMenuBtn');
+                this.mobileNav = document.getElementById('mobileNav');
+                this.closeBtn = document.getElementById('mobileNavClose');
+                
+                this.init();
+            }
+            
+            init() {
+                this.menuBtn.addEventListener('click', () => this.openMenu());
+                this.closeBtn.addEventListener('click', () => this.closeMenu());
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!this.mobileNav.contains(e.target) && 
+                        !this.menuBtn.contains(e.target) && 
+                        this.mobileNav.classList.contains('active')) {
+                        this.closeMenu();
+                    }
+                });
+                
+                // Close menu on escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.mobileNav.classList.contains('active')) {
+                        this.closeMenu();
+                    }
+                });
+                
+                // Close menu when clicking a link
+                this.mobileNav.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => this.closeMenu());
+                });
+            }
+            
+            openMenu() {
+                this.mobileNav.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            closeMenu() {
+                this.mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize all systems
+            const inkAnimation = new InkAnimation();
+            const flashlightCursor = new FlashlightCursor();
+            const mouseTracking = new MouseTracking();
+            const mobileMenu = new MobileMenu();
+            
+            // Add smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    
+                    if (href !== '#') {
+                        e.preventDefault();
+                        
+                        // Close mobile menu if open
+                        if (mobileMenu.mobileNav.classList.contains('active')) {
+                            mobileMenu.closeMenu();
+                        }
+                        
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            const headerHeight = document.querySelector('.shadow-header').offsetHeight;
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                            
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Clean up on page unload
+            window.addEventListener('beforeunload', () => {
+                inkAnimation.destroy();
+            });
+            
+            // Adjust canvas and cursor for reduced motion preference
+            const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+            reducedMotionQuery.addEventListener('change', () => {
+                if (reducedMotionQuery.matches) {
+                    // User now prefers reduced motion
+                    document.querySelectorAll('.hidden-content').forEach(el => {
+                        el.classList.add('revealed');
+                    });
+                    if (flashlightCursor.cursor) {
+                        flashlightCursor.cursor.style.display = 'none';
+                        flashlightCursor.center.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Add keyboard navigation support
+            document.addEventListener('keydown', (e) => {
+                // Tab key shows focus outlines
+                if (e.key === 'Tab') {
+                    document.documentElement.classList.add('keyboard-navigation');
+                }
+            });
+            
+            document.addEventListener('mousedown', () => {
+                document.documentElement.classList.remove('keyboard-navigation');
+            });
+            
+            // Add CSS for keyboard navigation
+            const keyboardStyles = document.createElement('style');
+            keyboardStyles.textContent = `
+                .keyboard-navigation a:focus,
+                .keyboard-navigation button:focus,
+                .keyboard-navigation .mobile-menu-btn:focus {
+                    outline: 2px solid var(--bright-white);
+                    outline-offset: 4px;
+                }
+                
+                /* Ensure hidden content is visible for screen readers */
+                @media (prefers-reduced-motion: reduce) {
+                    .hidden-content {
+                        opacity: 1 !important;
+                    }
+                }
+            `;
+            document.head.appendChild(keyboardStyles);
+            
+            // Gradually reveal some content on page load
+            setTimeout(() => {
+                document.querySelector('.hero-title')?.classList.add('revealed');
+            }, 500);
+            
+            setTimeout(() => {
+                document.querySelector('.hero-subtitle')?.classList.add('revealed');
+            }, 1000);
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

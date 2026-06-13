@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURAL_LINK // PORTFOLIO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --neon-pink: #ff003c;
+            --neon-blue: #00f0ff;
+            --neon-yellow: #fcee0a;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --glitch-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Hide default for custom cursor */
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- Custom Cursor --- */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        #cursor-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--neon-pink);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* --- Hero Section & Glitch --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+        }
+
+        .glitch-wrapper {
+            position: relative;
+        }
+
+        .glitch {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 0.05em 0 0 var(--neon-pink), -0.05em -0.025em 0 var(--neon-blue);
+            animation: glitch 500ms infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 var(--neon-pink), -0.05em -0.025em 0 var(--neon-blue); }
+            14% { text-shadow: 0.05em 0 0 var(--neon-pink), -0.05em -0.025em 0 var(--neon-blue); }
+            15% { text-shadow: -0.05em -0.025em 0 var(--neon-pink), 0.025em 0.025em 0 var(--neon-blue); }
+            49% { text-shadow: -0.05em -0.025em 0 var(--neon-pink), 0.025em 0.025em 0 var(--neon-blue); }
+            50% { text-shadow: 0.025em 0.05em 0 var(--neon-pink), 0.05em 0 0 var(--neon-blue); }
+            99% { text-shadow: 0.025em 0.05em 0 var(--neon-pink), 0.05em 0 0 var(--neon-blue); }
+            100% { text-shadow: -0.025em 0 0 var(--neon-pink), -0.025em -0.025em 0 var(--neon-blue); }
+        }
+
+        /* --- Circular Progress --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 40px;
+            padding: 100px 10%;
+        }
+
+        .skill-circle {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: auto;
+        }
+
+        svg {
+            width: 120px;
+            height: 120px;
+            transform: rotate(-90deg);
+        }
+
+        circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+
+        .bg-circle { stroke: #222; }
+        .prog-circle {
+            stroke: var(--neon-blue);
+            stroke-dasharray: 314;
+            stroke-dashoffset: 314;
+            transition: stroke-dashoffset 2s ease-out;
+            filter: drop-shadow(0 0 5px var(--neon-blue));
+        }
+
+        /* --- 3D Hover Cards --- */
+        .projects {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 50px 10%;
+            perspective: 1000px;
+        }
+
+        .project-card {
+            flex: 1 1 300px;
+            height: 400px;
+            background: var(--card-bg);
+            border: 1px solid var(--neon-blue);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: "SECURED_DATA";
+            position: absolute;
+            top: 10px; right: 10px;
+            font-size: 0.7rem;
+            color: var(--neon-pink);
+        }
+
+        /* --- Contact Form --- */
+        .contact-form {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px;
+            border-left: 4px solid var(--neon-pink);
+            background: linear-gradient(90deg, rgba(255, 0, 60, 0.05), transparent);
+        }
+
+        input, textarea {
+            width: 100%;
+            background: #111;
+            border: 1px solid #333;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-family: 'Rajdhani';
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .invalid { border-color: var(--neon-pink) !important; animation: shake 0.2s; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        button.cyber-btn {
+            background: var(--neon-blue);
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            transition: 0.3s;
+        }
+
+        button.cyber-btn:hover {
+            background: var(--neon-pink);
+            color: white;
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
+
+    <section class="hero">
+        <div class="glitch-wrapper">
+            <h1 class="glitch" data-text="CYBER_DEV">CYBER_DEV</h1>
+        </div>
+        <p style="letter-spacing: 5px; color: var(--neon-blue);">REWRITING_REALITY.exe</p>
+    </section>
+
+    <section class="skills-grid">
+        <div class="skill-circle" data-percent="85">
+            <svg>
+                <circle class="bg-circle" cx="60" cy="60" r="50"></circle>
+                <circle class="prog-circle" cx="60" cy="60" r="50"></circle>
+            </svg>
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">JS</div>
+        </div>
+        <div class="skill-circle" data-percent="70">
+            <svg>
+                <circle class="bg-circle" cx="60" cy="60" r="50"></circle>
+                <circle class="prog-circle" cx="60" cy="60" r="50"></circle>
+            </svg>
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">AI</div>
+        </div>
+    </section>
+
+    <section class="projects">
+        <div class="project-card">
+            <h2 style="color: var(--neon-blue);">Project_Alpha</h2>
+            <p>Neural network visualizer using raw WebGL.</p>
+        </div>
+        <div class="project-card">
+            <h2 style="color: var(--neon-blue);">Project_Beta</h2>
+            <p>Encrypted messaging protocol via satellite mesh.</p>
+        </div>
+    </section>
+
+    <section class="contact-form">
+        <h2 style="margin-bottom: 20px; font-family: 'Orbitron';">INITIALIZE_COMMUNICATION</h2>
+        <form id="cyberForm">
+            <input type="text" placeholder="NAME" required>
+            <input type="email" placeholder="EMAIL_ID" required id="emailInput">
+            <textarea rows="5" placeholder="MESSAGE_ENCRYPTED"></textarea>
+            <button type="submit" class="cyber-btn">Transmit</button>
+        </form>
+    </section>
+
+    <script>
+        // --- Custom Cursor Logic ---
+        const cursor = document.getElementById('cursor');
+        const dot = document.getElementById('cursor-dot');
+
+        document.addEventListener('mousemove', (e) => {
+            const { clientX: x, clientY: y } = e;
+            
+            // Smooth cursor following
+            cursor.style.transform = `translate3d(${x - 10}px, ${y - 10}px, 0)`;
+            dot.style.left = x - 2 + 'px';
+            dot.style.top = y - 2 + 'px';
+        });
+
+        // --- 3D Hover Effect ---
+        const cards = document.querySelectorAll('.project-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `rotateX(0) rotateY(0)`;
+            });
+        });
+
+        // --- Circular Progress Animation on Scroll ---
+        const skillObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const circle = entry.target.querySelector('.prog-circle');
+                    const percent = entry.target.getAttribute('data-percent');
+                    const offset = 314 - (314 * percent) / 100;
+                    circle.style.strokeDashoffset = offset;
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.skill-circle').forEach(s => skillObserver.observe(s));
+
+        // --- Form Validation Animation ---
+        const form = document.getElementById('cyberForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailInput');
+            if (!email.value.includes('@')) {
+                email.classList.add('invalid');
+                setTimeout(() => email.classList.remove('invalid'), 500);
+            } else {
+                alert("DATA_TRANSMITTED_SUCCESSFULLY");
+            }
+        });
+
+        // --- Parallax Hero ---
+        window.addEventListener('scroll', () => {
+            const scroll = window.pageYOffset;
+            document.querySelector('.glitch').style.transform = `translateY(${scroll * 0.5}px)`;
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

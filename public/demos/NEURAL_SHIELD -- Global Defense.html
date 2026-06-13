@@ -1,0 +1,333 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NEURAL_SHIELD - Enterprise-Grade Cyber Defense & Threat Intelligence.">
+    <title>NEURAL_SHIELD // Global Defense</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #050608;
+            --surface: #0d0f14;
+            --accent: #00f2ff;
+            --accent-rgb: 0, 242, 255;
+            --danger: #ff0055;
+            --text: #e0e6ed;
+            --text-dim: #8892b0;
+            --border: rgba(0, 242, 255, 0.1);
+            --font-main: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --ease: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* Accent Switcher Variations */
+        body.theme-red { --accent: #ff0055; --accent-rgb: 255, 0, 85; }
+        body.theme-purple { --accent: #bc00ff; --accent-rgb: 188, 0, 255; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- UI Components --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+        .glitch {
+            position: relative;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            color: var(--text);
+        }
+
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.8;
+        }
+
+        .glitch:hover::before {
+            animation: glitch-anim 0.3s infinite;
+            color: var(--accent);
+            z-index: -1;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(20px, 9999px, 10px, 0); transform: skew(0.5deg); }
+            50% { clip: rect(80px, 9999px, 5px, 0); transform: skew(-0.5deg); }
+            100% { clip: rect(10px, 9999px, 30px, 0); transform: skew(0.5deg); }
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-inner { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: var(--accent); font-family: var(--font-mono); }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 220px 0 120px;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            background: radial-gradient(circle at 10% 10%, rgba(var(--accent-rgb), 0.05) 0%, transparent 50%);
+        }
+
+        .hero h1 { font-size: clamp(3.5rem, 8vw, 6rem); line-height: 0.9; margin-bottom: 30px; }
+        .hero p { max-width: 600px; font-size: 1.2rem; color: var(--text-dim); margin-bottom: 40px; }
+
+        /* --- Threat Monitor Widget --- */
+        .threat-monitor {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .threat-log { height: 120px; overflow-y: hidden; color: var(--accent); opacity: 0.7; }
+        .status-dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; background: var(--accent); margin-right: 10px; animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* --- Cards & Grid --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 60px; }
+        
+        .service-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 40px;
+            transition: all 0.4s var(--ease);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px -20px rgba(var(--accent-rgb), 0.3);
+        }
+
+        .service-card::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, transparent 50%, var(--accent) 50%);
+            opacity: 0.2;
+        }
+
+        /* --- CTAs & Buttons --- */
+        .btn {
+            display: inline-block;
+            padding: 18px 40px;
+            background: var(--accent);
+            color: var(--bg);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover { background: var(--text); transform: scale(1.05); }
+        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); margin-left: 20px; }
+
+        /* --- Modal System --- */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: 0.4s;
+            z-index: 2000;
+        }
+        .modal.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: var(--surface); padding: 60px; border: 1px solid var(--accent); max-width: 500px; width: 90%; position: relative; }
+
+        /* --- Utilities --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .accent-switcher { position: fixed; right: 20px; bottom: 20px; display: flex; gap: 10px; z-index: 1000; }
+        .swatch { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-inner">
+            <div class="logo">NS_V2.0.4</div>
+            <div style="display:flex; align-items:center; gap:30px;">
+                <a href="#services" style="color:var(--text-dim); text-decoration:none; font-size:0.8rem;">RESOURCES</a>
+                <button class="btn" style="padding: 10px 20px;" onclick="toggleModal()">Access_Portal</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1 class="glitch" data-text="SECURE_THE_VOID">SECURE_THE_VOID</h1>
+                <p>Advanced cryptographic hardening and real-time perimeter defense for the distributed enterprise. We turn vulnerability into kinetic resistance.</p>
+                <div>
+                    <a href="#services" class="btn">Deploy Shields</a>
+                    <a href="javascript:void(0)" class="btn btn-outline" onclick="toggleModal()">Threat Audit</a>
+                </div>
+
+                <div class="threat-monitor reveal">
+                    <div style="margin-bottom: 10px;">
+                        <span class="status-dot"></span> SYSTEM_STATUS: OPERATIONAL // THREAT_LEVEL: LOW
+                    </div>
+                    <div class="threat-log" id="threatLog">
+                        > INITIALIZING NETWORK SCAN...<br>
+                        > NO ANOMALIES DETECTED IN NODE_04...<br>
+                        > ENCRYPTING DATA PACKETS (AES-256)...<br>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" id="services" style="padding: 100px 0;">
+            <div class="reveal">
+                <h2 style="font-size: 2.5rem; font-family: var(--font-mono);">01_DEFENSE_VECTORS</h2>
+                <div class="grid">
+                    <div class="service-card">
+                        <h3 style="margin-bottom:15px; color:var(--accent);">Cloud_Armor</h3>
+                        <p>End-to-end encryption for multi-cloud environments, ensuring zero-trust data sovereignty.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3 style="margin-bottom:15px; color:var(--accent);">Ghost_Protocol</h3>
+                        <p>Stealth network routing and IP obfuscation to prevent targeted DDOS and industrial espionage.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3 style="margin-bottom:15px; color:var(--accent);">Neural_Audit</h3>
+                        <p>AI-driven penetration testing that evolves in real-time to match zero-day threat patterns.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" style="padding: 100px 0; text-align: center;">
+            <div class="reveal">
+                <h2 style="font-size: 2.5rem; margin-bottom: 50px;">SUBSCRIPTION_PROTOCOLS</h2>
+                <div class="grid">
+                    <div class="service-card" style="border-radius: 0;">
+                        <span style="font-family:var(--font-mono); font-size: 0.7rem; color:var(--accent);">[ BASIC_NODE ]</span>
+                        <div style="font-size: 3rem; font-weight: 700; margin: 20px 0;">$499<span style="font-size:1rem;">/mo</span></div>
+                        <p style="margin-bottom: 30px;">Standard encryption and 24/7 firewall monitoring.</p>
+                        <button class="btn btn-outline" style="margin:0; width:100%;">Initialize</button>
+                    </div>
+                    <div class="service-card" style="border: 2px solid var(--accent);">
+                        <span style="font-family:var(--font-mono); font-size: 0.7rem; color:var(--accent);">[ QUANTUM_PRIME ]</span>
+                        <div style="font-size: 3rem; font-weight: 700; margin: 20px 0;">$1,299<span style="font-size:1rem;">/mo</span></div>
+                        <p style="margin-bottom: 30px;">AI threat hunting and air-gapped backup redundancy.</p>
+                        <button class="btn" style="width:100%;">Initialize</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="portalModal">
+        <div class="modal-content">
+            <h2 style="font-family:var(--font-mono); margin-bottom: 20px;">ACCESS_RESTRICTED</h2>
+            <p style="color:var(--text-dim); margin-bottom: 30px;">Enter your biometric override or hardware key to proceed to the command center.</p>
+            <input type="password" placeholder="KEY_PATH" style="width:100%; background:var(--bg); border:1px solid var(--border); padding:15px; color:white; margin-bottom:20px; font-family:var(--font-mono);">
+            <button class="btn" style="width:100%;" onclick="toggleModal()">Authorize</button>
+        </div>
+    </div>
+
+    <div class="accent-switcher">
+        <div class="swatch" style="background:#00f2ff;" onclick="setTheme('')"></div>
+        <div class="swatch" style="background:#ff0055;" onclick="setTheme('theme-red')"></div>
+        <div class="swatch" style="background:#bc00ff;" onclick="setTheme('theme-purple')"></div>
+    </div>
+
+    <footer style="padding: 60px 0; border-top: 1px solid var(--border); text-align: center; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim);">
+        &copy; 2026 NEURAL_SHIELD // ENCRYPTED_CONNECTION // ALL RIGHTS RESERVED
+    </footer>
+
+    <script>
+        // --- Scroll Reveal Engine ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Threat Monitor Simulation ---
+        const threatLog = document.getElementById('threatLog');
+        const logs = [
+            "> INTERCEPTING UNKNOWN PACKET FROM 192.168.1.1...",
+            "> APPLYING ZERO-TRUST FILTER...",
+            "> HANDSHAKE VERIFIED: ENCRYPTED.",
+            "> SCANNING NODE_07 FOR SQL_INJECTION...",
+            "> FIREWALL REINFORCED AT PERIMETER_B...",
+            "> WARNING: BRUTE FORCE ATTEMPT BLOCKED.",
+            "> ROTATING CRYPTOGRAPHIC KEYS..."
+        ];
+
+        setInterval(() => {
+            const newLog = document.createElement('div');
+            newLog.innerText = logs[Math.floor(Math.random() * logs.length)];
+            threatLog.appendChild(newLog);
+            if(threatLog.childNodes.length > 8) threatLog.removeChild(threatLog.firstChild);
+        }, 3000);
+
+        // --- Modal Control ---
+        function toggleModal() {
+            document.getElementById('portalModal').classList.toggle('active');
+        }
+
+        // --- Theme Switcher ---
+        function setTheme(theme) {
+            document.body.className = theme;
+        }
+
+        // --- Glitch Sound Simulation (Visual only for performance) ---
+        document.querySelectorAll('.glitch').forEach(el => {
+            el.addEventListener('mouseover', () => {
+                // Potential for subtle audio files here
+            });
+        });
+
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

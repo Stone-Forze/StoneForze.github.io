@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cine-Rain & Urban Melancholy</title>
+
+<!-- =============================
+     FONTS
+============================= -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   ROOT COLORS â€” DARK NOIR PALETTE
+========================================================= */
+:root{
+  --charcoal:#0f1114;
+  --navy:#0a1622;
+  --amber:#ffb347;
+  --glass:rgba(255,255,255,0.05);
+}
+
+/* =========================================================
+   GLOBAL RESET
+========================================================= */
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(180deg,var(--navy),var(--charcoal));
+  color:#e6edf3;
+  overflow-x:hidden;
+}
+
+/* =========================================================
+   RAIN BACKGROUND
+========================================================= */
+.rain{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-2;
+}
+
+.drop{
+  position:absolute;
+  width:2px;
+  height:18px;
+  background:rgba(255,255,255,0.15);
+  animation:fall linear infinite;
+}
+
+@keyframes fall{
+  from{transform:translateY(-20px)}
+  to{transform:translateY(100vh)}
+}
+
+/* =========================================================
+   WINDOW DROPLET OVERLAY
+========================================================= */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+   radial-gradient(circle at 20% 30%,rgba(255,255,255,.06),transparent 40%),
+   radial-gradient(circle at 70% 60%,rgba(255,255,255,.05),transparent 45%);
+  backdrop-filter:blur(2px);
+  pointer-events:none;
+  z-index:-1;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+header{
+  padding:120px 20px 60px;
+  text-align:center;
+}
+
+header h1{
+  font-family:'JetBrains Mono',monospace;
+  font-size:48px;
+  filter:url(#liquidRipple);
+}
+
+header p{
+  margin-top:14px;
+  opacity:.75;
+}
+
+/* =========================================================
+   WET SURFACE UI
+========================================================= */
+section{
+  max-width:1000px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+.card{
+  background:var(--glass);
+  border-radius:14px;
+  padding:24px;
+  margin-bottom:24px;
+  box-shadow:
+   inset 0 2px 8px rgba(255,255,255,0.05),
+   0 10px 30px rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);
+  transform:translateY(40px);
+  opacity:0;
+  filter:blur(12px);
+  transition:all .8s ease;
+}
+
+.card.show{
+  transform:translateY(0);
+  opacity:1;
+  filter:blur(0);
+}
+
+.card h3{
+  font-family:'JetBrains Mono',monospace;
+  margin-bottom:10px;
+}
+
+/* =========================================================
+   BUTTONS WITH WET GLOSS
+========================================================= */
+.btn{
+  display:inline-block;
+  padding:12px 20px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.08);
+  box-shadow:
+   inset 0 2px 4px rgba(255,255,255,0.2),
+   0 0 10px rgba(255,179,71,.4);
+  margin-top:18px;
+  transition:.3s;
+}
+
+.btn:hover{
+  box-shadow:
+   inset 0 2px 6px rgba(255,255,255,0.3),
+   0 0 18px var(--amber);
+}
+
+/* =========================================================
+   RIPPLE EFFECT
+========================================================= */
+.ripple{
+  position:fixed;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,0.3);
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  animation:rippleAnim .8s ease-out forwards;
+}
+
+@keyframes rippleAnim{
+  from{width:0;height:0;opacity:1}
+  to{width:220px;height:220px;opacity:0}
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media(max-width:600px){
+ header h1{font-size:34px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- SVG LIQUID DISPLACEMENT FILTER -->
+<svg width="0" height="0">
+<filter id="liquidRipple">
+  <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="2" result="warp"/>
+  <feDisplacementMap in="SourceGraphic" in2="warp" scale="14"/>
+</filter>
+</svg>
+
+<div class="rain" id="rain"></div>
+
+<header>
+  <h1>Cine-Rain Noir Interface</h1>
+  <p>Urban melancholy wrapped in reflective glass and cinematic rainfall.</p>
+  <div class="btn">Enter Experience</div>
+</header>
+
+<section>
+  <article class="card"><h3>Wet Glass UI</h3><p>Reflective surfaces inspired by rain-soaked city streets.</p></article>
+  <article class="card"><h3>Urban Mood</h3><p>Charcoal palettes with neon-amber cinematic accents.</p></article>
+  <article class="card"><h3>Noir Motion</h3><p>Misty blur-to-clear transitions reveal atmospheric content.</p></article>
+</section>
+
+<script>
+/* =========================================================
+   PERFORMANCE RAIN GENERATOR
+========================================================= */
+const rain=document.getElementById("rain");
+for(let i=0;i<120;i++){
+  const d=document.createElement("div");
+  d.className="drop";
+  d.style.left=Math.random()*100+"%";
+  d.style.animationDuration=(0.6+Math.random()*0.8)+"s";
+  d.style.animationDelay=Math.random()+"s";
+  rain.appendChild(d);
+}
+
+/* =========================================================
+   INTERSECTION OBSERVER â€” MISTY FADE IN
+========================================================= */
+const observer=new IntersectionObserver(entries=>{
+ entries.forEach(e=>{
+   if(e.isIntersecting){
+     e.target.classList.add("show");
+   }
+ });
+},{threshold:.2});
+
+document.querySelectorAll(".card").forEach(c=>observer.observe(c));
+
+/* =========================================================
+   CLICK RIPPLE EFFECT
+========================================================= */
+window.addEventListener("click",e=>{
+ const r=document.createElement("div");
+ r.className="ripple";
+ r.style.left=e.clientX+"px";
+ r.style.top=e.clientY+"px";
+ document.body.appendChild(r);
+ setTimeout(()=>r.remove(),800);
+});
+</script>
+
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,704 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Neo-Classical Luxury landing page blending ancient aesthetics with modern interaction design.">
+    <title>Neo-Classical Luxury | Aureum Atelier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Questrial&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --marble-white: #f8f7f4;
+            --marble-ivory: #f0eee9;
+            --marble-vein: rgba(122, 126, 134, 0.2);
+            --marble-vein-soft: rgba(124, 128, 135, 0.1);
+            --ink: #23211f;
+            --ink-soft: #56524c;
+            --panel: rgba(255, 255, 255, 0.72);
+            --gold-1: #6a4f1c;
+            --gold-2: #b88e3c;
+            --gold-3: #f0deb1;
+            --gold-4: #8a6829;
+            --shadow-deep: rgba(55, 39, 16, 0.34);
+            --shadow-soft: rgba(64, 48, 24, 0.16);
+            --mx: 50%;
+            --my: 50%;
+            --marble-shift: 0px;
+            --marble-shift-alt: 0px;
+            --frame-glare-x: 50%;
+            --frame-glare-y: 50%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            color: var(--ink);
+            font-family: "Questrial", sans-serif;
+            letter-spacing: 0.06em;
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+            background-color: var(--marble-white);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background-color: var(--marble-white);
+            background-image:
+                radial-gradient(circle at 18% 26%, rgba(255, 255, 255, 0.95), transparent 56%),
+                radial-gradient(circle at 77% 72%, rgba(238, 237, 234, 0.85), transparent 48%),
+                linear-gradient(122deg, transparent 22%, var(--marble-vein) 26%, transparent 31%, transparent 51%, var(--marble-vein-soft) 56%, transparent 61%),
+                linear-gradient(67deg, transparent 8%, var(--marble-vein-soft) 13%, transparent 20%, transparent 46%, var(--marble-vein) 50%, transparent 55%, transparent 74%, var(--marble-vein-soft) 79%, transparent 84%),
+                linear-gradient(var(--marble-ivory), var(--marble-white));
+            background-size: 170% 170%, 150% 150%, 220% 220%, 240% 240%, 100% 100%;
+            background-position:
+                calc(50% + var(--marble-shift-alt)) calc(50% + var(--marble-shift)),
+                calc(65% + var(--marble-shift)) calc(45% + var(--marble-shift-alt)),
+                calc(40% + var(--marble-shift-alt)) calc(10% + var(--marble-shift)),
+                calc(75% + var(--marble-shift)) calc(65% + var(--marble-shift-alt)),
+                center;
+            transition: background-position 0.2s linear;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.22;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='3' seed='7'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+            background-size: 250px 250px;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            backdrop-filter: blur(8px);
+            background: rgba(248, 247, 244, 0.7);
+            border-bottom: 1px solid rgba(151, 127, 84, 0.25);
+        }
+
+        .header-wrap {
+            width: min(1200px, 92vw);
+            margin: 0 auto;
+            min-height: 4.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .brand {
+            font-family: "Cinzel", serif;
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            font-size: clamp(1rem, 1.8vw, 1.25rem);
+            color: var(--ink);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            white-space: nowrap;
+        }
+
+        .brand-mark {
+            width: 1.7rem;
+            height: 1.7rem;
+            display: inline-block;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 32% 26%, #fff6dc 8%, transparent 42%),
+                linear-gradient(140deg, #6a4f1c, #b78f3b 42%, #f4e6c4 56%, #8d6b2b);
+            box-shadow: 0 0 0 1px rgba(98, 72, 24, 0.35), 0 6px 12px rgba(46, 33, 13, 0.25);
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .nav-list a {
+            text-decoration: none;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-size: 0.76rem;
+            padding: 0.7rem 0.9rem;
+            border-radius: 999px;
+            transition: color 0.24s ease, background-color 0.24s ease;
+        }
+
+        .nav-list a:hover,
+        .nav-list a:focus-visible {
+            color: var(--ink);
+            background: rgba(214, 196, 162, 0.25);
+            outline: none;
+        }
+
+        .page {
+            width: min(1200px, 92vw);
+            margin: 0 auto;
+            padding: 3.8rem 0 5rem;
+            display: grid;
+            gap: 5.2rem;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 2.4rem;
+            align-items: center;
+        }
+
+        .hero-panel {
+            background: var(--panel);
+            border-radius: 1.5rem;
+            padding: clamp(1.6rem, 3vw, 2.6rem);
+            box-shadow: 0 18px 32px var(--shadow-soft), inset 0 0 0 1px rgba(193, 168, 118, 0.2);
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.73rem;
+            color: #7a6846;
+            margin-bottom: 0.9rem;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: "Cinzel", serif;
+            letter-spacing: 0.08em;
+            color: #1c1916;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: clamp(1.9rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: var(--ink-soft);
+            max-width: 58ch;
+            font-size: clamp(0.94rem, 1.45vw, 1.08rem);
+        }
+
+        .hero-actions {
+            margin-top: 1.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem;
+        }
+
+        .gilded {
+            --mx: 50%;
+            --my: 50%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            background:
+                linear-gradient(rgba(248, 247, 244, 0.85), rgba(248, 247, 244, 0.78)) padding-box,
+                linear-gradient(112deg, var(--gold-1), var(--gold-2) 26%, var(--gold-3) 52%, var(--gold-2) 75%, var(--gold-4)) border-box;
+            box-shadow: inset 0 1px 0 rgba(255, 253, 245, 0.65), 0 10px 20px rgba(92, 67, 24, 0.18);
+        }
+
+        .gilded::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            background:
+                radial-gradient(180px circle at var(--mx) var(--my), rgba(255, 246, 219, 0.72), transparent 58%),
+                linear-gradient(110deg, transparent 34%, rgba(255, 255, 255, 0.72) 50%, transparent 66%);
+            background-size: 100% 100%, 220% 100%;
+            background-position: center, -160% 0;
+            opacity: 0.45;
+            animation: gilded-shimmer 4s linear infinite;
+            mix-blend-mode: screen;
+        }
+
+        .gilded:hover::before,
+        .gilded:focus-visible::before {
+            opacity: 0.82;
+        }
+
+        .gilded-border {
+            --mx: 50%;
+            --my: 50%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            border: 1px solid transparent;
+            background:
+                linear-gradient(rgba(250, 248, 242, 0.86), rgba(246, 241, 230, 0.8)) padding-box,
+                linear-gradient(116deg, var(--gold-1), var(--gold-2) 32%, var(--gold-3) 54%, var(--gold-2) 72%, var(--gold-4)) border-box;
+            box-shadow: inset 0 1px 0 rgba(255, 253, 245, 0.58), 0 12px 20px rgba(82, 60, 21, 0.12);
+        }
+
+        .gilded-border::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            opacity: 0.3;
+            background:
+                radial-gradient(170px circle at var(--mx) var(--my), rgba(255, 246, 218, 0.68), transparent 60%),
+                linear-gradient(110deg, transparent 36%, rgba(255, 255, 255, 0.62) 50%, transparent 64%);
+            background-size: 100% 100%, 210% 100%;
+            background-position: center, -180% 0;
+            animation: gilded-shimmer 4.6s linear infinite;
+            mix-blend-mode: screen;
+        }
+
+        .gilded-border:hover::before,
+        .gilded-border:focus-within::before {
+            opacity: 0.74;
+        }
+
+        @keyframes gilded-shimmer {
+            0% {
+                background-position: center, -160% 0;
+            }
+            100% {
+                background-position: center, 180% 0;
+            }
+        }
+
+        .button {
+            text-decoration: none;
+            color: #332609;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.92rem 1.4rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.22s ease;
+        }
+
+        .button:hover,
+        .button:focus-visible {
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        .hero-metric {
+            border-radius: 1.1rem;
+            padding: 1rem;
+            display: grid;
+            gap: 0.4rem;
+            text-align: center;
+            box-shadow: 0 14px 20px rgba(72, 52, 22, 0.16);
+        }
+
+        .hero-metric strong {
+            font-family: "Cinzel", serif;
+            font-size: clamp(1.4rem, 2vw, 2.1rem);
+            letter-spacing: 0.08em;
+        }
+
+        .hero-metric span {
+            color: #615742;
+            text-transform: uppercase;
+            letter-spacing: 0.13em;
+            font-size: 0.64rem;
+        }
+
+        .manifest {
+            background: rgba(255, 255, 255, 0.64);
+            padding: clamp(1.4rem, 3vw, 2rem);
+            border-radius: 1.3rem;
+            border: 1px solid rgba(180, 150, 98, 0.25);
+            box-shadow: 0 14px 28px rgba(70, 50, 20, 0.12);
+            display: grid;
+            gap: 1.2rem;
+        }
+
+        .manifest-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.9rem;
+        }
+
+        .manifest-card {
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.58);
+        }
+
+        .manifest-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .manifest-card p {
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            color: #645d50;
+        }
+
+        .gallery {
+            display: grid;
+            gap: 1.2rem;
+        }
+
+        .gallery-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .gallery-head h2 {
+            font-size: clamp(1.6rem, 3.4vw, 2.8rem);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.25rem;
+        }
+
+        .frame-wrap {
+            border-radius: 1.2rem;
+            perspective: 1200px;
+        }
+
+        .frame {
+            position: relative;
+            border-radius: 1.2rem;
+            padding: 0.85rem;
+            transform-style: preserve-3d;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+            background:
+                linear-gradient(143deg, #f7f4ed, #dfd7c8) padding-box,
+                linear-gradient(120deg, #72551f, #b58d3d 36%, #f2e1b8 58%, #8f6b2a) border-box;
+            border: 1px solid transparent;
+            box-shadow:
+                0 28px 36px -12px var(--shadow-deep),
+                0 10px 14px rgba(88, 64, 24, 0.24),
+                inset 0 0 0 2px rgba(246, 240, 224, 0.5);
+        }
+
+        .frame::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            background: radial-gradient(260px circle at var(--frame-glare-x) var(--frame-glare-y), rgba(255, 255, 255, 0.45), transparent 55%);
+            mix-blend-mode: screen;
+        }
+
+        .frame:hover::after {
+            opacity: 0.8;
+        }
+
+        .frame-well {
+            border-radius: 0.9rem;
+            overflow: hidden;
+            background: #0f0d0a;
+            box-shadow:
+                inset 0 16px 22px rgba(0, 0, 0, 0.65),
+                inset 0 -10px 16px rgba(0, 0, 0, 0.45),
+                0 8px 14px rgba(35, 24, 10, 0.3);
+            transform: translateZ(26px);
+        }
+
+        .frame img {
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            object-fit: cover;
+            display: block;
+            filter: saturate(0.88) contrast(1.03);
+            transform: scale(1.01);
+        }
+
+        figcaption {
+            margin-top: 0.8rem;
+            text-align: center;
+            color: #584f3f;
+            text-transform: uppercase;
+            letter-spacing: 0.11em;
+            font-size: 0.67rem;
+        }
+
+        footer {
+            margin-top: 0.5rem;
+            text-align: center;
+            color: #6b6356;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            font-size: 0.62rem;
+        }
+
+        @media (max-width: 980px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-panel + .hero-panel {
+                max-width: 420px;
+            }
+
+            .manifest-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .nav-list {
+                gap: 0.3rem;
+            }
+
+            .nav-list a {
+                padding: 0.55rem 0.7rem;
+                letter-spacing: 0.1em;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .header-wrap {
+                min-height: 4.2rem;
+                gap: 0.8rem;
+            }
+
+            .brand {
+                letter-spacing: 0.15em;
+                font-size: 0.95rem;
+            }
+
+            .nav-list a {
+                font-size: 0.62rem;
+                padding: 0.48rem 0.56rem;
+            }
+
+            .page {
+                gap: 3.5rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+
+            html {
+                scroll-behavior: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-wrap">
+            <a class="brand" href="#top">
+                <span class="brand-mark" aria-hidden="true"></span>
+                Aureum Atelier
+            </a>
+            <nav aria-label="Primary">
+                <ul class="nav-list">
+                    <li><a href="#heritage">Heritage</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#visit">Visit</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page" id="top">
+        <section class="hero" aria-labelledby="hero-title">
+            <article class="hero-panel">
+                <p class="eyebrow">Neo-Classical Luxury Interface</p>
+                <h1 id="hero-title">A Digital Monument Carved in Marble and Gold</h1>
+                <p>
+                    Aureum Atelier merges temple-grade symmetry with responsive interaction design.
+                    Every motion is restrained, every edge is gilded, and every surface feels archival.
+                </p>
+                <div class="hero-actions">
+                    <a class="button gilded" href="#gallery">Enter The Museum</a>
+                    <a class="button gilded" href="#visit">Reserve A Private Tour</a>
+                </div>
+            </article>
+
+            <aside class="hero-panel" aria-label="Studio metrics">
+                <div class="hero-metric gilded-border">
+                    <strong>03</strong>
+                    <span>Curated Wings</span>
+                </div>
+                <div class="hero-metric gilded-border">
+                    <strong>12K</strong>
+                    <span>Annual Visitors</span>
+                </div>
+                <div class="hero-metric gilded-border">
+                    <strong>1890</strong>
+                    <span>Classical Origin</span>
+                </div>
+            </aside>
+        </section>
+
+        <section class="manifest" id="heritage" aria-labelledby="heritage-title">
+            <p class="eyebrow">Design Manifesto</p>
+            <h2 id="heritage-title">Ancient Proportion, Contemporary Precision</h2>
+            <p>
+                The layout follows classical rhythm while micro-interactions respond with modern fidelity.
+                Material cues stay tactile: carved planes, brass gradients, and museum-depth shadows.
+            </p>
+            <div class="manifest-grid">
+                <article class="manifest-card gilded-border">
+                    <h3>Marble Surface</h3>
+                    <p>CSS-generated stratified veins drift subtly with scroll to simulate natural stone depth.</p>
+                </article>
+                <article class="manifest-card gilded-border">
+                    <h3>Gilded Components</h3>
+                    <p>Button and border highlights sweep with a metallic shimmer that tracks pointer light.</p>
+                </article>
+                <article class="manifest-card gilded-border">
+                    <h3>Gallery Illusion</h3>
+                    <p>Frames tilt in 3D space, placing artworks into deep-set wells with dynamic glare.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="gallery" id="gallery" aria-labelledby="gallery-title">
+            <header class="gallery-head">
+                <div>
+                    <p class="eyebrow">Museum Gallery</p>
+                    <h2 id="gallery-title">Curated Rooms of Light and Form</h2>
+                </div>
+                <a class="button gilded" href="#visit">Arrange Appointment</a>
+            </header>
+
+            <div class="gallery-grid">
+                <figure class="frame-wrap">
+                    <div class="frame" data-tilt>
+                        <div class="frame-well">
+                            <img src="https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=1200&q=80" alt="Marble colonnade interior with sculpted light" loading="lazy">
+                        </div>
+                    </div>
+                    <figcaption>Hall of Ionic Light</figcaption>
+                </figure>
+
+                <figure class="frame-wrap">
+                    <div class="frame" data-tilt>
+                        <div class="frame-well">
+                            <img src="https://images.unsplash.com/photo-1529429617124-aee711f7f718?auto=format&fit=crop&w=1200&q=80" alt="Classical statue with dramatic museum illumination" loading="lazy">
+                        </div>
+                    </div>
+                    <figcaption>Portrait of Eternal Form</figcaption>
+                </figure>
+
+                <figure class="frame-wrap">
+                    <div class="frame" data-tilt>
+                        <div class="frame-well">
+                            <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?auto=format&fit=crop&w=1200&q=80" alt="Grand vaulted dome and ornate neoclassical structure" loading="lazy">
+                        </div>
+                    </div>
+                    <figcaption>Vault of Aureate Echoes</figcaption>
+                </figure>
+            </div>
+        </section>
+    </main>
+
+    <footer id="visit">
+        Private Viewings by Appointment | Aureum Atelier | Neo-Classical Luxury Interface
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var gildedElements = document.querySelectorAll(".gilded, .gilded-border");
+            var frames = document.querySelectorAll("[data-tilt]");
+            var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            function updateMarbleShift() {
+                var y = window.scrollY || window.pageYOffset;
+                root.style.setProperty("--marble-shift", (y * 0.04).toFixed(2) + "px");
+                root.style.setProperty("--marble-shift-alt", (y * -0.03).toFixed(2) + "px");
+            }
+
+            updateMarbleShift();
+            window.addEventListener("scroll", updateMarbleShift, { passive: true });
+
+            gildedElements.forEach(function (element) {
+                element.addEventListener("pointermove", function (event) {
+                    var rect = element.getBoundingClientRect();
+                    var x = ((event.clientX - rect.left) / rect.width) * 100;
+                    var y = ((event.clientY - rect.top) / rect.height) * 100;
+                    element.style.setProperty("--mx", x.toFixed(2) + "%");
+                    element.style.setProperty("--my", y.toFixed(2) + "%");
+                });
+
+                element.addEventListener("pointerleave", function () {
+                    element.style.setProperty("--mx", "50%");
+                    element.style.setProperty("--my", "50%");
+                });
+            });
+
+            if (prefersReducedMotion) {
+                return;
+            }
+
+            frames.forEach(function (frame) {
+                frame.addEventListener("pointermove", function (event) {
+                    var rect = frame.getBoundingClientRect();
+                    var relX = (event.clientX - rect.left) / rect.width;
+                    var relY = (event.clientY - rect.top) / rect.height;
+                    var rotateY = (relX - 0.5) * 16;
+                    var rotateX = (0.5 - relY) * 14;
+
+                    frame.style.transform =
+                        "perspective(1200px) rotateX(" + rotateX.toFixed(2) + "deg) rotateY(" + rotateY.toFixed(2) + "deg) translateZ(6px)";
+                    frame.style.setProperty("--frame-glare-x", (relX * 100).toFixed(2) + "%");
+                    frame.style.setProperty("--frame-glare-y", (relY * 100).toFixed(2) + "%");
+                });
+
+                frame.addEventListener("pointerleave", function () {
+                    frame.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0px)";
+                    frame.style.setProperty("--frame-glare-x", "50%");
+                    frame.style.setProperty("--frame-glare-y", "50%");
+                });
+            });
+        })();
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

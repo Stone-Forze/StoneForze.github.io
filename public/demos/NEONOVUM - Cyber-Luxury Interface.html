@@ -1,0 +1,1389 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEONOVUM | Cyber-Luxury Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100;200;300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --obsidian-black: #050505;
+            --deep-void: #0A0A0A;
+            --neon-cyan: #00F3FF;
+            --neon-purple: #9D00FF;
+            --neon-glow: rgba(157, 0, 255, 0.3);
+            --cyan-glow: rgba(0, 243, 255, 0.3);
+            --border-glow: rgba(255, 255, 255, 0.1);
+            --text-primary: #FFFFFF;
+            --text-secondary: #AAAAAA;
+            --text-dim: #666666;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --shadow-heavy: rgba(0, 0, 0, 0.8);
+            --shadow-neon: rgba(0, 243, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--obsidian-black);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--obsidian-black);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* Subtle moving grain texture */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            animation: grain-move 8s steps(10) infinite;
+        }
+
+        @keyframes grain-move {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-1%, -1%); }
+            20% { transform: translate(1%, 0); }
+            30% { transform: translate(-1%, 1%); }
+            40% { transform: translate(1%, -1%); }
+            50% { transform: translate(-1%, 0); }
+            60% { transform: translate(1%, 1%); }
+            70% { transform: translate(0, -1%); }
+            80% { transform: translate(-1%, 1%); }
+            90% { transform: translate(1%, -1%); }
+        }
+
+        /* Cyber-luxury header */
+        .cyber-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid transparent;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.02), transparent);
+            background-size: 200% 200%;
+            animation: header-glow 3s linear infinite;
+        }
+
+        @keyframes header-glow {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .logo {
+            font-family: 'Antonio', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: 4px;
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            transition: width 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .logo:hover::before {
+            width: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-link {
+            font-family: 'Antonio', sans-serif;
+            font-weight: 300;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            position: relative;
+            padding: 0.5rem 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            transition: width 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            text-shadow: 0 0 15px var(--neon-glow);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Main content */
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 10rem 3rem 5rem;
+        }
+
+        /* Hero section */
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 2rem;
+            margin-bottom: 8rem;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Antonio', sans-serif;
+            font-size: 7rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            position: relative;
+            max-width: 1000px;
+        }
+
+        .hero-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 200px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            max-width: 700px;
+            line-height: 1.8;
+            margin-bottom: 4rem;
+            letter-spacing: 1px;
+        }
+
+        /* Neon glass cards with dynamic border glow */
+        .neon-glass-card {
+            background-color: var(--glass-bg);
+            border-radius: 2px;
+            padding: 4rem;
+            margin: 4rem 0;
+            position: relative;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid transparent;
+            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            box-shadow: 0 20px 80px var(--shadow-heavy);
+            overflow: hidden;
+        }
+
+        /* Dynamic border glow that activates on mouse proximity */
+        .neon-glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 2px;
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            pointer-events: none;
+        }
+
+        .neon-glass-card:hover::before {
+            opacity: 1;
+        }
+
+        .neon-glass-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.02), rgba(157, 0, 255, 0.02));
+            z-index: -1;
+        }
+
+        .card-title {
+            font-family: 'Antonio', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            transition: width 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .neon-glass-card:hover .card-title::after {
+            width: 150px;
+        }
+
+        .card-content {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        /* Magnetic buttons */
+        .magnetic-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.4rem 3.5rem;
+            background-color: var(--glass-bg);
+            color: var(--text-primary);
+            font-family: 'Antonio', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            text-decoration: none;
+            border-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 40px var(--shadow-heavy);
+        }
+
+        .magnetic-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .magnetic-button:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 60px var(--shadow-heavy),
+                        0 0 30px var(--shadow-neon);
+            transform: translateY(-3px);
+        }
+
+        .magnetic-button:hover::before {
+            left: 100%;
+        }
+
+        .button-glow {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: -1;
+        }
+
+        .magnetic-button:hover .button-glow {
+            opacity: 0.3;
+        }
+
+        /* Features grid with magnetic interactions */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 3rem;
+            margin: 5rem 0;
+        }
+
+        .feature-card {
+            background-color: var(--glass-bg);
+            border-radius: 2px;
+            padding: 3rem;
+            position: relative;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            overflow: hidden;
+            box-shadow: 0 15px 60px var(--shadow-heavy);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 2px;
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            pointer-events: none;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            transition: all 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .feature-card:hover .feature-icon {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        .feature-title {
+            font-family: 'Antonio', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .feature-description {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        /* Product showcase */
+        .product-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4rem;
+            margin: 6rem 0;
+            align-items: center;
+        }
+
+        .product-image {
+            flex: 1;
+            min-width: 300px;
+            height: 500px;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.05), rgba(157, 0, 255, 0.05));
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 2px;
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            pointer-events: none;
+        }
+
+        .product-image:hover::before {
+            opacity: 1;
+        }
+
+        .product-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .product-title {
+            font-family: 'Antonio', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .product-specs {
+            list-style: none;
+            margin: 2rem 0 3rem;
+        }
+
+        .product-specs li {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .product-specs li::before {
+            content: 'â–¶';
+            position: absolute;
+            left: 0;
+            color: var(--neon-cyan);
+            font-size: 0.8rem;
+        }
+
+        /* Cyber-luxury footer */
+        .cyber-footer {
+            margin-top: 10rem;
+            padding: 5rem 3rem 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            background-color: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+        }
+
+        .footer-column-title {
+            font-family: 'Antonio', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+            position: relative;
+            padding-left: 0;
+            font-weight: 300;
+        }
+
+        .footer-links a::before {
+            content: 'â†’';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            color: var(--neon-cyan);
+            transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+            padding-left: 25px;
+            text-shadow: 0 0 10px var(--neon-glow);
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: 0;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Mobile navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: rgba(5, 5, 5, 0.95);
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            box-shadow: -5px 0 40px rgba(0, 0, 0, 0.8);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .mobile-nav.active {
+            transform: translateX(0);
+        }
+
+        .mobile-nav-close {
+            align-self: flex-end;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .mobile-nav-close:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .hero-title {
+                font-size: 5.5rem;
+            }
+            
+            .content-wrapper {
+                padding: 8rem 2rem 4rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 4.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .cyber-header {
+                padding: 1.5rem 2rem;
+            }
+            
+            .card-title {
+                font-size: 2.8rem;
+            }
+            
+            .product-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3.5rem;
+                letter-spacing: 4px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .neon-glass-card {
+                padding: 3rem 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-showcase {
+                flex-direction: column;
+            }
+            
+            .product-image {
+                height: 400px;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .card-title {
+                font-size: 2.2rem;
+            }
+            
+            .card-content {
+                font-size: 1.1rem;
+            }
+            
+            .cyber-header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .magnetic-button {
+                padding: 1.2rem 2.5rem;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .grain-overlay,
+            .cyber-header,
+            .logo::before,
+            .nav-link,
+            .nav-link::before,
+            .neon-glass-card,
+            .neon-glass-card::before,
+            .card-title::after,
+            .magnetic-button,
+            .magnetic-button::before,
+            .button-glow,
+            .feature-card,
+            .feature-card::before,
+            .feature-icon,
+            .product-image::before {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Grain texture overlay -->
+    <div class="grain-overlay"></div>
+
+    <!-- Mobile navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose">
+            âœ•
+        </button>
+        <a href="#cybertech" class="nav-link">Cybertech</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#product" class="nav-link">Product</a>
+        <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+
+    <!-- Header -->
+    <header class="cyber-header">
+        <a href="#" class="logo">NEONOVUM</a>
+        
+        <nav class="nav-links">
+            <a href="#cybertech" class="nav-link">Cybertech</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#product" class="nav-link">Product</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            â˜°
+        </button>
+    </header>
+
+    <!-- Main content -->
+    <main class="content-wrapper">
+        <!-- Hero section -->
+        <section class="hero-section">
+            <h1 class="hero-title">REDEFINING CYBER-LUXURY</h1>
+            <p class="hero-subtitle">
+                Where cutting-edge technology meets uncompromising elegance. 
+                Neonovum represents the pinnacle of digital craftsmanshipâ€”a 
+                fusion of razor-sharp interfaces, magnetic interactions, 
+                and cinematic aesthetics.
+            </p>
+            <a href="#cybertech" class="magnetic-button" id="heroButton">
+                <span class="button-glow"></span>
+                EXPLORE THE INTERFACE
+            </a>
+        </section>
+
+        <!-- Cybertech section -->
+        <section id="cybertech">
+            <article class="neon-glass-card">
+                <h2 class="card-title">NEON-GLASS TECHNOLOGY</h2>
+                <p class="card-content">
+                    Our proprietary interface system utilizes quantum-thin 
+                    border rendering with dynamic gradient illumination. 
+                    Each element exists in a state of poised potential, 
+                    activating only when your presence demands it. This 
+                    creates a dialogue between user and interfaceâ€”a 
+                    conversation conducted in light and shadow.
+                </p>
+                <p class="card-content">
+                    The neon-glow effect isn't mere decoration; it's 
+                    functional aesthetics. The cyan-to-purple gradient 
+                    represents the spectrum of interactionâ€”from passive 
+                    observation to active engagement. When the border 
+                    illuminates, the system acknowledges your attention.
+                </p>
+                <a href="#" class="magnetic-button" style="margin-top: 2rem;">
+                    <span class="button-glow"></span>
+                    VIEW TECHNOLOGY SPECS
+                </a>
+            </article>
+        </section>
+
+        <!-- Features grid -->
+        <section id="features">
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon">âš¡</div>
+                    <h3 class="feature-title">Magnetic Interface</h3>
+                    <p class="feature-description">
+                        Buttons and controls exhibit subtle gravitational 
+                        attraction to cursor proximity, creating an 
+                        intuitive, physically-inspired interaction model.
+                    </p>
+                    <a href="#" class="magnetic-button" style="margin-top: 2rem; padding: 1rem 2rem; font-size: 1rem;">
+                        <span class="button-glow"></span>
+                        EXPERIENCE
+                    </a>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon">ðŸ”®</div>
+                    <h3 class="feature-title">Dynamic Illumination</h3>
+                    <p class="feature-description">
+                        UI elements feature razor-thin borders that 
+                        illuminate with cyan-to-purple gradients only 
+                        when your cursor approaches.
+                    </p>
+                    <a href="#" class="magnetic-button" style="margin-top: 2rem; padding: 1rem 2rem; font-size: 1rem;">
+                        <span class="button-glow"></span>
+                        EXPERIENCE
+                    </a>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon">ðŸŒ€</div>
+                    <h3 class="feature-title">Cinematic Typography</h3>
+                    <p class="feature-description">
+                        Stark, wide letterforms create dramatic visual 
+                        hierarchy. Every character is precision-optimized 
+                        for maximum impact and readability.
+                    </p>
+                    <a href="#" class="magnetic-button" style="margin-top: 2rem; padding: 1rem 2rem; font-size: 1rem;">
+                        <span class="button-glow"></span>
+                        EXPERIENCE
+                    </a>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card">
+                    <div class="feature-icon">â—ˆ</div>
+                    <h3 class="feature-title">Quantum Grain</h3>
+                    <p class="feature-description">
+                        A subtly moving texture adds physical depth to 
+                        the obsidian canvas, preventing the flatness 
+                        typical of digital interfaces.
+                    </p>
+                    <a href="#" class="magnetic-button" style="margin-top: 2rem; padding: 1rem 2rem; font-size: 1rem;">
+                        <span class="button-glow"></span>
+                        EXPERIENCE
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product showcase -->
+        <section id="product">
+            <div class="product-showcase">
+                <div class="product-image"></div>
+                <div class="product-content">
+                    <h2 class="product-title">NOVA INTERFACE</h2>
+                    <p class="card-content" style="margin-bottom: 2rem;">
+                        The Nova Interface represents our flagship cyber-luxury 
+                        experience. Every pixel is meticulously crafted, every 
+                        interaction precisely tuned. This isn't just softwareâ€”it's 
+                        digital haute couture.
+                    </p>
+                    
+                    <ul class="product-specs">
+                        <li>Dynamic gradient border illumination</li>
+                        <li>Magnetic button interaction system</li>
+                        <li>4K HDR cinematic typography rendering</li>
+                        <li>Quantum grain texture with parallax depth</li>
+                        <li>60fps ultra-smooth transition engine</li>
+                        <li>Fully responsive across all device classes</li>
+                    </ul>
+                    
+                    <a href="#" class="magnetic-button">
+                        <span class="button-glow"></span>
+                        ACQUIRE NOVA INTERFACE
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final card -->
+        <article class="neon-glass-card">
+            <h2 class="card-title">THE FUTURE OF INTERFACE DESIGN</h2>
+            <p class="card-content">
+                We stand at the intersection of technology and artistry. 
+                Neonovum isn't just another interfaceâ€”it's a statement. 
+                A declaration that digital experiences can possess the 
+                same craftsmanship, attention to detail, and emotional 
+                resonance as physical luxury goods.
+            </p>
+            <p class="card-content">
+                Each interaction is choreographed. Each animation is 
+                composed. Each visual element is placed with intention. 
+                This is cyber-luxury: where every detail matters, and 
+                every moment is designed to elevate.
+            </p>
+            <div style="display: flex; gap: 1.5rem; margin-top: 3rem; flex-wrap: wrap;">
+                <a href="#" class="magnetic-button">
+                    <span class="button-glow"></span>
+                    REQUEST DEMO
+                </a>
+                <a href="#" class="magnetic-button">
+                    <span class="button-glow"></span>
+                    VIEW PORTFOLIO
+                </a>
+            </div>
+        </article>
+
+        <!-- Footer -->
+        <footer class="cyber-footer" id="contact">
+            <div class="footer-content">
+                <div>
+                    <h4 class="footer-column-title">NEONOVUM</h4>
+                    <p style="margin-top: 1.5rem; color: var(--text-secondary); line-height: 1.7; font-weight: 300;">
+                        Crafting the future of digital luxury through 
+                        precision engineering, cinematic design, and 
+                        magnetic interactions.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="footer-column-title">TECHNOLOGIES</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Neon-Glass UI</a></li>
+                        <li><a href="#">Magnetic Interaction</a></li>
+                        <li><a href="#">Quantum Grain</a></li>
+                        <li><a href="#">Cinematic Typography</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-column-title">EXPERIENCES</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Nova Interface</a></li>
+                        <li><a href="#">Aether Dashboard</a></li>
+                        <li><a href="#">Quantum Terminal</a></li>
+                        <li><a href="#">Neon Workspace</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-column-title">CONTACT</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:interface@neonovum.com">interface@neonovum.com</a></li>
+                        <li><a href="#">Enterprise Inquiries</a></li>
+                        <li><a href="#">Design Partnerships</a></li>
+                        <li><a href="#">Research Collaborations</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                NEONOVUM Â© 2024 | CYBER-LUXURY INTERFACE SYSTEMS
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Magnetic button effect
+        class MagneticButtons {
+            constructor() {
+                this.buttons = document.querySelectorAll('.magnetic-button');
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                
+                if (!this.isReducedMotion) {
+                    this.init();
+                }
+            }
+            
+            init() {
+                // Track mouse position
+                document.addEventListener('mousemove', (e) => {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+                    this.updateButtons();
+                });
+                
+                // Initialize all buttons
+                this.buttons.forEach(button => {
+                    // Store original position
+                    button.dataset.originalX = 0;
+                    button.dataset.originalY = 0;
+                    button.dataset.isMagnetic = 'true';
+                    
+                    // Add mouse enter/leave for stronger effect
+                    button.addEventListener('mouseenter', () => {
+                        button.dataset.isHovered = 'true';
+                    });
+                    
+                    button.addEventListener('mouseleave', () => {
+                        button.dataset.isHovered = 'false';
+                        // Reset position smoothly
+                        this.resetButton(button);
+                    });
+                });
+                
+                // Start animation loop
+                this.animate();
+            }
+            
+            updateButtons() {
+                this.buttons.forEach(button => {
+                    if (button.dataset.isMagnetic !== 'true') return;
+                    
+                    const rect = button.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    // Calculate distance from mouse to button center
+                    const distance = Math.sqrt(
+                        Math.pow(this.mouseX - centerX, 2) + 
+                        Math.pow(this.mouseY - centerY, 2)
+                    );
+                    
+                    // Calculate attraction radius
+                    const attractionRadius = 200; // pixels
+                    
+                    if (distance < attractionRadius) {
+                        // Calculate attraction strength (stronger when closer)
+                        const strength = 1 - (distance / attractionRadius);
+                        const maxMovement = 15; // max pixels to move
+                        
+                        // Calculate direction vector from mouse to button
+                        const dirX = centerX - this.mouseX;
+                        const dirY = centerY - this.mouseY;
+                        
+                        // Normalize direction
+                        const length = Math.sqrt(dirX * dirX + dirY * dirY);
+                        const normX = dirX / length;
+                        const normY = dirY / length;
+                        
+                        // Apply movement (buttons are repelled from cursor)
+                        const moveX = -normX * strength * maxMovement;
+                        const moveY = -normY * strength * maxMovement;
+                        
+                        // Apply transform
+                        button.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                        
+                        // Increase glow on stronger attraction
+                        const glow = button.querySelector('.button-glow');
+                        if (glow) {
+                            const glowStrength = strength * 0.5;
+                            glow.style.opacity = glowStrength.toString();
+                        }
+                    } else {
+                        // Reset if outside attraction radius
+                        this.resetButton(button);
+                    }
+                });
+            }
+            
+            resetButton(button) {
+                // Smoothly return to original position
+                button.style.transition = 'transform 0.3s cubic-bezier(0.77, 0, 0.175, 1)';
+                button.style.transform = 'translate(0, 0)';
+                
+                // Reset glow
+                const glow = button.querySelector('.button-glow');
+                if (glow) {
+                    glow.style.transition = 'opacity 0.3s cubic-bezier(0.77, 0, 0.175, 1)';
+                    glow.style.opacity = '0';
+                }
+                
+                // Remove transition after reset
+                setTimeout(() => {
+                    button.style.transition = '';
+                    if (glow) glow.style.transition = '';
+                }, 300);
+            }
+            
+            animate() {
+                this.updateButtons();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        
+        // Dynamic border glow for neon glass cards
+        class NeonBorderGlow {
+            constructor() {
+                this.cards = document.querySelectorAll('.neon-glass-card, .feature-card, .product-image');
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                
+                if (!this.isReducedMotion) {
+                    this.init();
+                }
+            }
+            
+            init() {
+                // Track mouse position
+                document.addEventListener('mousemove', (e) => {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+                    this.updateCardGlows();
+                });
+                
+                // Initialize animation
+                this.animate();
+            }
+            
+            updateCardGlows() {
+                this.cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    // Calculate distance from mouse to card center
+                    const distance = Math.sqrt(
+                        Math.pow(this.mouseX - centerX, 2) + 
+                        Math.pow(this.mouseY - centerY, 2)
+                    );
+                    
+                    // Activation radius
+                    const activationRadius = 400; // pixels
+                    
+                    if (distance < activationRadius) {
+                        // Calculate glow intensity (stronger when closer)
+                        const intensity = 1 - (distance / activationRadius);
+                        
+                        // Update border opacity
+                        card.style.setProperty('--border-opacity', intensity.toString());
+                        
+                        // Apply the opacity to the pseudo-element via style
+                        const pseudoOpacity = Math.min(intensity * 0.8, 1);
+                        card.style.setProperty('--pseudo-opacity', pseudoOpacity.toString());
+                        
+                        // Add a CSS custom property for JavaScript to use
+                        card.dataset.glowIntensity = intensity;
+                    } else {
+                        // Reset if outside activation radius
+                        card.style.setProperty('--border-opacity', '0');
+                        card.style.setProperty('--pseudo-opacity', '0');
+                        delete card.dataset.glowIntensity;
+                    }
+                });
+            }
+            
+            animate() {
+                this.updateCardGlows();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        
+        // Mouse proximity detection for dynamic effects
+        class MouseProximity {
+            constructor() {
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.init();
+            }
+            
+            init() {
+                document.addEventListener('mousemove', (e) => {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+                    
+                    // Update CSS variables for any elements that use them
+                    document.documentElement.style.setProperty('--mouse-x', `${this.mouseX}px`);
+                    document.documentElement.style.setProperty('--mouse-y', `${this.mouseY}px`);
+                });
+            }
+        }
+        
+        // Mobile menu functionality
+        class MobileMenu {
+            constructor() {
+                this.menuBtn = document.getElementById('mobileMenuBtn');
+                this.mobileNav = document.getElementById('mobileNav');
+                this.closeBtn = document.getElementById('mobileNavClose');
+                
+                this.init();
+            }
+            
+            init() {
+                this.menuBtn.addEventListener('click', () => this.openMenu());
+                this.closeBtn.addEventListener('click', () => this.closeMenu());
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!this.mobileNav.contains(e.target) && 
+                        !this.menuBtn.contains(e.target) && 
+                        this.mobileNav.classList.contains('active')) {
+                        this.closeMenu();
+                    }
+                });
+                
+                // Close menu on escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.mobileNav.classList.contains('active')) {
+                        this.closeMenu();
+                    }
+                });
+                
+                // Close menu when clicking a link
+                this.mobileNav.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => this.closeMenu());
+                });
+            }
+            
+            openMenu() {
+                this.mobileNav.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            closeMenu() {
+                this.mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize all systems
+            const magneticButtons = new MagneticButtons();
+            const neonBorderGlow = new NeonBorderGlow();
+            const mouseProximity = new MouseProximity();
+            const mobileMenu = new MobileMenu();
+            
+            // Add smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    
+                    if (href !== '#') {
+                        e.preventDefault();
+                        
+                        // Close mobile menu if open
+                        if (mobileMenu.mobileNav.classList.contains('active')) {
+                            mobileMenu.closeMenu();
+                        }
+                        
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            const headerHeight = document.querySelector('.cyber-header').offsetHeight;
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                            
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Add CSS for dynamic border glow
+            const dynamicStyles = document.createElement('style');
+            dynamicStyles.textContent = `
+                /* Dynamic border glow based on proximity */
+                .neon-glass-card::before,
+                .feature-card::before,
+                .product-image::before {
+                    opacity: var(--pseudo-opacity, 0) !important;
+                }
+                
+                /* Add focus styles for accessibility */
+                .magnetic-button:focus,
+                .nav-link:focus,
+                .mobile-menu-btn:focus {
+                    outline: 2px solid var(--neon-cyan);
+                    outline-offset: 4px;
+                }
+                
+                /* Reduced motion adjustments */
+                @media (prefers-reduced-motion: reduce) {
+                    .magnetic-button,
+                    .neon-glass-card,
+                    .feature-card {
+                        transform: none !important;
+                        transition: none !important;
+                    }
+                    
+                    .grain-overlay {
+                        animation: none !important;
+                    }
+                }
+                
+                /* Product image placeholder styling */
+                .product-image {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--text-dim);
+                    font-size: 1.5rem;
+                    letter-spacing: 2px;
+                }
+                
+                .product-image::after {
+                    content: 'NOVA INTERFACE';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    opacity: 0.3;
+                    text-transform: uppercase;
+                    font-family: 'Antonio', sans-serif;
+                    font-size: 2rem;
+                    letter-spacing: 4px;
+                }
+            `;
+            document.head.appendChild(dynamicStyles);
+            
+            // Add keyboard navigation class
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    document.documentElement.classList.add('keyboard-navigation');
+                }
+            });
+            
+            document.addEventListener('mousedown', () => {
+                document.documentElement.classList.remove('keyboard-navigation');
+            });
+            
+            // Add initial animation for hero button
+            setTimeout(() => {
+                const heroButton = document.getElementById('heroButton');
+                if (heroButton) {
+                    heroButton.style.animation = 'none';
+                    heroButton.offsetHeight; // Trigger reflow
+                    heroButton.style.animation = '';
+                }
+            }, 1000);
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

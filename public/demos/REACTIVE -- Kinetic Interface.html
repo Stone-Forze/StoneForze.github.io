@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REACTIVE // Kinetic Interface</title>
+    <style>
+        :root {
+            --bg: #0a0a0b;
+            --text: #ffffff;
+            --accent: #00ffcc;
+            --font: 'Inter', system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Hide default cursor for the follow-glow */
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Custom Cursor & Follow Glow --- */
+        #cursor-follower {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--text);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease-out;
+        }
+
+        #cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 204, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            will-change: transform;
+        }
+
+        /* --- Experimental Layout --- */
+        .magnetic-container {
+            display: flex;
+            gap: 100px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .magnetic-wrap {
+            display: inline-block;
+            padding: 40px; /* Magnetic trigger area */
+        }
+
+        .btn-magnetic {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--text);
+            padding: 30px 60px;
+            border-radius: 100px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: border-color 0.3s, color 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-magnetic:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-text {
+            pointer-events: none; /* Prevent text from interrupting the magnetic calc */
+            display: block;
+        }
+
+        /* --- Content Sections --- */
+        .info-panel {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            * { cursor: auto; }
+            #cursor-follower, #cursor-glow { display: none; }
+            .magnetic-container { gap: 40px; }
+            .btn-magnetic { padding: 20px 40px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cursor-follower"></div>
+    <div id="cursor-glow"></div>
+
+    <div class="info-panel">SYSTEMS_ACTIVE // STABLE</div>
+
+    <main class="magnetic-container">
+        <div class="magnetic-wrap">
+            <button class="btn-magnetic">
+                <span class="btn-text">Core_</span>
+            </button>
+        </div>
+        <div class="magnetic-wrap">
+            <button class="btn-magnetic">
+                <span class="btn-text">Sync_</span>
+            </button>
+        </div>
+        <div class="magnetic-wrap">
+            <button class="btn-magnetic">
+                <span class="btn-text">Flux_</span>
+            </button>
+        </div>
+    </main>
+
+    <script>
+        const follower = document.getElementById('cursor-follower');
+        const glow = document.getElementById('cursor-glow');
+        const magneticWraps = document.querySelectorAll('.magnetic-wrap');
+
+        let mouse = { x: 0, y: 0 };
+        let pos = { x: 0, y: 0 };
+        const lerp = (a, b, n) => (1 - n) * a + n * b;
+
+        // Track mouse position
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // Animation Loop
+        function render() {
+            // Smooth cursor follower
+            pos.x = lerp(pos.x, mouse.x, 0.15);
+            pos.y = lerp(pos.y, mouse.y, 0.15);
+            
+            follower.style.transform = `translate3d(${pos.x - 10}px, ${pos.y - 10}px, 0)`;
+            glow.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+
+            // Magnetic Button Logic
+            magneticWraps.forEach(wrap => {
+                const btn = wrap.querySelector('.btn-magnetic');
+                const text = btn.querySelector('.btn-text');
+                
+                const rect = wrap.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                const distanceX = mouse.x - centerX;
+                const distanceY = mouse.y - centerY;
+                const distance = Math.hypot(distanceX, distanceY);
+
+                // If mouse is within proximity of the wrapper
+                if (distance < 150) {
+                    // Pull button toward mouse (magnetic strength 0.4)
+                    const x = distanceX * 0.4;
+                    const y = distanceY * 0.4;
+                    btn.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                    
+                    // Pull text slightly less for depth (magnetic strength 0.2)
+                    text.style.transform = `translate3d(${x * 0.2}px, ${y * 0.2}px, 0)`;
+                } else {
+                    // Snap back to origin
+                    btn.style.transform = `translate3d(0px, 0px, 0)`;
+                    text.style.transform = `translate3d(0px, 0px, 0)`;
+                }
+            });
+
+            requestAnimationFrame(render);
+        }
+
+        render();
+
+        // Hover scale effects
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                follower.style.transform += ' scale(4)';
+                follower.style.opacity = '0.3';
+            });
+            btn.addEventListener('mouseleave', () => {
+                follower.style.opacity = '1';
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

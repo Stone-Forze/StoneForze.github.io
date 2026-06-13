@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BINARY // Tech Perspectives</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --card-bg: #141417;
+            --accent: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --transition: cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+
+        /* --- Progress Bar --- */
+        #progress-wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            z-index: 1000;
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), #8b5cf6);
+            transition: width 0.1s linear;
+        }
+
+        /* --- Header & Nav --- */
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 12, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            font-weight: 700;
+        }
+
+        .logo span { color: var(--accent); }
+
+        /* --- Featured Post --- */
+        .hero {
+            padding: 80px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-label {
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        /* --- Article Cards --- */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 0 5% 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .article-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .article-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            transition: color 0.3s;
+        }
+
+        .article-card:hover h2 { color: var(--accent); }
+
+        .article-meta {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- Scroll Reveals --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s var(--transition);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Lazy Load Styles --- */
+        .lazy-img {
+            width: 100%;
+            height: 200px;
+            background: #1e1e22;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            filter: blur(10px);
+            transition: filter 0.5s;
+        }
+
+        .lazy-img.loaded { filter: blur(0); }
+
+        footer {
+            text-align: center;
+            padding: 60px 5%;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .blog-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="progress-wrap">
+        <div id="progress-bar"></div>
+    </div>
+
+    <header>
+        <div class="logo">BINARY<span>_</span></div>
+        <div style="font-size: 0.9rem; opacity: 0.6;">Vol. 2026</div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <span class="hero-label">Editor's Choice</span>
+            <h1 class="reveal">The Architecture of Neural Consciousness</h1>
+            <p class="reveal" style="color: var(--text-secondary); max-width: 600px; font-size: 1.2rem;">Exploring the intersection of biological cognitive maps and large-scale synthetic intelligence models.</p>
+        </section>
+
+        <div class="blog-grid">
+            <article class="article-card reveal">
+                <div>
+                    <div class="lazy-img" data-src="article1.jpg"></div>
+                    <h2>Quantum Decrypting: The End of Privacy?</h2>
+                    <p style="color: var(--text-secondary);">How RSA-2048 stands against the looming threat of fault-tolerant quantum computers.</p>
+                </div>
+                <div class="article-meta">
+                    <span>Mar 12, 2026</span>
+                    <span>8 min read</span>
+                </div>
+            </article>
+
+            <article class="article-card reveal">
+                <div>
+                    <div class="lazy-img" data-src="article2.jpg"></div>
+                    <h2>Web GPU: High-Performance Graphics</h2>
+                    <p style="color: var(--text-secondary);">Native-level GPU power is coming to the browser. Here is what you need to know.</p>
+                </div>
+                <div class="article-meta">
+                    <span>Feb 28, 2026</span>
+                    <span>5 min read</span>
+                </div>
+            </article>
+
+            <article class="article-card reveal">
+                <div>
+                    <div class="lazy-img" data-src="article3.jpg"></div>
+                    <h2>The Rust Renaissance</h2>
+                    <p style="color: var(--text-secondary);">Why systems programming is becoming the new standard for web infrastructure.</p>
+                </div>
+                <div class="article-meta">
+                    <span>Feb 15, 2026</span>
+                    <span>12 min read</span>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <p>Â© 2026 Binary Media. Designed for the machine age.</p>
+    </footer>
+
+    <script>
+        // --- Reading Progress Bar ---
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + '%';
+        });
+
+        // --- Intersection Observer for Scroll Reveals ---
+        const revealOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, revealOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // --- Simulated Lazy Loading ---
+        const lazyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    // In a real app, we'd set the src here
+                    // img.style.backgroundImage = `url(${img.dataset.src})`;
+                    img.classList.add('loaded');
+                    lazyObserver.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('.lazy-img').forEach(img => lazyObserver.observe(img));
+
+        // --- Animated Title (Typewriter-ish micro-interaction) ---
+        const logo = document.querySelector('.logo');
+        logo.addEventListener('mouseenter', () => {
+            logo.innerHTML = 'BINARY<span>.exe</span>';
+        });
+        logo.addEventListener('mouseleave', () => {
+            logo.innerHTML = 'BINARY<span>_</span>';
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

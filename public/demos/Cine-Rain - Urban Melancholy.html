@@ -1,0 +1,645 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cine-Rain | Urban Melancholy</title>
+    <meta name="description" content="An immersive tech-noir landing page featuring realistic rain effects, window droplets, and atmospheric urban melancholy aesthetics.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== DESIGN TOKENS ===== */
+        :root {
+            /* Palette: Urban Noir */
+            --charcoal: #1A1D23;
+            --deep-navy: #0D1B2A;
+            --midnight-blue: #1B263B;
+            --neon-amber: #FFB703;
+            --muted-amber: #FB8500;
+            --glass-white: rgba(255, 255, 255, 0.08);
+            --reflection: rgba(255, 255, 255, 0.15);
+            --shadow-dark: rgba(0, 0, 0, 0.6);
+            
+            /* Typography */
+            --font-display: 'JetBrains Mono', monospace;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+            --spacing-xl: 6rem;
+            
+            /* Effects */
+            --blur-wet: blur(20px);
+            --blur-mist: blur(8px);
+            --glow-amber: 0 0 20px rgba(255, 183, 3, 0.4);
+        }
+        
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--deep-navy);
+            color: #E0E6ED;
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        /* ===== RAIN CANVAS BACKGROUND ===== */
+        #rain-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        /* ===== WINDOW DROPLET OVERLAY ===== */
+        .droplet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><filter id="droplet"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="2"/><feDisplacementMap in="SourceGraphic" scale="15"/></filter><rect width="400" height="400" filter="url(%23droplet)" fill="%231A1D23" opacity="0.03"/></svg>');
+            background-size: 200px 200px;
+            opacity: 0.4;
+        }
+        
+        .droplet {
+            position: absolute;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 60%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: droplet-fall linear infinite;
+        }
+        
+        @keyframes droplet-fall {
+            0% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) scale(0.8);
+                opacity: 0;
+            }
+        }
+        
+        /* ===== CONTENT WRAPPER ===== */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: var(--spacing-md);
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            animation: fade-in-mist 1.5s ease-out;
+        }
+        
+        @keyframes fade-in-mist {
+            0% {
+                opacity: 0;
+                filter: var(--blur-mist);
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+            }
+        }
+        
+        /* ===== LIQUID DISPLACEMENT FILTER ===== */
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: var(--spacing-md);
+            color: var(--neon-amber);
+            letter-spacing: -0.02em;
+            filter: url(#liquid-displacement);
+            text-shadow: 0 0 30px rgba(255, 183, 3, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: 300;
+            margin-bottom: var(--spacing-lg);
+            color: #B8C5D6;
+        }
+        
+        /* ===== WET SURFACE BUTTONS ===== */
+        .cta-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-wet {
+            padding: 1rem 2.5rem;
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, var(--glass-white), rgba(255, 255, 255, 0.04));
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--reflection);
+            color: #fff;
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 2px var(--shadow-dark),
+                0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn-wet.primary {
+            background: linear-gradient(135deg, var(--neon-amber), var(--muted-amber));
+            color: var(--charcoal);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+                var(--glow-amber);
+        }
+        
+        .btn-wet:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 2px var(--shadow-dark),
+                0 8px 24px rgba(0, 0, 0, 0.6);
+        }
+        
+        .btn-wet.primary:hover {
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(255, 183, 3, 0.6);
+        }
+        
+        /* ===== RIPPLE EFFECT ===== */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 183, 3, 0.4), transparent 70%);
+            pointer-events: none;
+            transform: scale(0);
+            animation: ripple-expand 0.8s ease-out;
+        }
+        
+        @keyframes ripple-expand {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        /* ===== FEATURE CARDS ===== */
+        .features {
+            padding: var(--spacing-xl) var(--spacing-md);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .feature-card {
+            padding: var(--spacing-md);
+            background: linear-gradient(135deg, var(--glass-white), rgba(255, 255, 255, 0.02));
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--reflection);
+            border-radius: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -2px 4px var(--shadow-dark),
+                0 8px 24px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(40px);
+            animation: drift-in 0.8s ease-out forwards;
+        }
+        
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        @keyframes drift-in {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--neon-amber);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                inset 0 -2px 4px var(--shadow-dark),
+                0 12px 40px rgba(255, 183, 3, 0.2);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--neon-amber), var(--muted-amber));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.8rem;
+            box-shadow: var(--glow-amber);
+        }
+        
+        .feature-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            margin-bottom: var(--spacing-xs);
+            color: var(--neon-amber);
+        }
+        
+        .feature-description {
+            color: #B8C5D6;
+            line-height: 1.6;
+        }
+        
+        /* ===== SVG FILTERS ===== */
+        svg {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 80vh;
+            }
+            
+            .features {
+                padding: var(--spacing-lg) var(--spacing-sm);
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-group {
+                flex-direction: column;
+            }
+            
+            .btn-wet {
+                width: 100%;
+            }
+        }
+        
+        /* ===== ACCESSIBILITY ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            #rain-canvas,
+            .droplet-overlay {
+                display: none;
+            }
+        }
+        
+        /* ===== FOCUS STATES ===== */
+        .btn-wet:focus-visible {
+            outline: 3px solid var(--neon-amber);
+            outline-offset: 4px;
+        }
+        
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--neon-amber);
+            text-align: center;
+            margin-bottom: var(--spacing-md);
+        }
+    </style>
+</head>
+<body>
+    <!-- Rain Canvas -->
+    <canvas id="rain-canvas"></canvas>
+    
+    <!-- Window Droplet Overlay -->
+    <div class="droplet-overlay" id="droplet-container"></div>
+    
+    <!-- SVG Filters -->
+    <svg xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Liquid Displacement Filter -->
+            <filter id="liquid-displacement" x="-50%" y="-50%" width="200%" height="200%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="1">
+                    <animate attributeName="baseFrequency" 
+                             values="0.012;0.015;0.012" 
+                             dur="8s" 
+                             repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" scale="8"/>
+            </filter>
+        </defs>
+    </svg>
+    
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">URBAN RAINFALL</h1>
+                <p class="hero-subtitle">Experience the atmospheric beauty of digital melancholy</p>
+                <div class="cta-group">
+                    <button class="btn-wet primary">Explore the City</button>
+                    <button class="btn-wet">Watch Trailer</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Features Section -->
+        <section class="features">
+            <h2 class="section-title">NOIR AESTHETICS</h2>
+            <div class="features-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">ðŸŒ§ï¸</div>
+                    <h3 class="feature-title">Realistic Rain</h3>
+                    <p class="feature-description">Canvas-based rain simulation with 200+ droplets at 60fps, optimized for performance across all devices.</p>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">ðŸ’§</div>
+                    <h3 class="feature-title">Window Droplets</h3>
+                    <p class="feature-description">SVG-powered droplet overlay with fractal noise displacement for authentic wet-glass aesthetics.</p>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">âœ¨</div>
+                    <h3 class="feature-title">Wet Surface UI</h3>
+                    <p class="feature-description">High-gloss glassmorphism with 20px blur, inner shadows, and reflective borders for depth.</p>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">ðŸŒŠ</div>
+                    <h3 class="feature-title">Liquid Distortion</h3>
+                    <p class="feature-description">Animated SVG displacement filter on hero typography simulating water ripples and surface tension.</p>
+                </article>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // ===== RAIN ANIMATION SYSTEM =====
+        class RainSystem {
+            constructor() {
+                this.canvas = document.getElementById('rain-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.drops = [];
+                this.maxDrops = 200;
+                this.isRunning = true;
+                
+                this.resize();
+                this.init();
+                this.animate();
+                
+                window.addEventListener('resize', () => this.resize());
+            }
+            
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+            
+            init() {
+                for (let i = 0; i < this.maxDrops; i++) {
+                    this.drops.push(this.createDrop());
+                }
+            }
+            
+            createDrop() {
+                return {
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height - this.canvas.height,
+                    length: Math.random() * 20 + 10,
+                    speed: Math.random() * 5 + 8,
+                    opacity: Math.random() * 0.3 + 0.2
+                };
+            }
+            
+            update() {
+                this.drops.forEach(drop => {
+                    drop.y += drop.speed;
+                    
+                    // Reset drop when it goes off-screen
+                    if (drop.y > this.canvas.height) {
+                        drop.y = -drop.length;
+                        drop.x = Math.random() * this.canvas.width;
+                    }
+                });
+            }
+            
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.drops.forEach(drop => {
+                    this.ctx.strokeStyle = `rgba(173, 216, 230, ${drop.opacity})`;
+                    this.ctx.lineWidth = 1;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(drop.x, drop.y);
+                    this.ctx.lineTo(drop.x, drop.y + drop.length);
+                    this.ctx.stroke();
+                });
+            }
+            
+            animate() {
+                if (!this.isRunning) return;
+                
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        
+        // ===== WINDOW DROPLETS SYSTEM =====
+        class DropletSystem {
+            constructor() {
+                this.container = document.getElementById('droplet-container');
+                this.dropletCount = 15;
+                this.init();
+            }
+            
+            init() {
+                for (let i = 0; i < this.dropletCount; i++) {
+                    setTimeout(() => this.createDroplet(), i * 800);
+                }
+            }
+            
+            createDroplet() {
+                const droplet = document.createElement('div');
+                droplet.classList.add('droplet');
+                
+                const size = Math.random() * 8 + 4;
+                const x = Math.random() * window.innerWidth;
+                const duration = Math.random() * 3 + 4;
+                
+                droplet.style.width = `${size}px`;
+                droplet.style.height = `${size}px`;
+                droplet.style.left = `${x}px`;
+                droplet.style.top = '-20px';
+                droplet.style.animationDuration = `${duration}s`;
+                
+                this.container.appendChild(droplet);
+                
+                // Remove and recreate after animation
+                setTimeout(() => {
+                    droplet.remove();
+                    this.createDroplet();
+                }, duration * 1000);
+            }
+        }
+        
+        // ===== RIPPLE EFFECT SYSTEM =====
+        class RippleSystem {
+            constructor() {
+                this.init();
+            }
+            
+            init() {
+                document.addEventListener('click', (e) => this.createRipple(e));
+            }
+            
+            createRipple(e) {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+                
+                const size = 100;
+                ripple.style.width = `${size}px`;
+                ripple.style.height = `${size}px`;
+                ripple.style.left = `${e.clientX - size / 2}px`;
+                ripple.style.top = `${e.clientY - size / 2}px`;
+                
+                document.body.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 800);
+            }
+        }
+        
+        // ===== INTERSECTION OBSERVER FOR DRIFT-IN ANIMATIONS =====
+        class AnimationObserver {
+            constructor() {
+                this.observer = new IntersectionObserver(
+                    (entries) => this.handleIntersection(entries),
+                    { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
+                );
+                
+                this.init();
+            }
+            
+            init() {
+                const elements = document.querySelectorAll('.feature-card');
+                elements.forEach(el => this.observer.observe(el));
+            }
+            
+            handleIntersection(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }
+        }
+        
+        // ===== PERFORMANCE MONITORING =====
+        class PerformanceMonitor {
+            constructor() {
+                this.frameCount = 0;
+                this.fps = 0;
+                this.lastTime = performance.now();
+                this.monitor();
+            }
+            
+            monitor() {
+                const currentTime = performance.now();
+                this.frameCount++;
+                
+                if (currentTime >= this.lastTime + 1000) {
+                    this.fps = Math.round((this.frameCount * 1000) / (currentTime - this.lastTime));
+                    this.frameCount = 0;
+                    this.lastTime = currentTime;
+                    
+                    // Log FPS in development (comment out in production)
+                    // console.log(`FPS: ${this.fps}`);
+                }
+                
+                requestAnimationFrame(() => this.monitor());
+            }
+        }
+        
+        // ===== INITIALIZE SYSTEMS =====
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for reduced motion preference
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            
+            if (!prefersReducedMotion) {
+                new RainSystem();
+                new DropletSystem();
+                new PerformanceMonitor();
+            }
+            
+            new RippleSystem();
+            new AnimationObserver();
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

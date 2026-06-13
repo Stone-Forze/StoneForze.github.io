@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPITAL_AXIS // Liquidity & Wealth OS</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f4f7f5;
+            --primary: #064e3b; /* Deep Treasury Green */
+            --accent: #10b981; /* Emerald Success */
+            --text: #061512;
+            --text-dim: #6b7280;
+            --border: #e5e7eb;
+            --font-main: 'Outfit', sans-serif;
+            --font-data: 'JetBrains Mono', monospace;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #050a09;
+            --surface: #0c1412;
+            --primary: #10b981;
+            --text: #ecfdf5;
+            --text-dim: #94a3b8;
+            --border: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            transition: background 0.5s var(--ease);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- Nav --- */
+        nav {
+            padding: 30px 0; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; display: flex; align-items: center; gap: 8px; }
+        .logo-mark { width: 12px; height: 12px; background: var(--accent); border-radius: 2px; transform: rotate(45deg); }
+
+        /* --- Hero --- */
+        .hero { padding: 100px 0 60px; text-align: center; }
+        .hero h1 { 
+            font-size: clamp(3rem, 8vw, 5rem); font-weight: 800; line-height: 1; 
+            letter-spacing: -3px; margin-bottom: 24px;
+        }
+        .hero p { font-family: var(--font-data); font-size: 0.9rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- Asset Dashboard Widget --- */
+        .dashboard-container {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 24px; padding: 40px; margin-bottom: 100px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+        }
+
+        .balance-card { padding: 30px; background: var(--bg); border-radius: 16px; border: 1px solid var(--border); }
+        .balance-label { font-size: 0.75rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px; }
+        .balance-amount { font-family: var(--font-data); font-size: 2.5rem; font-weight: 700; color: var(--primary); }
+
+        /* --- Animated Data Stream --- */
+        .data-stream { font-family: var(--font-data); font-size: 0.7rem; color: var(--text-dim); overflow: hidden; white-space: nowrap; padding: 10px 0; border-top: 1px solid var(--border); margin-top: 40px; }
+        .stream-content { display: inline-block; animation: scrollText 30s linear infinite; }
+        @keyframes scrollText { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* --- Pricing & Tiers --- */
+        .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin: 80px 0; }
+        .price-card { padding: 40px; border-radius: 20px; border: 1px solid var(--border); transition: 0.3s; }
+        .price-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .price-card.premium { background: var(--primary); color: white; }
+
+        /* --- Interactive elements --- */
+        .btn {
+            display: inline-block; padding: 14px 28px; border-radius: 100px;
+            font-weight: 700; text-decoration: none; cursor: pointer; border: none;
+            transition: 0.3s var(--ease); font-size: 0.9rem;
+        }
+        .btn-primary { background: var(--text); color: var(--bg); }
+        .btn-primary:hover { opacity: 0.8; letter-spacing: 1px; }
+
+        .reveal { opacity: 0; transform: translateY(20px); transition: 0.8s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .theme-toggle { background: none; border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; cursor: pointer; color: var(--text); font-family: var(--font-data); font-size: 0.65rem; }
+
+        @media (max-width: 800px) { .dashboard-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <nav class="container">
+        <div class="logo"><div class="logo-mark"></div> CAPITAL_AXIS</div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <button class="theme-toggle" id="themeBtn">SYS_THEME</button>
+            <a href="#" class="btn btn-primary" style="padding: 10px 20px;">Access Vault</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1 class="reveal">Velocity for <br> Your Capital.</h1>
+            <p class="reveal" style="transition-delay: 0.1s;">Precision liquidity management for the global markets.</p>
+        </section>
+
+        
+        <section class="dashboard-container reveal">
+            <div class="asset-display">
+                <div class="balance-card">
+                    <div class="balance-label">Total Net Liquidity</div>
+                    <div class="balance-amount" id="mainBalance">$0.00</div>
+                    <div style="margin-top: 15px; color: var(--accent); font-weight: 700; font-size: 0.85rem;">+ 2.14% â–² Today</div>
+                </div>
+                <div style="margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="balance-card" style="padding: 20px;">
+                        <div class="balance-label">US Treasury</div>
+                        <div style="font-family: var(--font-data); font-weight: 700;">$428,000</div>
+                    </div>
+                    <div class="balance-card" style="padding: 20px;">
+                        <div class="balance-label">Global Equity</div>
+                        <div style="font-family: var(--font-data); font-weight: 700;">$1.2M</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="transfer-engine">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem;">Instant Settlement</h3>
+                <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <span style="font-size: 0.8rem; font-weight: 600;">USD Balance</span>
+                        <span style="font-family: var(--font-data); font-size: 0.8rem;">MAX: $142k</span>
+                    </div>
+                    <input type="text" placeholder="0.00" style="width: 100%; border: none; font-family: var(--font-data); font-size: 2rem; outline: none; background: transparent; color: var(--text);">
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 20px; background: var(--accent);">Initiate Transfer</button>
+                </div>
+                <p style="font-size: 0.7rem; color: var(--text-dim); margin-top: 15px;">Transactions are secured by 256-bit institutional encryption.</p>
+            </div>
+        </section>
+
+        <section class="price-grid">
+            <div class="price-card reveal">
+                <h4 style="color: var(--accent); font-size: 0.8rem; letter-spacing: 2px;">STANDARD</h4>
+                <div style="font-size: 2.5rem; font-weight: 800; margin: 20px 0;">$49<span style="font-size: 1rem; color: var(--text-dim);">/mo</span></div>
+                <ul style="list-style: none; font-size: 0.85rem; line-height: 2.5; color: var(--text-dim);">
+                    <li>âœ“ 24h Settlement</li>
+                    <li>âœ“ Multi-Currency Vault</li>
+                    <li>âœ“ Basic Reporting</li>
+                </ul>
+            </div>
+            <div class="price-card premium reveal" style="transition-delay: 0.1s;">
+                <h4 style="color: var(--accent); font-size: 0.8rem; letter-spacing: 2px;">INSTITUTIONAL</h4>
+                <div style="font-size: 2.5rem; font-weight: 800; margin: 20px 0;">$890<span style="font-size: 1rem; opacity: 0.7;">/mo</span></div>
+                <ul style="list-style: none; font-size: 0.85rem; line-height: 2.5; opacity: 0.8;">
+                    <li>âœ“ Real-time Settlement</li>
+                    <li>âœ“ Dedicated API Nodes</li>
+                    <li>âœ“ Smart Tax Optimization</li>
+                    <li>âœ“ 1-on-1 Wealth Manager</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <div class="data-stream">
+        <div class="stream-content">
+            BTC/USD 48,291.20 (+0.4%) â€¢ GOLD/OZ 2,042.10 (-0.1%) â€¢ EUR/USD 1.0821 (+0.02%) â€¢ AAPL 182.41 (+1.2%) â€¢ TSLA 194.02 (-2.1%) â€¢ BTC/USD 48,291.20 (+0.4%) â€¢ GOLD/OZ 2,042.10 (-0.1%) â€¢ EUR/USD 1.0821 (+0.02%) â€¢ AAPL 182.41 (+1.2%) â€¢ TSLA 194.02 (-2.1%)
+        </div>
+    </div>
+
+    <footer style="padding: 60px 0; text-align: center; border-top: 1px solid var(--border);">
+        <p style="font-family: var(--font-data); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 1px;">&copy; 2026 CAPITAL AXIS GLOBAL MARKETS. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script>
+        // --- Theme Toggle ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        });
+
+        // --- Scroll Reveal ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Balance Counter Animation ---
+        function animateBalance(target) {
+            let current = 0;
+            const el = document.getElementById('mainBalance');
+            const interval = setInterval(() => {
+                current += 45210.50;
+                if (current >= target) {
+                    el.innerText = '$' + target.toLocaleString('en-US', {minimumFractionDigits: 2});
+                    clearInterval(interval);
+                } else {
+                    el.innerText = '$' + current.toLocaleString('en-US', {minimumFractionDigits: 2});
+                }
+            }, 30);
+        }
+        
+        // Trigger on load
+        setTimeout(() => animateBalance(2485920.42), 500);
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

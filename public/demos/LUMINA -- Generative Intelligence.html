@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lumina AI - Next-generation generative engine for enterprise content.">
+    <title>LUMINA // Generative Intelligence</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0f0f12;
+            --primary: #3b82f6;
+            --text: #ffffff;
+            --text-dim: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --ease: cubic-bezier(0.19, 1, 0.22, 1);
+            --font-display: 'Space Grotesk', sans-serif;
+        }
+
+        [data-theme="light"] {
+            --bg: #ffffff;
+            --surface: #f8fafc;
+            --primary: #2563eb;
+            --text: #020617;
+            --text-dim: #64748b;
+            --border: rgba(0, 0, 0, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            transition: background 0.6s var(--ease);
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- Global FX --- */
+        .glow {
+            position: absolute; width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            z-index: -1; pointer-events: none;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            padding: 30px 0; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; }
+
+        /* --- Hero --- */
+        .hero { padding: 120px 0 80px; text-align: center; }
+        .hero h1 {
+            font-family: var(--font-display); font-size: clamp(3rem, 10vw, 6rem);
+            line-height: 0.95; letter-spacing: -4px; margin-bottom: 30px;
+        }
+        .hero p { color: var(--text-dim); font-size: 1.25rem; max-width: 600px; margin: 0 auto 40px; }
+
+        /* --- AI Prompt Demo --- */
+        .demo-box {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; padding: 30px; max-width: 800px; margin: 0 auto 100px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .terminal-header { display: flex; gap: 8px; margin-bottom: 20px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--border); }
+        .prompt-input { 
+            font-family: monospace; color: var(--primary); font-size: 1.1rem;
+            min-height: 24px; margin-bottom: 20px; border-right: 2px solid var(--primary);
+            width: fit-content; animation: blink 0.8s infinite;
+        }
+        @keyframes blink { 50% { border-color: transparent; } }
+        .output-text { color: var(--text-dim); line-height: 1.8; display: none; }
+
+        /* --- Metrics --- */
+        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-bottom: 120px; }
+        .metric-item h3 { font-family: var(--font-display); font-size: 3rem; margin-bottom: 10px; }
+        .metric-item p { color: var(--text-dim); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; }
+
+        /* --- Pricing --- */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        .price-card {
+            padding: 40px; border: 1px solid var(--border); border-radius: 20px;
+            background: var(--surface); transition: 0.4s;
+        }
+        .price-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .price-card.hot { background: linear-gradient(to bottom right, var(--surface), rgba(59, 130, 246, 0.05)); border-color: var(--primary); }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block; padding: 16px 32px; border-radius: 100px;
+            font-weight: 600; text-decoration: none; transition: 0.3s;
+            cursor: pointer; border: none; font-family: var(--font-display);
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+
+        /* --- Reveal --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1.2s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .theme-toggle { background: none; border: none; cursor: pointer; color: var(--text); font-size: 0.9rem; font-weight: 700; }
+
+        @media (max-width: 768px) {
+            .metrics { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 3.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow" style="top: -100px; left: -100px;"></div>
+    <div class="glow" style="bottom: 100px; right: -100px; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);"></div>
+
+    <nav class="container">
+        <div class="logo">LUMINA//AI</div>
+        <div style="display: flex; gap: 30px; align-items: center;">
+            <button class="theme-toggle" id="themeBtn">â— THEME</button>
+            <a href="#" class="btn btn-primary" style="padding: 10px 24px;">Sign In</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1 class="reveal">Output that <br> <span style="color: var(--primary);">feels human.</span></h1>
+            <p class="reveal" style="transition-delay: 0.1s;">The first generative engine trained exclusively on high-performance enterprise data. Build faster, rank higher, convert more.</p>
+            <div class="reveal" style="transition-delay: 0.2s; margin-bottom: 60px;">
+                <a href="#" class="btn btn-primary">Start Generating</a>
+                <a href="#" class="btn btn-outline" style="margin-left: 15px;">Watch Demo</a>
+            </div>
+
+            
+            <div class="demo-box reveal" style="transition-delay: 0.3s;">
+                <div class="terminal-header">
+                    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                </div>
+                <div class="prompt-input" id="typewriter"></div>
+                <div class="output-text" id="output">
+                    "The integration of autonomous systems into modern cloud infrastructure represents the final frontier of operational efficiency. Our latest LLM ensures that your technical documentation is not just accurate, but strategically aligned with global compliance standards."
+                </div>
+            </div>
+        </section>
+
+        <section class="metrics">
+            <div class="metric-item reveal">
+                <h3>100M+</h3>
+                <p>Tokens Processed</p>
+            </div>
+            <div class="metric-item reveal" style="transition-delay: 0.1s;">
+                <h3>0.4s</h3>
+                <p>Average Latency</p>
+            </div>
+            <div class="metric-item reveal" style="transition-delay: 0.2s;">
+                <h3>99.9%</h3>
+                <p>Uptime Record</p>
+            </div>
+        </section>
+
+        <section id="pricing" style="padding: 100px 0;">
+            <h2 class="reveal" style="font-family: var(--font-display); font-size: 3rem; margin-bottom: 50px; text-align: center;">Scalable Intelligence.</h2>
+            <div class="pricing-grid">
+                <div class="price-card reveal">
+                    <h4>Creator</h4>
+                    <div style="font-size: 3rem; font-weight: 700; margin: 20px 0;">$19<span style="font-size: 1rem; color: var(--text-dim);">/mo</span></div>
+                    <ul style="list-style: none; color: var(--text-dim); line-height: 2.2; margin-bottom: 30px;">
+                        <li>âœ“ 50,000 Words / mo</li>
+                        <li>âœ“ 10 AI Templates</li>
+                        <li>âœ“ Standard Support</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline" style="width: 100%; text-align: center;">Get Started</a>
+                </div>
+                <div class="price-card hot reveal" style="transition-delay: 0.1s;">
+                    <h4>Pro</h4>
+                    <div style="font-size: 3rem; font-weight: 700; margin: 20px 0;">$49<span style="font-size: 1rem; color: var(--text-dim);">/mo</span></div>
+                    <ul style="list-style: none; color: var(--text-dim); line-height: 2.2; margin-bottom: 30px;">
+                        <li>âœ“ Unlimited Words</li>
+                        <li>âœ“ Custom Brand Voice</li>
+                        <li>âœ“ Priority API Access</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Upgrade to Pro</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer style="padding: 100px 0 60px; border-top: 1px solid var(--border); text-align: center;">
+        <div class="logo" style="margin-bottom: 20px; opacity: 0.5;">LUMINA//AI</div>
+        <p style="color: var(--text-dim); font-size: 0.9rem;">&copy; 2026 LUMINA COGNITIVE LABS. PATENTS PENDING.</p>
+    </footer>
+
+    <script>
+        // --- Typewriter Simulation ---
+        const text = "Write a technical analysis of cloud-native AI...";
+        const typewriter = document.getElementById('typewriter');
+        const output = document.getElementById('output');
+        let i = 0;
+
+        function type() {
+            if (i < text.length) {
+                typewriter.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, 50);
+            } else {
+                setTimeout(() => {
+                    typewriter.style.animation = "none";
+                    typewriter.style.border = "none";
+                    output.style.display = "block";
+                    output.style.opacity = "0";
+                    setTimeout(() => { output.style.transition = "opacity 2s"; output.style.opacity = "1"; }, 100);
+                }, 1000);
+            }
+        }
+
+        // Trigger typewriter when section is visible
+        const demoObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                type();
+                demoObserver.disconnect();
+            }
+        });
+        demoObserver.observe(document.querySelector('.demo-box'));
+
+        // --- Standard Scroll Reveal ---
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // --- Theme Toggle ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

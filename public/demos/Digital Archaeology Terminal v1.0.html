@@ -1,0 +1,479 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Archaeology Terminal v1.0</title>
+    <style>
+        /* 
+         * CORE VARIABLES & RESET
+         * Defining the retro color palette and basic sizing.
+         */
+        :root {
+            --terminal-bg: #0a0a0a;
+            --terminal-glow: #00FF00;
+            --terminal-dim: #003300;
+            --crt-scanline: rgba(18, 16, 16, 0.5);
+            --font-stack: 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--terminal-bg);
+            color: var(--terminal-glow);
+            font-family: var(--font-stack);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 0 0 5px var(--terminal-glow);
+        }
+
+        /* 
+         * CRT EFFECT LAYERS
+         * 1. Scanlines: Repeating linear gradient
+         * 2. Flicker: Keyframe animation on opacity
+         * 3. Vignette: Radial gradient for curved screen effect
+         */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            animation: flicker 0.15s infinite;
+        }
+
+        .crt-overlay::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.6) 100%);
+            z-index: 101;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.95; }
+            50% { opacity: 0.85; }
+            100% { opacity: 0.98; }
+        }
+
+        /* 
+         * MAIN LAYOUT
+         * Grid layout for the control panel and the display area.
+         */
+        .container {
+            width: 90%;
+            height: 90%;
+            border: 2px solid var(--terminal-glow);
+            padding: 20px;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            gap: 20px;
+            position: relative;
+            box-shadow: 0 0 20px var(--terminal-dim), inset 0 0 20px var(--terminal-dim);
+        }
+
+        /* 
+         * HEADER SECTION
+         */
+        header {
+            border-bottom: 1px dashed var(--terminal-glow);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .status-light {
+            width: 15px;
+            height: 15px;
+            background-color: var(--terminal-glow);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px var(--terminal-glow);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        /* 
+         * DISPLAY AREA (THE LOG)
+         * Handles the scrolling text and artifact display.
+         */
+        .display-area {
+            border: 1px solid var(--terminal-dim);
+            background: rgba(0, 20, 0, 0.3);
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        /* Custom Scrollbar for Webkit */
+        .display-area::-webkit-scrollbar {
+            width: 10px;
+        }
+        .display-area::-webkit-scrollbar-track {
+            background: var(--terminal-bg);
+            border-left: 1px solid var(--terminal-dim);
+        }
+        .display-area::-webkit-scrollbar-thumb {
+            background: var(--terminal-glow);
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+        }
+
+        .log-entry.system { color: #88FF88; }
+        .log-entry.warning { color: #FFFF00; text-shadow: 0 0 5px #FFFF00; }
+        .log-entry.error { color: #FF3333; text-shadow: 0 0 5px #FF3333; }
+
+        /* 
+         * ARTIFACT STYLING
+         * Styling for the recovered items.
+         */
+        .artifact-card {
+            border: 1px double var(--terminal-glow);
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 50, 0, 0.2);
+        }
+
+        .artifact-title {
+            text-decoration: underline;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .artifact-content {
+            font-family: "Times New Roman", serif; /* Authentic 90s feel */
+            background: #C0C0C0; /* Windows 95 Grey */
+            color: black;
+            padding: 10px;
+            border: 2px solid white;
+            border-right-color: gray;
+            border-bottom-color: gray;
+            text-shadow: none;
+            max-width: 300px;
+        }
+
+        /* 
+         * CONTROLS & LOADING BAR
+         */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            background: transparent;
+            border: 2px solid var(--terminal-glow);
+            color: var(--terminal-glow);
+            padding: 10px 20px;
+            font-family: var(--font-stack);
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            box-shadow: 0 0 5px var(--terminal-dim);
+        }
+
+        button:hover {
+            background: var(--terminal-glow);
+            color: var(--terminal-bg);
+            box-shadow: 0 0 15px var(--terminal-glow);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: var(--terminal-dim);
+        }
+
+        .loading-container {
+            display: none; /* Hidden by default */
+            width: 100%;
+            border: 1px solid var(--terminal-dim);
+            padding: 2px;
+            margin-top: 10px;
+        }
+
+        .loading-bar {
+            height: 20px;
+            width: 0%;
+            background-color: var(--terminal-glow);
+            transition: width 0.2s linear;
+        }
+        
+        .loading-text {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            min-height: 1.2em;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Visual Effects Layer -->
+    <div class="crt-overlay"></div>
+
+    <!-- Main Application Interface -->
+    <div class="container">
+        <header>
+            <div>
+                <h1>ARCHAEOLOGY_OS</h1>
+                <small>v.1995.04.01 // MEM: 640KB OK</small>
+            </div>
+            <div class="status-light"></div>
+        </header>
+
+        <div class="display-area" id="logDisplay">
+            <!-- Logs will be injected here via JS -->
+        </div>
+
+        <div class="controls">
+            <div class="loading-container" id="loadingContainer">
+                <div class="loading-bar" id="loadingBar"></div>
+                <div class="loading-text" id="loadingText">Connecting...</div>
+            </div>
+            <div class="button-group">
+                <button id="digBtn" onclick="startExcavation()">> INITIATE_DIG</button>
+                <button onclick="clearLog()">> CLS</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * ARTIFACT DATABASE
+         * A collection of mock 90s web artifacts to be recovered.
+         */
+        const artifacts = [
+            {
+                name: "UnderConstruction.gif",
+                type: "Image Artifact",
+                content: `<div style="text-align:center; font-weight:bold;">âš ï¸ PAGE UNDER CONSTRUCTION âš ï¸<br>[Please sign Guestbook]</div>`
+            },
+            {
+                name: "Marquee_Tag_Fragment",
+                type: "HTML Element",
+                content: `<marquee scrollamount="5">Welcome to my CyberHome! Best viewed in Netscape Navigator 4.0</marquee>`
+            },
+            {
+                name: "Table_Layout_Skeleton",
+                type: "Structure",
+                content: `<table border="1" width="100%"><tr><td>Menu</td><td>Content</td></tr></table>`
+            },
+            {
+                name: "Hit_Counter.exe",
+                type: "Script",
+                content: `<div style="font-family: 'Courier New'; background: black; color: red; display: inline-block; padding: 2px;">0 0 1 3 3 7</div>`
+            },
+            {
+                name: "Blink_Tag_Anomaly",
+                type: "Deprecated Tag",
+                content: `<span style="animation: blinker 1s linear infinite;">NEW! HOT! COOL!</span><style>@keyframes blinker { 50% { opacity: 0; }}</style>`
+            }
+        ];
+
+        /**
+         * SYSTEM BOOT SEQUENCE
+         * Simulates a BIOS startup log when the page loads.
+         */
+        const bootSequence = [
+            "Initializing Video Adapter... OK",
+            "Checking Memory... 65536KB OK",
+            "Loading ARCHAEOLOGY_OS...",
+            "Mounting Virtual Drive A:...",
+            "Connecting to World Wide Web...",
+            "Modem initialized: ATDT 555-0199",
+            "Handshake complete. Baud rate: 56000",
+            "System Ready. Awaiting input."
+        ];
+
+        const logDisplay = document.getElementById('logDisplay');
+        const loadingBar = document.getElementById('loadingBar');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const loadingText = document.getElementById('loadingText');
+        const digBtn = document.getElementById('digBtn');
+
+        // Audio Context for modem sounds (Simulated via text for this exercise, 
+        // but structure is ready for Web Audio API)
+        
+        window.onload = () => {
+            runBootSequence();
+        };
+
+        /**
+         * Runs the initial scrolling text effect
+         */
+        async function runBootSequence() {
+            for (let i = 0; i < bootSequence.length; i++) {
+                await typeWriter(bootSequence[i], 0);
+                await delay(300); // Pause between lines
+            }
+        }
+
+        /**
+         * Helper: Adds text to the log with a typewriter effect simulation
+         */
+        function addToLog(text, type = 'system') {
+            const entry = document.createElement('div');
+            entry.classList.add('log-entry', type);
+            entry.innerHTML = `> ${text}`;
+            logDisplay.appendChild(entry);
+            logDisplay.scrollTop = logDisplay.scrollHeight;
+        }
+
+        /**
+         * Helper: Simulates typing delay
+         */
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        /**
+         * Helper: Typewriter effect for a single line
+         */
+        function typeWriter(text, i) {
+            return new Promise(resolve => {
+                addToLog(text);
+                resolve();
+            });
+        }
+
+        /**
+         * CORE INTERACTION: START EXCAVATION
+         * Handles the button click, loading bar animation, and artifact retrieval.
+         */
+        async function startExcavation() {
+            if (digBtn.disabled) return;
+
+            // UI State: Busy
+            digBtn.disabled = true;
+            loadingContainer.style.display = 'block';
+            addToLog("Initiating excavation protocol...", "system");
+            
+            // Simulation Parameters
+            let progress = 0;
+            const totalDuration = 3000; // 3 seconds for 56k feel
+            const intervalTime = 50; 
+            const increment = 100 / (totalDuration / intervalTime);
+
+            // Modem Noise Text Simulation
+            const modemNoises = ["*ksshhh*", "*bing-bong*", "*eeeeeee*", "*crrrk*"];
+            loadingText.innerText = "Dialing...";
+
+            const timer = setInterval(() => {
+                progress += increment;
+                
+                // Randomly stall the progress bar to simulate lag
+                if (Math.random() > 0.8) progress -= 2; 
+
+                // Update Loading Bar Visuals
+                loadingBar.style.width = Math.min(progress, 100) + '%';
+                
+                // Update Loading Text randomly
+                if (Math.random() > 0.9) {
+                    loadingText.innerText = modemNoises[Math.floor(Math.random() * modemNoises.length)];
+                }
+
+                if (progress >= 100) {
+                    clearInterval(timer);
+                    finalizeExcavation();
+                }
+            }, intervalTime);
+        }
+
+        /**
+         * Finalizes the dig, selects an artifact, and displays it.
+         */
+        function finalizeExcavation() {
+            loadingBar.style.width = '100%';
+            loadingText.innerText = "Download Complete.";
+            
+            setTimeout(() => {
+                // Reset UI
+                loadingContainer.style.display = 'none';
+                loadingBar.style.width = '0%';
+                digBtn.disabled = false;
+
+                // Select Random Artifact
+                const artifact = artifacts[Math.floor(Math.random() * artifacts.length)];
+                
+                // Render Artifact
+                renderArtifact(artifact);
+                
+                addToLog(`Recovered: ${artifact.name} (${artifact.type})`, "system");
+
+            }, 500);
+        }
+
+        /**
+         * Renders the HTML card for a recovered artifact.
+         */
+        function renderArtifact(artifact) {
+            const card = document.createElement('div');
+            card.classList.add('artifact-card');
+            
+            card.innerHTML = `
+                <div class="artifact-title">FILE: ${artifact.name}</div>
+                <div class="artifact-content">${artifact.content}</div>
+                <small style="display:block; margin-top:10px; opacity:0.7;">Origin: ~1996</small>
+            `;
+            
+            logDisplay.appendChild(card);
+            logDisplay.scrollTop = logDisplay.scrollHeight;
+        }
+
+        /**
+         * Utility: Clear the screen
+         */
+        function clearLog() {
+            logDisplay.innerHTML = '';
+            addToLog("Screen cleared.", "system");
+        }
+
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

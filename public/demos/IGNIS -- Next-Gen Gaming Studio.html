@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IGNIS REDACTED - Pushing the boundaries of interactive digital experiences.">
+    <title>IGNIS // Next-Gen Gaming Studio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Oxanium:wght@300;500;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0d0d12;
+            --accent: #bf00ff; /* Cyber Purple */
+            --accent-rgb: 191, 0, 255;
+            --text: #ffffff;
+            --text-dim: #a0a0aa;
+            --border: rgba(191, 0, 255, 0.15);
+            --font-display: 'Syncopate', sans-serif;
+            --font-main: 'Oxanium', sans-serif;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        [data-theme="blue"] {
+            --accent: #00d4ff;
+            --accent-rgb: 0, 212, 255;
+            --border: rgba(0, 212, 255, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 30px; }
+
+        /* --- Scanline Effect --- */
+        body::before {
+            content: " ";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            z-index: 100; pointer-events: none;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed; top: 0; width: 100%; height: 90px;
+            display: flex; align-items: center; z-index: 1000;
+            background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+        }
+        .nav-inner { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; letter-spacing: 4px; color: var(--accent); }
+
+        /* --- Hero --- */
+        .hero {
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .hero-title {
+            font-family: var(--font-display); font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 700; line-height: 0.9; text-transform: uppercase;
+            text-shadow: 0 0 30px rgba(var(--accent-rgb), 0.5);
+            z-index: 2;
+        }
+        .hero-bg-text {
+            position: absolute; font-family: var(--font-display); font-size: 20vw;
+            color: rgba(var(--accent-rgb), 0.03); white-space: nowrap; font-weight: 700;
+            top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;
+        }
+
+        /* --- Game Grid --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; margin: 100px 0; }
+        
+        .game-card {
+            position: relative; height: 500px; border: 1px solid var(--border);
+            overflow: hidden; cursor: pointer; transition: 0.5s var(--ease);
+            background: var(--surface);
+        }
+        .game-card:hover { border-color: var(--accent); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .game-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: 0.8s var(--ease); }
+        .game-card:hover img { opacity: 0.9; transform: scale(1.1); }
+        .game-info {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+        }
+
+        /* --- Utility & Buttons --- */
+        .btn {
+            display: inline-block; padding: 18px 45px; background: var(--accent);
+            color: #fff; text-decoration: none; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 2px; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+            transition: 0.3s; border: none; cursor: pointer;
+        }
+        .btn:hover { transform: scale(1.1) rotate(-1deg); box-shadow: 0 0 20px var(--accent); }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1.2s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- Modal --- */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            z-index: 2000; display: none; align-items: center; justify-content: center;
+        }
+        .modal-content { width: 90%; max-width: 1000px; aspect-ratio: 16/9; background: #000; border: 1px solid var(--accent); }
+
+        .theme-switcher { position: fixed; right: 20px; bottom: 20px; z-index: 1000; display: flex; gap: 10px; }
+        .swatch { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid white; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-inner">
+            <div class="logo">IGNIS_</div>
+            <div style="display: flex; gap: 30px; align-items: center; font-size: 0.8rem; font-weight: 700; letter-spacing: 2px;">
+                <a href="#games" style="color: inherit; text-decoration: none;">GAMES</a>
+                <a href="#studio" style="color: inherit; text-decoration: none;">STUDIO</a>
+                <button class="btn" style="padding: 10px 25px;" onclick="openModal()">REC_ALPHA</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-bg-text">IGNIS</div>
+            <div class="container" style="z-index: 5;">
+                <h1 class="hero-title">Forge Your <br> <span style="color: var(--accent);">Eternity.</span></h1>
+                <p style="max-width: 600px; margin: 30px auto; color: var(--text-dim); letter-spacing: 1px;">High-fidelity interactive worlds built on the bleeding edge of proprietary engine tech.</p>
+                <a href="#games" class="btn">View Catalog</a>
+            </div>
+        </section>
+
+        
+
+        <section id="games" class="container">
+            <div class="reveal">
+                <h2 style="font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 50px;">// CURRENT_PROJECTS</h2>
+                <div class="grid">
+                    <div class="game-card" onclick="openModal()">
+                        <div style="width: 100%; height: 100%; background: linear-gradient(45deg, #1a1a1a, #4a00e0);"></div>
+                        <div class="game-info">
+                            <span style="color: var(--accent); font-weight: 800; font-size: 0.7rem; letter-spacing: 3px;">ACTION / RPG</span>
+                            <h3 style="font-size: 2rem;">NEON_DRIFT</h3>
+                            <p style="color: var(--text-dim);">Survival in the last megacity on Earth.</p>
+                        </div>
+                    </div>
+                    <div class="game-card" onclick="openModal()">
+                        <div style="width: 100%; height: 100%; background: linear-gradient(45deg, #121212, #ff0055);"></div>
+                        <div class="game-info">
+                            <span style="color: var(--accent); font-weight: 800; font-size: 0.7rem; letter-spacing: 3px;">HORROR / STEALTH</span>
+                            <h3 style="font-size: 2rem;">VOID_STALKER</h3>
+                            <p style="color: var(--text-dim);">The dark is not empty.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section style="padding: 100px 0; background: var(--surface);">
+            <div class="container reveal" style="text-align: center;">
+                <h2 style="font-family: var(--font-display); font-size: 3rem; margin-bottom: 30px;">Engineered for <br> Immersion.</h2>
+                <p style="max-width: 700px; margin: 0 auto 50px; color: var(--text-dim);">Our proprietary "Ignis Core" handles real-time ray-tracing and neural-physics, allowing for destruction and light simulation never before seen in the medium.</p>
+                <div style="display: flex; justify-content: center; gap: 80px; font-family: var(--font-display); color: var(--accent);">
+                    <div><div style="font-size: 3rem; font-weight: 700;">120</div><div style="font-size: 0.7rem; letter-spacing: 2px;">FPS_TARGET</div></div>
+                    <div><div style="font-size: 3rem; font-weight: 700;">8K</div><div style="font-size: 0.7rem; letter-spacing: 2px;">NATIVE_RES</div></div>
+                    <div><div style="font-size: 3rem; font-weight: 700;">0ms</div><div style="font-size: 0.7rem; letter-spacing: 2px;">INPUT_LAG</div></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="vidModal" onclick="closeModal()">
+        <div class="modal-content">
+            <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--accent); font-family:var(--font-display);">
+                [ TRAILER_FEED_LOADING... ]
+            </div>
+        </div>
+    </div>
+
+    <div class="theme-switcher">
+        <div class="swatch" style="background: #bf00ff;" onclick="setTheme('dark')"></div>
+        <div class="swatch" style="background: #00d4ff;" onclick="setTheme('blue')"></div>
+    </div>
+
+    <footer style="padding: 80px 0; border-top: 1px solid var(--border); text-align: center; color: var(--text-dim); font-size: 0.7rem; letter-spacing: 2px;">
+        &copy; 2026 IGNIS REDACTED // ALL PROTOCOLS ENFORCED // UNREAL ENGINE 6 PARTNER
+    </footer>
+
+    <script>
+        // --- Scroll Reveal ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Parallax Hero ---
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            document.querySelector('.hero-bg-text').style.transform = `translate(-50%, ${-50 + scrolled * 0.05}%)`;
+        });
+
+        // --- Theme ---
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        // --- Modal ---
+        function openModal() { document.getElementById('vidModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('vidModal').style.display = 'none'; }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

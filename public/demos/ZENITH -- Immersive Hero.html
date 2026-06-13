@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZENITH // Immersive Hero</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #ffffff;
+            --accent: #ffffff;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            /* Extra height to facilitate the scroll-driven animations */
+            height: 400vh; 
+        }
+
+        /* --- Hero Controller --- */
+        .hero-viewport {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        /* --- Layered Visual Elements --- */
+        .layer {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            will-change: transform, opacity;
+        }
+
+        #bg-shape {
+            width: 60vmax; height: 60vmax;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+        }
+
+        .title-wrap {
+            text-align: center;
+            z-index: 20;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 15vw, 10rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 0.9;
+            text-transform: uppercase;
+        }
+
+        .cta-box {
+            margin-top: 40px;
+            padding: 20px 40px;
+            border: 1px solid var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.4s var(--ease);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .cta-box:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        /* --- Progressive Content --- */
+        .content-sections {
+            position: relative;
+            z-index: 5;
+            padding-top: 150vh; /* Delays reveal until hero is "spent" */
+            max-width: 800px;
+            margin: 0 auto;
+            padding-bottom: 100px;
+        }
+
+        .section-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 60px 40px;
+            border-radius: 2px;
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s var(--ease);
+        }
+
+        .section-card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scroll Indicator */
+        .scroll-hint {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            opacity: 0.5;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scroll-hint">SCROLL_TO_EXPLORE</div>
+
+    <div class="hero-viewport">
+        <div class="layer" id="layer-bg">
+            <div id="bg-shape"></div>
+        </div>
+
+        <div class="layer title-wrap" id="layer-text">
+            <h1>Beyond<br>Static.</h1>
+            <div class="cta-box" id="hero-cta">Initialize_Experience</div>
+        </div>
+    </div>
+
+    <div class="content-sections">
+        <div class="section-card">
+            <h3>01 // Dynamic Scaling</h3>
+            <p style="opacity: 0.6; margin-top: 20px;">The hero section uses scroll-interpolation to scale the viewport as you descend, creating a seamless handoff to the body content.</p>
+        </div>
+        <div class="section-card">
+            <h3>02 // Layered Motion</h3>
+            <p style="opacity: 0.6; margin-top: 20px;">Visual elements are mapped to different scroll velocities, simulating an expensive parallax depth without the lag.</p>
+        </div>
+    </div>
+
+    <script>
+        const layerBg = document.getElementById('layer-bg');
+        const layerText = document.getElementById('layer-text');
+        const heroCta = document.getElementById('hero-cta');
+        const cards = document.querySelectorAll('.section-card');
+
+        // Initial Entrance
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                heroCta.style.opacity = '1';
+                heroCta.style.transform = 'translateY(0)';
+            }, 800);
+        });
+
+        // Scroll Animation Logic
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const vh = window.innerHeight;
+            
+            // 1. Hero Text Scale and Fade
+            // Text grows and fades out by the time we hit 100vh
+            const textProgress = Math.min(scrolled / vh, 1);
+            const textScale = 1 + (textProgress * 0.5);
+            const textOpacity = 1 - (textProgress * 1.5);
+            
+            layerText.style.transform = `scale(${textScale})`;
+            layerText.style.opacity = textOpacity;
+
+            // 2. Background Shape Motion
+            // Moves slower than text for parallax depth
+            const bgProgress = (scrolled / vh) * 0.5;
+            layerBg.style.transform = `scale(${1 + bgProgress}) rotate(${scrolled * 0.05}deg)`;
+
+            // 3. Card Reveal (Intersection Observer alternative for performance)
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                if (cardTop < vh * 0.85) {
+                    card.classList.add('active');
+                }
+            });
+
+            // 4. Scroll Hint Fade
+            document.querySelector('.scroll-hint').style.opacity = scrolled > 100 ? 0 : 0.5;
+        });
+
+        // Smooth momentum simulation on CTA click
+        heroCta.addEventListener('click', () => {
+            window.scrollTo({
+                top: window.innerHeight * 1.5,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

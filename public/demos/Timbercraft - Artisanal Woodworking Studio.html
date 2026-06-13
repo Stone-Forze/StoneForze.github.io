@@ -1,0 +1,1437 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timbercraft | Artisanal Woodworking Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --forest-deep: #2C5530;
+            --forest-mid: #4A7856;
+            --forest-light: #6A9C78;
+            --oak-dark: #8B7355;
+            --oak-mid: #B89B7A;
+            --oak-light: #D4C2A8;
+            --charcoal: #3C3C3C;
+            --charcoal-light: #5A5A5A;
+            --ivory: #F8F4E9;
+            --shadow-dark: rgba(44, 85, 48, 0.4);
+            --shadow-light: rgba(180, 190, 175, 0.2);
+            --grain-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='0.1'/%3E%3C/svg%3E");
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--ivory);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--ivory);
+            color: var(--charcoal);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        /* Grain texture overlay */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            background-image: var(--grain-texture);
+            opacity: 0.08;
+            mix-blend-mode: multiply;
+        }
+
+        /* Natural elements for parallax */
+        .natural-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .leaf-shadow {
+            position: absolute;
+            opacity: 0.1;
+            filter: blur(2px);
+            transition: transform 0.1s linear;
+        }
+
+        .wood-grain-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 50%, rgba(139, 115, 85, 0.03) 100%);
+            opacity: 0.2;
+        }
+
+        /* Main content container */
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Tactile header */
+        .tactile-header {
+            padding: 3rem 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--oak-light);
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .header-wood-grain {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--oak-dark), var(--oak-mid), var(--oak-dark));
+        }
+
+        .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--forest-deep);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(139, 115, 85, 0.1);
+            border-radius: 8px;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .logo:hover::before {
+            transform: scaleX(1);
+        }
+
+        .logo-wood {
+            color: var(--oak-dark);
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            color: var(--charcoal);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--oak-dark);
+            transition: width 0.4s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--forest-deep);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--charcoal);
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: rgba(139, 115, 85, 0.1);
+        }
+
+        /* Hero section with tactile elements */
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 0;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 5rem;
+            font-weight: 600;
+            line-height: 1.1;
+            color: var(--forest-deep);
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: var(--charcoal-light);
+            max-width: 600px;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        /* Carved wood cards */
+        .carved-card {
+            background-color: var(--ivory);
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            box-shadow: 
+                inset 0 4px 12px var(--shadow-light),
+                inset 0 -2px 8px var(--shadow-dark),
+                0 8px 24px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            transition: all 0.4s ease;
+            transform-style: preserve-3d;
+        }
+
+        /* Carved effect using pseudo-elements */
+        .carved-card::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border-radius: 8px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0.05));
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .carved-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            background: linear-gradient(135deg, transparent 30%, rgba(139, 115, 85, 0.03) 100%);
+            z-index: -1;
+        }
+
+        .carved-card:hover {
+            transform: translateY(-5px) rotateX(1deg);
+            box-shadow: 
+                inset 0 4px 12px var(--shadow-light),
+                inset 0 -2px 8px var(--shadow-dark),
+                0 16px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: var(--forest-deep);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background-color: var(--oak-mid);
+            border-radius: 2px;
+        }
+
+        .card-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--charcoal-light);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Haptic-style button */
+        .haptic-button {
+            display: inline-block;
+            padding: 1.2rem 2.8rem;
+            background-color: var(--forest-deep);
+            color: var(--ivory);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            box-shadow: 
+                0 6px 0 var(--forest-mid),
+                0 8px 20px rgba(44, 85, 48, 0.3);
+            transform: translateY(0);
+            user-select: none;
+        }
+
+        .haptic-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255, 255, 255, 0.1), transparent);
+            border-radius: 8px;
+        }
+
+        .haptic-button:active {
+            transform: translateY(6px);
+            box-shadow: 
+                0 0 0 var(--forest-mid),
+                0 4px 12px rgba(44, 85, 48, 0.2);
+            transition: all 0.08s ease;
+        }
+
+        .haptic-button:hover:not(:active) {
+            background-color: var(--forest-mid);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 0 var(--forest-mid),
+                0 12px 24px rgba(44, 85, 48, 0.4);
+        }
+
+        .button-wood {
+            background-color: var(--oak-dark);
+            box-shadow: 
+                0 6px 0 var(--oak-mid),
+                0 8px 20px rgba(139, 115, 85, 0.3);
+        }
+
+        .button-wood:hover:not(:active) {
+            background-color: var(--oak-mid);
+            box-shadow: 
+                0 8px 0 var(--oak-mid),
+                0 12px 24px rgba(139, 115, 85, 0.4);
+        }
+
+        .button-wood:active {
+            box-shadow: 
+                0 0 0 var(--oak-mid),
+                0 4px 12px rgba(139, 115, 85, 0.2);
+        }
+
+        /* Projects grid with tactile layout */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .project-card {
+            background-color: var(--ivory);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 
+                inset 0 2px 8px var(--shadow-light),
+                inset 0 -2px 6px var(--shadow-dark),
+                0 8px 24px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            transition: all 0.4s ease;
+            transform-style: preserve-3d;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px) rotateX(2deg);
+            box-shadow: 
+                inset 0 2px 8px var(--shadow-light),
+                inset 0 -2px 6px var(--shadow-dark),
+                0 16px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .project-image {
+            height: 250px;
+            background-color: var(--oak-light);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.2s ease;
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--forest-deep);
+            margin-bottom: 1rem;
+        }
+
+        .project-description {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--charcoal-light);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Craftsmanship section */
+        .craftsmanship-section {
+            margin: 6rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--forest-deep);
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background-color: var(--oak-mid);
+            border-radius: 2px;
+        }
+
+        .process-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin: 3rem 0;
+        }
+
+        .process-step {
+            flex: 1;
+            min-width: 250px;
+            max-width: 350px;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background-color: var(--oak-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--forest-deep);
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--forest-deep);
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--charcoal-light);
+        }
+
+        /* Workshop info */
+        .workshop-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .info-card {
+            background-color: var(--ivory);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 
+                inset 0 2px 8px var(--shadow-light),
+                inset 0 -2px 6px var(--shadow-dark);
+            border: 1px solid rgba(139, 115, 85, 0.2);
+        }
+
+        .info-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--forest-deep);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .info-title i {
+            color: var(--oak-dark);
+        }
+
+        .info-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--charcoal-light);
+        }
+
+        /* Footer with wood texture */
+        .tactile-footer {
+            margin-top: 6rem;
+            padding: 4rem 0 3rem;
+            border-top: 2px solid var(--oak-light);
+            position: relative;
+            background-color: rgba(248, 244, 233, 0.9);
+        }
+
+        .footer-wood-grain {
+            position: absolute;
+            top: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--oak-dark), var(--oak-mid), var(--oak-dark));
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--forest-deep);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--charcoal-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 0;
+        }
+
+        .footer-links a::before {
+            content: 'â–¶';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            color: var(--oak-dark);
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--forest-deep);
+            padding-left: 20px;
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: 0;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(139, 115, 85, 0.2);
+            font-size: 0.9rem;
+            color: var(--charcoal-light);
+        }
+
+        /* Mobile navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: var(--ivory);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .mobile-nav.active {
+            transform: translateX(0);
+        }
+
+        .mobile-nav-close {
+            align-self: flex-end;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--charcoal);
+            cursor: pointer;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 4rem;
+            }
+            
+            .section-title {
+                font-size: 3rem;
+            }
+            
+            .content-wrapper {
+                padding: 0 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tactile-header {
+                padding: 2rem 0 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-title {
+                font-size: 3.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .carved-card {
+                padding: 2rem;
+            }
+            
+            .card-title {
+                font-size: 2.2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .process-step {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .card-title {
+                font-size: 1.8rem;
+            }
+            
+            .haptic-button {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .carved-card,
+            .project-card,
+            .haptic-button,
+            .leaf-shadow {
+                transition: none !important;
+                transform: none !important;
+            }
+            
+            .project-image img {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Grain texture overlay -->
+    <div class="grain-overlay"></div>
+    
+    <!-- Natural elements for parallax -->
+    <div class="natural-elements" id="naturalElements">
+        <div class="wood-grain-bg"></div>
+    </div>
+
+    <!-- Mobile navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" id="mobileNavClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="#craftsmanship" class="nav-link">Craftsmanship</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#workshop" class="nav-link">Workshop</a>
+        <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header class="tactile-header">
+            <a href="#" class="logo">Timber<span class="logo-wood">craft</span></a>
+            
+            <nav class="nav-links">
+                <a href="#craftsmanship" class="nav-link">Craftsmanship</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#workshop" class="nav-link">Workshop</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="header-wood-grain"></div>
+        </header>
+
+        <!-- Hero section -->
+        <section class="hero-section">
+            <h1 class="hero-title">Where Wood Finds Its Voice Through Patient Hands</h1>
+            <p class="hero-subtitle">
+                In our sunlit studio, raw timber transforms into heirloom pieces. 
+                Each project begins with respect for the material's history 
+                and ends with furniture that will tell stories for generations.
+            </p>
+            <a href="#projects" class="haptic-button">Explore Our Work</a>
+        </section>
+
+        <!-- Carved wood card - Philosophy -->
+        <article class="carved-card">
+            <h2 class="card-title">The Art of Wood</h2>
+            <p class="card-content">
+                Woodworking isn't merely constructionâ€”it's a conversation with 
+                nature. Every plank of oak, walnut, or cherry carries within it 
+                decades of growth, seasons of change, and a unique character 
+                waiting to be revealed. Our philosophy centers on listening to 
+                this story and guiding it to its natural conclusion, creating 
+                pieces that honor both the tree's journey and the human hands 
+                that shaped it.
+            </p>
+            <a href="#philosophy" class="haptic-button button-wood">Our Philosophy</a>
+        </article>
+
+        <!-- Craftsmanship section -->
+        <section class="craftsmanship-section" id="craftsmanship">
+            <h2 class="section-title">Time-Honored Techniques</h2>
+            
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-icon">ðŸŒ³</div>
+                    <h3 class="step-title">Material Selection</h3>
+                    <p class="step-description">
+                        We source sustainable, locally harvested timber, 
+                        selecting each piece for its grain pattern, density, 
+                        and inherent character.
+                    </p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-icon">âœ‹</div>
+                    <h3 class="step-title">Hand-Shaping</h3>
+                    <p class="step-description">
+                        Using traditional hand tools, we shape the wood 
+                        with deliberate strokes, maintaining connection 
+                        between maker and material.
+                    </p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-icon">ðŸ”¨</div>
+                    <h3 class="step-title">Joinery</h3>
+                    <p class="step-description">
+                        Mortise and tenon, dovetail, and butterfly joints 
+                        create connections that grow stronger with time, 
+                        without needing metal fasteners.
+                    </p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-icon">ðŸŽ¨</div>
+                    <h3 class="step-title">Finishing</h3>
+                    <p class="step-description">
+                        Natural oil and wax finishes enhance the wood's 
+                        beauty while allowing it to breathe and age 
+                        gracefully over decades.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects grid -->
+        <section class="projects-section" id="projects">
+            <h2 class="section-title">Recent Projects</h2>
+            
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <article class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Live edge dining table">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">River Table</h3>
+                        <p class="project-description">
+                            A live-edge walnut slab with epoxy resin river, 
+                            celebrating the wood's natural contours while 
+                            creating functional art.
+                        </p>
+                        <a href="#" class="haptic-button button-wood">View Project</a>
+                    </div>
+                </article>
+                
+                <!-- Project 2 -->
+                <article class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Custom bookshelf">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Library Ladder</h3>
+                        <p class="project-description">
+                            Custom-built oak library ladder with brass 
+                            hardware, designed to access high shelves 
+                            with elegance and stability.
+                        </p>
+                        <a href="#" class="haptic-button button-wood">View Project</a>
+                    </div>
+                </article>
+                
+                <!-- Project 3 -->
+                <article class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Wooden chair">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Windsor Chair</h3>
+                        <p class="project-description">
+                            Hand-carved cherry Windsor chair using 18th-century 
+                            techniques, offering both timeless beauty and 
+                            exceptional comfort.
+                        </p>
+                        <a href="#" class="haptic-button button-wood">View Project</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Workshop info -->
+        <section class="workshop-section" id="workshop">
+            <div class="workshop-info">
+                <div class="info-card">
+                    <h3 class="info-title"><i class="fas fa-map-marker-alt"></i> Visit Our Studio</h3>
+                    <p class="info-content">
+                        Nestled in a converted 19th-century barn, our workshop 
+                        is filled with natural light and the scent of fresh-cut 
+                        wood. We welcome visitors by appointment to experience 
+                        the craft firsthand.
+                    </p>
+                    <a href="#" class="haptic-button" style="margin-top: 1.5rem;">Schedule a Visit</a>
+                </div>
+                
+                <div class="info-card">
+                    <h3 class="info-title"><i class="fas fa-graduation-cap"></i> Learn With Us</h3>
+                    <p class="info-content">
+                        We offer intimate workshops where you can learn traditional 
+                        woodworking techniques. From beginner classes to advanced 
+                        masterclasses, discover the satisfaction of creating with 
+                        your own hands.
+                    </p>
+                    <a href="#" class="haptic-button button-wood" style="margin-top: 1.5rem;">View Classes</a>
+                </div>
+                
+                <div class="info-card">
+                    <h3 class="info-title"><i class="fas fa-tree"></i> Sustainable Sourcing</h3>
+                    <p class="info-content">
+                        Every piece of wood in our studio comes from responsibly 
+                        managed forests or reclaimed sources. We believe beautiful 
+                        furniture shouldn't come at the expense of our forests.
+                    </p>
+                    <a href="#" class="haptic-button" style="margin-top: 1.5rem;">Our Materials</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final carved card -->
+        <article class="carved-card">
+            <h2 class="card-title">Commission Your Piece</h2>
+            <p class="card-content">
+                Whether you envision a custom dining table, a built-in bookshelf, 
+                or a unique heirloom piece, we collaborate closely with clients 
+                throughout the design and creation process. Each commission begins 
+                with understanding your needs, your space, and the story you want 
+                the piece to tell.
+            </p>
+            <a href="#contact" class="haptic-button">Begin a Conversation</a>
+        </article>
+
+        <!-- Footer -->
+        <footer class="tactile-footer" id="contact">
+            <div class="footer-wood-grain"></div>
+            
+            <div class="footer-content">
+                <div>
+                    <h4 class="footer-column-title">Timbercraft Studio</h4>
+                    <p style="margin-top: 1rem; color: var(--charcoal-light); line-height: 1.7;">
+                        123 Forest Lane, Woodland Valley<br>
+                        Studio Hours: Tue-Sat, 9am-5pm<br>
+                        By appointment only
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="footer-column-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#projects">Portfolio</a></li>
+                        <li><a href="#workshop">Workshop Tours</a></li>
+                        <li><a href="#classes">Classes</a></li>
+                        <li><a href="#blog">Woodworking Journal</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-column-title">Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:craft@timbercraft.com">craft@timbercraft.com</a></li>
+                        <li><a href="tel:+15551234567">(555) 123-4567</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Newsletter</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                Timbercraft Â© 2024 | Handcrafted with patience in Woodland Valley
+            </div>
+        </footer>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script>
+        // Natural elements parallax system
+        class NaturalParallax {
+            constructor() {
+                this.container = document.getElementById('naturalElements');
+                this.leaves = [];
+                this.lastScrollY = window.scrollY;
+                this.animationId = null;
+                
+                this.init();
+            }
+            
+            init() {
+                // Create leaf shadow elements
+                this.createLeafShadows();
+                
+                // Start animation loop
+                this.animate();
+                
+                // Handle resize
+                window.addEventListener('resize', () => {
+                    this.resizeLeaves();
+                });
+            }
+            
+            createLeafShadows() {
+                const leafCount = 15;
+                
+                for (let i = 0; i < leafCount; i++) {
+                    const leaf = document.createElement('div');
+                    leaf.className = 'leaf-shadow';
+                    
+                    // Random properties
+                    const size = Math.random() * 100 + 50;
+                    const left = Math.random() * 100;
+                    const top = Math.random() * 100;
+                    const rotation = Math.random() * 360;
+                    const depth = Math.random() * 0.5 + 0.5; // Parallax depth
+                    
+                    // SVG for leaf shape
+                    leaf.innerHTML = `
+                        <svg width="${size}" height="${size}" viewBox="0 0 100 100">
+                            <path d="M50,10 C30,10 10,30 10,50 C10,70 30,90 50,90 C70,90 90,70 90,50 C90,30 70,10 50,10 Z" 
+                                  fill="${this.getRandomGreen()}" 
+                                  opacity="0.1"/>
+                        </svg>
+                    `;
+                    
+                    leaf.style.left = `${left}%`;
+                    leaf.style.top = `${top}%`;
+                    leaf.style.transform = `rotate(${rotation}deg)`;
+                    leaf.dataset.depth = depth;
+                    
+                    this.container.appendChild(leaf);
+                    
+                    this.leaves.push({
+                        element: leaf,
+                        originalLeft: left,
+                        originalTop: top,
+                        depth: depth,
+                        size: size
+                    });
+                }
+            }
+            
+            getRandomGreen() {
+                const greens = ['#2C5530', '#4A7856', '#6A9C78'];
+                return greens[Math.floor(Math.random() * greens.length)];
+            }
+            
+            resizeLeaves() {
+                // Adjust leaf positions on resize
+                this.leaves.forEach(leaf => {
+                    leaf.element.style.left = `${leaf.originalLeft}%`;
+                    leaf.element.style.top = `${leaf.originalTop}%`;
+                });
+            }
+            
+            animate() {
+                const scrollY = window.scrollY;
+                const scrollDelta = scrollY - this.lastScrollY;
+                this.lastScrollY = scrollY;
+                
+                // Update leaf positions based on scroll
+                this.leaves.forEach(leaf => {
+                    const parallaxOffset = scrollDelta * leaf.depth * 0.1;
+                    const currentTop = parseFloat(leaf.element.style.top) || leaf.originalTop;
+                    
+                    // Apply parallax movement
+                    leaf.element.style.top = `${currentTop + parallaxOffset}%`;
+                    
+                    // Subtle rotation based on scroll
+                    const rotation = parseFloat(leaf.element.style.transform.replace('rotate(', '').replace('deg)', '')) || 0;
+                    const newRotation = rotation + (scrollDelta * 0.01 * leaf.depth);
+                    
+                    leaf.element.style.transform = `rotate(${newRotation}deg)`;
+                    
+                    // Keep leaves in bounds
+                    if (currentTop > 100) {
+                        leaf.element.style.top = '-10%';
+                    } else if (currentTop < -10) {
+                        leaf.element.style.top = '100%';
+                    }
+                });
+                
+                this.animationId = requestAnimationFrame(() => this.animate());
+            }
+            
+            destroy() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+            }
+        }
+        
+        // Haptic button interaction system
+        class HapticInteraction {
+            constructor() {
+                this.buttons = document.querySelectorAll('.haptic-button');
+                this.init();
+            }
+            
+            init() {
+                this.buttons.forEach(button => {
+                    // Add pressed state on mousedown/touchstart
+                    button.addEventListener('mousedown', (e) => this.pressButton(e.currentTarget));
+                    button.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        this.pressButton(e.currentTarget);
+                    });
+                    
+                    // Add release on mouseup/touchend
+                    button.addEventListener('mouseup', (e) => this.releaseButton(e.currentTarget));
+                    button.addEventListener('mouseleave', (e) => this.releaseButton(e.currentTarget));
+                    button.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        this.releaseButton(e.currentTarget);
+                    });
+                    
+                    // Add keyboard support
+                    button.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.pressButton(e.currentTarget);
+                        }
+                    });
+                    
+                    button.addEventListener('keyup', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.releaseButton(e.currentTarget);
+                            // Trigger click if Enter was pressed
+                            if (e.key === 'Enter') {
+                                e.currentTarget.click();
+                            }
+                        }
+                    });
+                });
+            }
+            
+            pressButton(button) {
+                // Add pressed class
+                button.classList.add('pressed');
+                
+                // Create ripple effect
+                this.createRipple(button);
+                
+                // Add haptic feedback if supported
+                if (navigator.vibrate) {
+                    navigator.vibrate(10);
+                }
+            }
+            
+            releaseButton(button) {
+                button.classList.remove('pressed');
+            }
+            
+            createRipple(button) {
+                // Remove existing ripples
+                const existingRipples = button.querySelectorAll('.ripple');
+                existingRipples.forEach(ripple => ripple.remove());
+                
+                // Create new ripple
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                
+                // Get button dimensions
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = rect.width / 2;
+                const y = rect.height / 2;
+                
+                // Style ripple
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${x - size / 2}px`;
+                ripple.style.top = `${y - size / 2}px`;
+                ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.position = 'absolute';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s linear';
+                ripple.style.zIndex = '1';
+                
+                // Add CSS for animation if not already present
+                if (!document.getElementById('rippleAnimation')) {
+                    const style = document.createElement('style');
+                    style.id = 'rippleAnimation';
+                    style.textContent = `
+                        @keyframes ripple {
+                            to {
+                                transform: scale(2);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                button.style.position = 'relative';
+                button.style.overflow = 'hidden';
+                button.appendChild(ripple);
+                
+                // Remove ripple after animation
+                setTimeout(() => {
+                    if (ripple.parentNode === button) {
+                        ripple.remove();
+                    }
+                }, 600);
+            }
+        }
+        
+        // Scroll-driven animations for cards
+        class ScrollAnimations {
+            constructor() {
+                this.cards = document.querySelectorAll('.carved-card, .project-card');
+                this.lastScrollY = 0;
+                this.ticking = false;
+                
+                this.init();
+            }
+            
+            init() {
+                // Initial check for cards in view
+                this.checkCards();
+                
+                // Add scroll listener with throttling
+                window.addEventListener('scroll', () => {
+                    this.lastScrollY = window.scrollY;
+                    
+                    if (!this.ticking) {
+                        requestAnimationFrame(() => {
+                            this.updateCards();
+                            this.ticking = false;
+                        });
+                        this.ticking = true;
+                    }
+                }, { passive: true });
+                
+                // Also check on resize
+                window.addEventListener('resize', () => {
+                    this.checkCards();
+                });
+            }
+            
+            checkCards() {
+                this.cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const isVisible = (
+                        rect.top <= window.innerHeight * 0.8 &&
+                        rect.bottom >= window.innerHeight * 0.2
+                    );
+                    
+                    if (isVisible) {
+                        card.classList.add('in-view');
+                    }
+                });
+            }
+            
+            updateCards() {
+                const scrollY = this.lastScrollY;
+                
+                this.cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const cardTop = rect.top + scrollY;
+                    const cardCenter = cardTop + rect.height / 2;
+                    const viewportCenter = scrollY + window.innerHeight / 2;
+                    
+                    // Calculate distance from viewport center
+                    const distance = Math.abs(cardCenter - viewportCenter);
+                    const maxDistance = window.innerHeight;
+                    const intensity = 1 - (distance / maxDistance);
+                    
+                    // Apply subtle transform based on scroll position
+                    if (intensity > 0.1) {
+                        const translateY = intensity * 10;
+                        const rotateX = intensity * 0.5;
+                        
+                        card.style.transform = `
+                            translateY(${translateY}px)
+                            rotateX(${rotateX}deg)
+                            translateZ(0)
+                        `;
+                    }
+                });
+            }
+        }
+        
+        // Mobile menu functionality
+        class MobileMenu {
+            constructor() {
+                this.menuBtn = document.getElementById('mobileMenuBtn');
+                this.mobileNav = document.getElementById('mobileNav');
+                this.closeBtn = document.getElementById('mobileNavClose');
+                
+                this.init();
+            }
+            
+            init() {
+                this.menuBtn.addEventListener('click', () => this.openMenu());
+                this.closeBtn.addEventListener('click', () => this.closeMenu());
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!this.mobileNav.contains(e.target) && 
+                        !this.menuBtn.contains(e.target) && 
+                        this.mobileNav.classList.contains('active')) {
+                        this.closeMenu();
+                    }
+                });
+                
+                // Close menu on escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.mobileNav.classList.contains('active')) {
+                        this.closeMenu();
+                    }
+                });
+            }
+            
+            openMenu() {
+                this.mobileNav.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            closeMenu() {
+                this.mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize systems
+            const parallax = new NaturalParallax();
+            const haptic = new HapticInteraction();
+            const scrollAnim = new ScrollAnimations();
+            const mobileMenu = new MobileMenu();
+            
+            // Add CSS for reduced motion preference
+            const reducedMotionStyle = document.createElement('style');
+            reducedMotionStyle.textContent = `
+                @media (prefers-reduced-motion: reduce) {
+                    .ripple {
+                        display: none !important;
+                    }
+                    
+                    .leaf-shadow {
+                        animation: none !important;
+                    }
+                }
+                
+                /* Focus styles for accessibility */
+                .haptic-button:focus {
+                    outline: 2px solid var(--forest-deep);
+                    outline-offset: 4px;
+                }
+                
+                .nav-link:focus {
+                    outline: 2px solid var(--oak-dark);
+                    outline-offset: 4px;
+                }
+            `;
+            document.head.appendChild(reducedMotionStyle);
+            
+            // Clean up on page unload
+            window.addEventListener('beforeunload', () => {
+                parallax.destroy();
+            });
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    
+                    if (href !== '#') {
+                        e.preventDefault();
+                        
+                        // Close mobile menu if open
+                        if (mobileMenu.mobileNav.classList.contains('active')) {
+                            mobileMenu.closeMenu();
+                        }
+                        
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            const headerHeight = document.querySelector('.tactile-header').offsetHeight;
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                            
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

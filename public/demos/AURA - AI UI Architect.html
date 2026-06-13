@@ -1,0 +1,422 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | AI UI Architect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;500;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        /* --- DESIGN SYSTEM --- */
+        :root {
+            --bg-void: #030014;
+            --glass-surface: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --primary-glow: #a855f7;
+            --secondary-glow: #3b82f6;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08), transparent 25%);
+        }
+
+        /* --- UTILITIES --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .flex-center { display: flex; justify-content: center; align-items: center; }
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 30%, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- BACKGROUND MESH --- */
+        .grid-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(3, 0, 20, 0.8);
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo span {
+            width: 8px; height: 8px; background: var(--primary-glow);
+            border-radius: 50%; box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--glass-border);
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .nav-btn:hover { background: white; color: black; }
+
+        /* --- HERO --- */
+        .hero {
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+            background: rgba(168, 85, 247, 0.1);
+            color: #d8b4fe;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            font-family: var(--font-code);
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 30px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 50px;
+            line-height: 1.6;
+        }
+
+        /* --- INTERACTIVE GENERATOR DEMO --- */
+        .generator-wrapper {
+            background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        /* The Glow behind the generator */
+        .generator-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px; height: 300px;
+            background: var(--primary-glow);
+            filter: blur(100px);
+            opacity: 0.2;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .input-bar {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 30px;
+        }
+
+        .prompt-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 15px;
+            font-family: var(--font-code);
+            font-size: 0.95rem;
+        }
+
+        .gen-btn {
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            border: none;
+            color: white;
+            padding: 0 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .gen-btn:hover { opacity: 0.9; box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
+
+        /* The Canvas where UI is drawn */
+        .ui-canvas {
+            position: relative;
+            z-index: 2;
+            background: #0f0f11;
+            border-radius: 16px;
+            min-height: 300px;
+            border: 1px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* --- BENTO GRID FEATURES --- */
+        .bento-section { padding: 100px 0; }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 250px);
+            gap: 20px;
+        }
+
+        .bento-card {
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .bento-card:hover { 
+            border-color: rgba(255,255,255,0.2); 
+            background: rgba(255,255,255,0.05);
+        }
+
+        .span-2 { grid-column: span 2; }
+        
+        .bento-title { font-size: 1.5rem; font-family: var(--font-display); margin-bottom: 10px; }
+        .bento-desc { color: var(--text-muted); font-size: 0.9rem; }
+        
+        .visual-element {
+            width: 100%; height: 100px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 50px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- GENERATED UI ELEMENTS (Injected by JS) --- */
+        .generated-card {
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 12px;
+            width: 280px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: var(--font-body);
+        }
+        .gen-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .gen-avatar { width: 40px; height: 40px; background: #ddd; border-radius: 50%; }
+        .gen-bar { height: 10px; background: #eee; border-radius: 5px; margin-bottom: 8px; }
+        .gen-btn-ui { 
+            margin-top: 15px; width: 100%; padding: 10px; 
+            background: black; color: white; border: none; border-radius: 6px; 
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Loader */
+        .loader {
+            width: 40px; height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary-glow);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media(max-width: 768px) {
+            .bento-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .span-2 { grid-column: span 1; }
+            h1 { font-size: 3rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="grid-bg"></div>
+
+    <nav class="container">
+        <div class="logo"><span></span> AURA</div>
+        <button class="nav-btn">Get Early Access</button>
+    </nav>
+
+    <section class="hero container">
+        <div class="badge">v2.0 Now Available</div>
+        <h1>Design at the <br><span class="gradient-text">Speed of Thought.</span></h1>
+        <p>Aura uses generative AI to build production-ready UI components, landing pages, and design systems instantly.</p>
+
+        <div class="generator-wrapper">
+            <div class="generator-glow"></div>
+            
+            <div class="input-bar">
+                <input type="text" class="prompt-input" id="prompt" value="Create a minimal profile card for a user named Sarah" placeholder="Describe a UI component...">
+                <button class="gen-btn" onclick="generateUI()">
+                    <span id="btn-text">Generate</span>
+                </button>
+            </div>
+
+            <div class="ui-canvas" id="canvas">
+                <div style="color: #444; font-family: var(--font-code); font-size: 0.9rem;">
+                    // Waiting for prompt...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bento-section container">
+        <div class="bento-grid">
+            <div class="bento-card span-2">
+                <div>
+                    <div class="bento-title">Text to Website</div>
+                    <div class="bento-desc">Describe your dream site in natural language. Aura handles the layout, typography, and responsiveness.</div>
+                </div>
+                <div class="visual-element" style="background: linear-gradient(90deg, #a855f722, transparent);"></div>
+            </div>
+            <div class="bento-card">
+                <div>
+                    <div class="bento-title">Code Export</div>
+                    <div class="bento-desc">Get clean React, Vue, or HTML/CSS code instantly.</div>
+                </div>
+                <div style="margin-top:20px; font-family:var(--font-code); color:#666; font-size:0.8rem;">&lt;div class="hero"&gt;...</div>
+            </div>
+            <div class="bento-card">
+                <div>
+                    <div class="bento-title">Design System</div>
+                    <div class="bento-desc">Auto-generate color palettes and font stacks.</div>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <div style="width:30px; height:30px; border-radius:50%; background:#a855f7;"></div>
+                    <div style="width:30px; height:30px; border-radius:50%; background:#3b82f6;"></div>
+                    <div style="width:30px; height:30px; border-radius:50%; background:#fff;"></div>
+                </div>
+            </div>
+            <div class="bento-card span-2">
+                <div>
+                    <div class="bento-title">Iterative Refinement</div>
+                    <div class="bento-desc">Chat with the AI to tweak padding, colors, and content in real-time.</div>
+                </div>
+                <div class="visual-element" style="background: linear-gradient(90deg, #3b82f622, transparent);"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Aura AI Labs. Designed by the Future.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const btnText = document.getElementById('btn-text');
+
+        function generateUI() {
+            // 1. Loading State
+            canvas.innerHTML = '<div class="loader"></div>';
+            btnText.innerText = "Dreaming...";
+            
+            // 2. Simulate Delay (AI Thinking)
+            setTimeout(() => {
+                createResult();
+                btnText.innerText = "Generate";
+            }, 1500);
+        }
+
+        function createResult() {
+            // Randomize slightly for variety
+            const names = ["Sarah Jenkins", "Alex Rivera", "Jordan Lee"];
+            const roles = ["Product Designer", "Frontend Dev", "AI Researcher"];
+            const name = names[Math.floor(Math.random() * names.length)];
+            const role = roles[Math.floor(Math.random() * roles.length)];
+
+            // Inject HTML for the "Generated" Card
+            canvas.innerHTML = `
+                <div class="generated-card">
+                    <div class="gen-header">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${name}" class="gen-avatar">
+                        <div>
+                            <div style="font-weight:700; font-size:1rem;">${name}</div>
+                            <div style="color:#666; font-size:0.8rem;">${role}</div>
+                        </div>
+                    </div>
+                    <div style="color:#444; font-size:0.9rem; line-height:1.4; margin-bottom:15px;">
+                        Passionate about building accessible interfaces and clean design systems.
+                    </div>
+                    <div style="display:flex; gap:10px; margin-bottom:15px;">
+                        <div style="background:#f3f4f6; padding:5px 10px; border-radius:4px; font-size:0.7rem; font-weight:600;">UI/UX</div>
+                        <div style="background:#f3f4f6; padding:5px 10px; border-radius:4px; font-size:0.7rem; font-weight:600;">React</div>
+                    </div>
+                    <button class="gen-btn-ui">View Portfolio</button>
+                </div>
+            `;
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,1347 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cine-Rain | Urban Melancholy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --charcoal: #1A1A1A;
+            --deep-navy: #0A192F;
+            --neon-amber: #FF9A00;
+            --neon-amber-glow: rgba(255, 154, 0, 0.7);
+            --neon-amber-subtle: rgba(255, 154, 0, 0.3);
+            --wet-surface: rgba(255, 255, 255, 0.08);
+            --rain-streak: rgba(255, 255, 255, 0.05);
+            --text-primary: #E6E6E6;
+            --text-secondary: #A0A0A0;
+            --shadow-heavy: rgba(0, 0, 0, 0.7);
+            --gloss-highlight: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--charcoal);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--deep-navy) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            cursor: default;
+        }
+
+        /* Rain animation container */
+        #rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .rain-drop {
+            position: absolute;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.3) 70%, transparent 100%);
+            animation: rain-fall linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rain-fall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Window droplet overlay */
+        .window-droplets {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.03) 2px, transparent 3px),
+                radial-gradient(circle at 75% 40%, rgba(255, 255, 255, 0.02) 3px, transparent 4px),
+                radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.04) 4px, transparent 5px),
+                radial-gradient(circle at 85% 85%, rgba(255, 255, 255, 0.03) 2px, transparent 3px);
+            background-size: 200px 200px, 300px 300px, 250px 250px, 180px 180px;
+        }
+
+        /* Ripple effect container */
+        #ripple-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 154, 0, 0.2) 0%, transparent 70%);
+            transform: scale(0);
+            animation: ripple-expand 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        @keyframes ripple-expand {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.8rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 154, 0, 0.2);
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--neon-amber);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-amber), transparent);
+            box-shadow: 0 0 10px var(--neon-amber-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--neon-amber);
+            box-shadow: 0 0 8px var(--neon-amber-glow);
+            transition: width 0.4s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-amber);
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--neon-amber);
+        }
+
+        /* Hero Section with liquid displacement effect */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            line-height: 1.1;
+            opacity: 0;
+            transform: translateY(30px);
+            filter: blur(10px);
+            transition: opacity 1.2s ease, transform 1.2s ease, filter 1.2s ease;
+        }
+
+        .hero h1.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        /* Liquid displacement filter for hero text */
+        .liquid-text {
+            filter: url(#liquidDisplacement);
+        }
+
+        .hero-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(30px);
+            filter: blur(10px);
+            transition: opacity 1.2s ease 0.3s, transform 1.2s ease 0.3s, filter 1.2s ease 0.3s;
+        }
+
+        .hero-subtitle.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        /* Wet surface button */
+        .cta-button {
+            display: inline-block;
+            padding: 1.3rem 2.8rem;
+            background: var(--wet-surface);
+            border: 1px solid rgba(255, 154, 0, 0.3);
+            color: var(--neon-amber);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 var(--gloss-highlight),
+                0 0 20px rgba(255, 154, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(30px);
+            filter: blur(10px);
+            transition: opacity 1.2s ease 0.6s, transform 1.2s ease 0.6s, filter 1.2s ease 0.6s, all 0.4s ease;
+        }
+
+        .cta-button.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        /* Wet surface glossy effect */
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.7s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover {
+            color: white;
+            border-color: var(--neon-amber);
+            background: rgba(255, 154, 0, 0.15);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 30px var(--neon-amber-glow);
+            transform: translateY(-3px);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Wet surface cards */
+        .content-section {
+            padding: 6rem 3rem;
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            filter: blur(10px);
+            transition: opacity 0.8s ease, transform 0.8s ease, filter 0.8s ease;
+        }
+
+        .section-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-amber), transparent);
+            box-shadow: 0 0 10px var(--neon-amber-glow);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-bottom: 6rem;
+        }
+
+        .wet-card {
+            background: var(--wet-surface);
+            border-radius: 8px;
+            padding: 2.5rem;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 154, 0, 0.2);
+            box-shadow: 
+                0 15px 35px var(--shadow-heavy),
+                inset 0 1px 0 var(--gloss-highlight),
+                0 0 20px rgba(255, 154, 0, 0.05);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            filter: blur(10px);
+            transition: opacity 0.8s ease, transform 0.8s ease, filter 0.8s ease, all 0.4s ease;
+        }
+
+        .wet-card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        /* Rain streak effect on cards */
+        .wet-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent 10%, var(--rain-streak) 50%, transparent 90%);
+            background-size: 200% 200%;
+            animation: rain-streak 3s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+        }
+
+        .wet-card:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes rain-streak {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .wet-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(255, 154, 0, 0.4);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 30px rgba(255, 154, 0, 0.2);
+        }
+
+        .card-icon {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            color: var(--neon-amber);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 0 0 10px var(--neon-amber-glow);
+        }
+
+        .card-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .card-content {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .card-button {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 154, 0, 0.1);
+            border: 1px solid rgba(255, 154, 0, 0.3);
+            color: var(--neon-amber);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            font-size: 1rem;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .card-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 154, 0, 0.2), transparent);
+            transition: left 0.6s ease;
+            z-index: -1;
+        }
+
+        .card-button:hover {
+            color: white;
+            background: rgba(255, 154, 0, 0.25);
+            border-color: var(--neon-amber);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 20px rgba(255, 154, 0, 0.3);
+        }
+
+        .card-button:hover::before {
+            left: 100%;
+        }
+
+        /* Features section */
+        .features-section {
+            padding: 6rem 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 154, 0, 0.1);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            filter: blur(10px);
+            transition: opacity 0.8s ease, transform 0.8s ease, filter 0.8s ease, all 0.4s ease;
+        }
+
+        .feature-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 154, 0, 0.3);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.4),
+                0 0 25px rgba(255, 154, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--neon-amber);
+            text-shadow: 0 0 10px var(--neon-amber-glow);
+        }
+
+        .feature-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(26, 26, 26, 0.8);
+            border-top: 1px solid rgba(255, 154, 0, 0.2);
+            padding: 4rem 3rem 2rem;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--neon-amber);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+            position: relative;
+            padding-left: 0;
+        }
+
+        .footer-links a::before {
+            content: '>';
+            position: absolute;
+            left: -15px;
+            opacity: 0;
+            color: var(--neon-amber);
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--neon-amber);
+            padding-left: 15px;
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: 0;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 4px;
+            background: rgba(255, 154, 0, 0.1);
+            color: var(--neon-amber);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 154, 0, 0.2);
+        }
+
+        .social-icons a:hover {
+            background: rgba(255, 154, 0, 0.25);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 154, 0, 0.2);
+            border-color: var(--neon-amber);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            transform: translateY(-100%);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 99;
+            border-bottom: 1px solid rgba(255, 154, 0, 0.2);
+        }
+
+        .mobile-nav.active {
+            transform: translateY(0);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3.8rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .content-section {
+                padding: 4rem 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+                margin-bottom: 3rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .cta-button {
+                padding: 1.1rem 2.2rem;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .wet-card {
+                padding: 2rem;
+            }
+            
+            .card-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG filter for liquid displacement effect -->
+    <svg width="0" height="0">
+        <filter id="liquidDisplacement">
+            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.02" numOctaves="2" result="noise" seed="5">
+                <animate attributeName="baseFrequency" values="0.01 0.02;0.02 0.03;0.01 0.02" dur="8s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
+
+    <!-- Rain animation container -->
+    <div id="rain-container"></div>
+    
+    <!-- Window droplet overlay -->
+    <div class="window-droplets"></div>
+    
+    <!-- Ripple effect container -->
+    <div id="ripple-container"></div>
+
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo">CINE-RAIN</a>
+        
+        <nav class="nav-links">
+            <a href="#films">Films</a>
+            <a href="#soundscapes">Soundscapes</a>
+            <a href="#visuals">Visuals</a>
+            <a href="#experience">Experience</a>
+        </nav>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <span>â˜°</span>
+        </button>
+    </header>
+    
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="#films">Films</a>
+        <a href="#soundscapes">Soundscapes</a>
+        <a href="#visuals">Visuals</a>
+        <a href="#experience">Experience</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 id="heroTitle" class="liquid-text">URBAN MELANCHOLY</h1>
+        <p class="hero-subtitle" id="heroSubtitle">An immersive exploration of noir aesthetics through the lens of rain-drenched cityscapes. Where every droplet tells a story of solitude and reflection.</p>
+        <a href="#films" class="cta-button" id="heroButton">ENTER THE RAIN</a>
+    </section>
+
+    <!-- Films Section -->
+    <section class="content-section" id="films">
+        <h2 class="section-title" id="filmsTitle">CINEMATIC RAINS</h2>
+        
+        <div class="cards-grid">
+            <!-- Card 1 -->
+            <article class="wet-card" id="card1">
+                <div class="card-icon">ã€ŠBLADE RUNNERã€‹</div>
+                <h3 class="card-title">Neon-Drenched Noir</h3>
+                <p class="card-content">The eternal rain of Los Angeles 2019. A study in how precipitation becomes a character itself, washing over neon signs and reflecting dystopian dreams.</p>
+                <a href="#" class="card-button">WATCH STUDY</a>
+            </article>
+            
+            <!-- Card 2 -->
+            <article class="wet-card" id="card2">
+                <div class="card-icon">ã€ŠSE7ENã€‹</div>
+                <h3 class="card-title">Relentless Downpour</h3>
+                <p class="card-content">Rain as psychological pressure. The constant precipitation mirrors the unrelenting tension, turning the city into a character of oppressive dampness.</p>
+                <a href="#" class="card-button">WATCH STUDY</a>
+            </article>
+            
+            <!-- Card 3 -->
+            <article class="wet-card" id="card3">
+                <div class="card-icon">ã€ŠTHE MATRIXã€‹</div>
+                <h3 class="card-title">Digital Precipitation</h3>
+                <p class="card-content">When rain becomes code. The green-tinted drizzle of the simulated world, where every drop represents data flowing through the system.</p>
+                <a href="#" class="card-button">WATCH STUDY</a>
+            </article>
+        </div>
+    </section>
+
+    <!-- Soundscapes Section -->
+    <section class="content-section features-section" id="soundscapes">
+        <h2 class="section-title" id="soundTitle">AUDIOVISUAL RAIN</h2>
+        
+        <div class="features-grid">
+            <!-- Feature 1 -->
+            <div class="feature-item" id="feature1">
+                <div class="feature-icon">â™«</div>
+                <h3 class="feature-title">Ambient Drizzle</h3>
+                <p class="feature-desc">Generative soundscapes that mimic varying intensities of rain, from gentle patter to torrential downpour, synchronized with visual elements.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="feature-item" id="feature2">
+                <div class="feature-icon">â™©</div>
+                <h3 class="feature-title">Neon Hum</h3>
+                <p class="feature-desc">The electrical buzz of wet signs and reflections, creating a synthetic harmony with natural precipitation sounds.</p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="feature-item" id="feature3">
+                <div class="feature-icon">â™ª</div>
+                <h3 class="feature-title">Echo Chambers</h3>
+                <p class="feature-desc">Spatial audio that places you in different rain environments: narrow alleyways, wide boulevards, underground passages.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visuals Section -->
+    <section class="content-section" id="visuals">
+        <h2 class="section-title" id="visualsTitle">VISUAL PRECIPITATION</h2>
+        
+        <div class="cards-grid">
+            <!-- Card 1 -->
+            <article class="wet-card" id="card4">
+                <div class="card-icon">â—ˆ</div>
+                <h3 class="card-title">Refraction Studies</h3>
+                <p class="card-content">How light bends through falling droplets, creating miniature inverted cities within each bead of water on glass surfaces.</p>
+                <a href="#" class="card-button">VIEW GALLERY</a>
+            </article>
+            
+            <!-- Card 2 -->
+            <article class="wet-card" id="card5">
+                <div class="card-icon">â—‰</div>
+                <h3 class="card-title">Streetlight Halos</h3>
+                <p class="card-content">The atmospheric glow of artificial light through precipitation, creating coronas and aureoles around urban light sources.</p>
+                <a href="#" class="card-button">VIEW GALLERY</a>
+            </article>
+            
+            <!-- Card 3 -->
+            <article class="wet-card" id="card6">
+                <div class="card-icon">â—</div>
+                <h3 class="card-title">Puddle Reflections</h3>
+                <p class="card-content">Inverted cityscapes in temporary mirrors on asphalt, where the world above meets its rippling counterpart below.</p>
+                <a href="#" class="card-button">VIEW GALLERY</a>
+            </article>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="experience">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3 class="footer-title">CINE-RAIN</h3>
+                <p style="font-family: 'Inter', sans-serif;">An atmospheric exploration of precipitation in cinematic storytelling. Where weather becomes narrative, and droplets become dialogue.</p>
+                <div class="social-icons">
+                    <a href="#"><span style="font-family: 'JetBrains Mono', monospace;">[R]</span></a>
+                    <a href="#"><span style="font-family: 'JetBrains Mono', monospace;">[A]</span></a>
+                    <a href="#"><span style="font-family: 'JetBrains Mono', monospace;">[I]</span></a>
+                    <a href="#"><span style="font-family: 'JetBrains Mono', monospace;">[N]</span></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-title">EXPERIENCES</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Rain Room VR</a></li>
+                    <li><a href="#">Noir Soundwalks</a></li>
+                    <li><a href="#">Cinema Studies</a></li>
+                    <li><a href="#">Visual Essays</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-title">RESOURCES</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Rain Databases</a></li>
+                    <li><a href="#">Cinematic Archives</a></li>
+                    <li><a href="#">Audio Libraries</a></li>
+                    <li><a href="#">Visual Assets</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            CINE-RAIN Â© 2023 | URBAN MELANCHOLY PROJECT | ALL VISUALS SYNTHESIZED IN REAL-TIME
+        </div>
+    </footer>
+
+    <script>
+        // Performance-optimized rain system with 60fps target
+        class RainSystem {
+            constructor() {
+                this.container = document.getElementById('rain-container');
+                this.drops = [];
+                this.dropCount = 80; // Optimized for performance
+                this.maxDrops = 120;
+                this.lastTime = 0;
+                this.dropIds = 0;
+                this.animationId = null;
+                
+                this.init();
+            }
+            
+            init() {
+                // Create initial rain drops
+                for (let i = 0; i < this.dropCount; i++) {
+                    this.createDrop(true);
+                }
+                
+                // Adjust based on screen size
+                this.adjustRainIntensity();
+                
+                // Start optimized animation loop
+                this.animate();
+                
+                // Adjust on resize
+                window.addEventListener('resize', () => {
+                    this.adjustRainIntensity();
+                });
+            }
+            
+            adjustRainIntensity() {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                const area = width * height;
+                const targetDrops = Math.min(this.maxDrops, Math.floor(area / 15000));
+                
+                // Add or remove drops as needed
+                while (this.drops.length < targetDrops) {
+                    this.createDrop(true);
+                }
+                
+                while (this.drops.length > targetDrops && this.drops.length > 0) {
+                    const drop = this.drops.pop();
+                    if (drop.element.parentNode) {
+                        drop.element.remove();
+                    }
+                }
+            }
+            
+            createDrop(randomY = false) {
+                const drop = document.createElement('div');
+                drop.className = 'rain-drop';
+                drop.dataset.id = this.dropIds++;
+                
+                // Random properties for natural variation
+                const height = Math.random() * 30 + 15;
+                const left = Math.random() * 100;
+                const top = randomY ? Math.random() * 100 : -10;
+                const opacity = Math.random() * 0.5 + 0.2;
+                const speed = Math.random() * 0.5 + 0.8;
+                
+                drop.style.height = `${height}px`;
+                drop.style.left = `${left}vw`;
+                drop.style.top = `${top}vh`;
+                drop.style.opacity = opacity;
+                drop.style.animationDuration = `${4 / speed}s`;
+                
+                // Add slight horizontal movement for wind effect
+                const horizontalDrift = (Math.random() - 0.5) * 30;
+                drop.style.transform = `translateX(${horizontalDrift}px)`;
+                
+                this.container.appendChild(drop);
+                
+                this.drops.push({
+                    element: drop,
+                    id: drop.dataset.id,
+                    x: left,
+                    y: top,
+                    height: height,
+                    speed: speed,
+                    opacity: opacity,
+                    horizontalDrift: horizontalDrift
+                });
+            }
+            
+            animate(currentTime = 0) {
+                // Calculate delta time for consistent animation
+                const deltaTime = this.lastTime ? Math.min((currentTime - this.lastTime) / 16.67, 2) : 1;
+                this.lastTime = currentTime;
+                
+                // Update each drop position
+                for (let i = this.drops.length - 1; i >= 0; i--) {
+                    const drop = this.drops[i];
+                    
+                    // Move drop downward
+                    drop.y += drop.speed * deltaTime * 0.5;
+                    
+                    // Reset if off screen
+                    if (drop.y > 100) {
+                        drop.y = -10;
+                        drop.x = Math.random() * 100;
+                        drop.horizontalDrift = (Math.random() - 0.5) * 30;
+                        drop.element.style.left = `${drop.x}vw`;
+                    }
+                    
+                    // Apply subtle horizontal sway
+                    const sway = Math.sin(currentTime / 1000 + drop.id) * 5;
+                    
+                    // Update position with transform for performance
+                    drop.element.style.transform = `translate(${drop.horizontalDrift + sway}px, ${drop.y}vh)`;
+                }
+                
+                // Use requestAnimationFrame with error handling
+                this.animationId = requestAnimationFrame((time) => this.animate(time));
+            }
+            
+            // Clean up method
+            destroy() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+            }
+        }
+        
+        // Ripple effect system with performance optimization
+        class RippleSystem {
+            constructor() {
+                this.container = document.getElementById('ripple-container');
+                this.ripples = [];
+                this.maxRipples = 8; // Limit concurrent ripples for performance
+                this.rippleId = 0;
+                
+                this.init();
+            }
+            
+            init() {
+                // Listen for clicks anywhere on the page
+                document.addEventListener('click', (e) => this.createRipple(e));
+                
+                // Also create ripples on card hovers
+                document.querySelectorAll('.wet-card, .cta-button, .feature-item').forEach(element => {
+                    element.addEventListener('mouseenter', (e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        this.createRipple({
+                            clientX: rect.left + rect.width / 2,
+                            clientY: rect.top + rect.height / 2,
+                            isFromHover: true
+                        });
+                    });
+                });
+            }
+            
+            createRipple(event) {
+                // Limit number of concurrent ripples
+                if (this.ripples.length >= this.maxRipples && this.ripples.length > 0) {
+                    const oldRipple = this.ripples.shift();
+                    if (oldRipple.element.parentNode) {
+                        oldRipple.element.remove();
+                    }
+                }
+                
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                ripple.dataset.id = this.rippleId++;
+                
+                // Position at click location or center of element
+                const x = event.clientX || window.innerWidth / 2;
+                const y = event.clientY || window.innerHeight / 2;
+                
+                // Random size for natural variation
+                const size = (event.isFromHover ? 30 : Math.random() * 40 + 20);
+                
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.style.width = `${size}px`;
+                ripple.style.height = `${size}px`;
+                
+                // Slight color variation
+                const hue = 30 + (Math.random() * 10 - 5); // Around amber
+                const saturation = 100;
+                const lightness = 50 + (Math.random() * 20 - 10);
+                ripple.style.background = `radial-gradient(circle, hsla(${hue}, ${saturation}%, ${lightness}%, 0.2) 0%, transparent 70%)`;
+                
+                this.container.appendChild(ripple);
+                
+                // Store reference for cleanup
+                this.ripples.push({
+                    element: ripple,
+                    id: ripple.dataset.id
+                });
+                
+                // Remove ripple after animation completes
+                setTimeout(() => {
+                    const index = this.ripples.findIndex(r => r.id === ripple.dataset.id);
+                    if (index !== -1) {
+                        this.ripples.splice(index, 1);
+                    }
+                    if (ripple.parentNode) {
+                        ripple.remove();
+                    }
+                }, 800);
+            }
+        }
+        
+        // Intersection Observer for misty fade-in effects
+        class MistyObserver {
+            constructor() {
+                this.observer = null;
+                this.init();
+            }
+            
+            init() {
+                // Configure intersection observer with performance in mind
+                this.observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Add staggered delay based on element position
+                            const delay = entry.target.dataset.delay || 
+                                         Array.from(entry.target.parentNode?.children || []).indexOf(entry.target) * 100 || 0;
+                            
+                            // Use setTimeout to avoid blocking main thread
+                            setTimeout(() => {
+                                entry.target.classList.add('visible');
+                            }, delay);
+                            
+                            // Unobserve after animation to reduce overhead
+                            this.observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                });
+                
+                // Observe all elements with fade-in effects
+                const elementsToObserve = [
+                    '#heroTitle', '#heroSubtitle', '#heroButton',
+                    '.section-title', '.wet-card', '.feature-item'
+                ].flatMap(selector => Array.from(document.querySelectorAll(selector)));
+                
+                elementsToObserve.forEach(el => {
+                    if (el) this.observer.observe(el);
+                });
+            }
+        }
+        
+        // Mobile menu functionality
+        class MobileMenu {
+            constructor() {
+                this.menuBtn = document.getElementById('mobileMenuBtn');
+                this.mobileNav = document.getElementById('mobileNav');
+                this.init();
+            }
+            
+            init() {
+                this.menuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleMenu();
+                });
+                
+                // Close menu when clicking a link
+                this.mobileNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => this.closeMenu());
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!this.mobileNav.contains(e.target) && !this.menuBtn.contains(e.target)) {
+                        this.closeMenu();
+                    }
+                });
+                
+                // Close menu on escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') this.closeMenu();
+                });
+            }
+            
+            toggleMenu() {
+                this.mobileNav.classList.toggle('active');
+                this.menuBtn.textContent = this.mobileNav.classList.contains('active') ? 'âœ•' : 'â˜°';
+            }
+            
+            closeMenu() {
+                this.mobileNav.classList.remove('active');
+                this.menuBtn.textContent = 'â˜°';
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize all systems
+            const rainSystem = new RainSystem();
+            const rippleSystem = new RippleSystem();
+            const observer = new MistyObserver();
+            const mobileMenu = new MobileMenu();
+            
+            // Preload and immediately show hero elements
+            setTimeout(() => {
+                const heroTitle = document.getElementById('heroTitle');
+                const heroSubtitle = document.getElementById('heroSubtitle');
+                const heroButton = document.getElementById('heroButton');
+                
+                if (heroTitle) heroTitle.classList.add('visible');
+                if (heroSubtitle) heroSubtitle.classList.add('visible');
+                if (heroButton) heroButton.classList.add('visible');
+            }, 300);
+            
+            // Add keyboard navigation for accessibility
+            document.addEventListener('keydown', (e) => {
+                // Tab key navigation - add focus styles
+                if (e.key === 'Tab') {
+                    document.documentElement.classList.add('keyboard-navigation');
+                }
+            });
+            
+            // Remove focus styles on mouse interaction
+            document.addEventListener('mousedown', () => {
+                document.documentElement.classList.remove('keyboard-navigation');
+            });
+            
+            // Clean up on page unload
+            window.addEventListener('beforeunload', () => {
+                rainSystem.destroy();
+            });
+            
+            // Adjust rain on orientation change
+            window.addEventListener('orientationchange', () => {
+                setTimeout(() => rainSystem.adjustRainIntensity(), 100);
+            });
+        });
+        
+        // Add CSS for keyboard navigation accessibility
+        const accessibilityStyles = document.createElement('style');
+        accessibilityStyles.textContent = `
+            .keyboard-navigation a:focus,
+            .keyboard-navigation button:focus,
+            .keyboard-navigation .card-button:focus,
+            .keyboard-navigation .cta-button:focus {
+                outline: 2px solid var(--neon-amber);
+                outline-offset: 3px;
+                box-shadow: 0 0 15px var(--neon-amber-glow);
+            }
+            
+            /* Reduced motion preference */
+            @media (prefers-reduced-motion: reduce) {
+                .rain-drop, .ripple, .wet-card::before,
+                .hero h1, .hero-subtitle, .cta-button,
+                .section-title, .wet-card, .feature-item {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                }
+                
+                .rain-drop {
+                    opacity: 0.1;
+                }
+            }
+            
+            /* High contrast mode */
+            @media (prefers-contrast: high) {
+                :root {
+                    --text-primary: #FFFFFF;
+                    --text-secondary: #CCCCCC;
+                    --neon-amber: #FFAA00;
+                }
+                
+                .wet-card, .feature-item, .cta-button {
+                    border-width: 2px;
+                }
+            }
+        `;
+        document.head.appendChild(accessibilityStyles);
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

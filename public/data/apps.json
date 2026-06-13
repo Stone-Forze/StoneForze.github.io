@@ -1,0 +1,57 @@
+{
+  "category": "apps",
+  "subcategories": [
+    {
+      "label": "Native Android Apps",
+      "icon": "🤖",
+      "projects": [
+        {
+          "title": "ZenTask Scheduler",
+          "description": "Native Android task manager and calendar organizer app. Supports task categorization, local database persistence, push notifications, and home screen widgets.",
+          "featured": true,
+          "status": "active",
+          "year": "2024",
+          "platform": "Android",
+          "screens": 6,
+          "thumbnailEmoji": "📅",
+          "thumbnailBg": "linear-gradient(135deg, #1e3a8a 0%, #172554 100%)",
+          "thumbnailUrl": "",
+          "keyFeatures": [
+            "Local Database (SQLite)",
+            "Home Screen Widgets",
+            "Local Push Notifications",
+            "Custom Category Tags"
+          ],
+          "tags": ["Android Studio", "Java", "SQLite", "Local Notifications"],
+          "links": {
+            "playstore": "https://play.google.com/store/apps/details?id=com.stoneforze.zentask",
+            "github": "https://github.com/stonemz/zentask-android"
+          }
+        },
+        {
+          "title": "QuickBill POS System",
+          "description": "Lightweight point-of-sale utility app tailored for local retail stores. Generates digital invoices, tracks product inventory, and exports PDF billing summaries.",
+          "featured": true,
+          "status": "sample",
+          "year": "2023",
+          "platform": "Android",
+          "screens": 8,
+          "thumbnailEmoji": "🧾",
+          "thumbnailBg": "linear-gradient(135deg, #3f3f46 0%, #18181b 100%)",
+          "thumbnailUrl": "",
+          "keyFeatures": [
+            "Digital Invoice Generator",
+            "Inventory Management",
+            "PDF Summary Exporter",
+            "Off-line SQLite Database"
+          ],
+          "tags": ["Android Studio", "Java", "SQLite", "PDF Generation"],
+          "links": {
+            "playstore": "",
+            "github": "https://github.com/stonemz/quickbill-pos"
+          }
+        }
+      ]
+    }
+  ]
+}

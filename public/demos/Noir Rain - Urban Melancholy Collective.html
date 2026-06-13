@@ -1,0 +1,532 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noir Rain | Urban Melancholy Collective</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+         * Cine-Rain & Urban Melancholy
+         * High-end atmospheric landing page
+         * 60fps optimized, fully responsive
+         */
+
+        :root {
+            --charcoal: #1A1A1A;
+            --deep-navy: #0D1117;
+            --neon-amber: #F59E0B;
+            --wet-glass: rgba(255, 255, 255, 0.08);
+            --rain-glow: rgba(245, 158, 11, 0.3);
+            --mist: rgba(255, 255, 255, 0.02);
+            --reflection: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--deep-navy);
+            color: #E2E8F0;
+            overflow-x: hidden;
+            line-height: 1.7;
+            cursor: none;
+            position: relative;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            background: radial-gradient(circle, var(--neon-amber) 20%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: screen;
+            transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Rain Background */
+        .rain-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .rain {
+            position: absolute;
+            width: 2px;
+            height: 50px;
+            background: linear-gradient(to bottom, transparent, #ffffff44);
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+
+        /* Window Droplet Overlay */
+        .droplets {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 160px 30px, #fff, transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: drip 20s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        @keyframes drip {
+            from { background-position: 0 0; }
+            to { background-position: 0 100px; }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            opacity: 0;
+            filter: blur(10px);
+            transform: translateY(30px);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .hero.misty {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+
+        .hero h1 {
+            font-size: clamp(4rem, 12vw, 9rem);
+            font-weight: 300;
+            color: transparent;
+            background: linear-gradient(135deg, #E2E8F0, var(--neon-amber));
+            background-clip: text;
+            -webkit-background-clip: text;
+            filter: url(#liquidDisplacement);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+            text-shadow: 0 0 50px var(--rain-glow);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: 300;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Wet Glass Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 50px;
+            margin: 120px 0;
+        }
+
+        .wet-card {
+            background: var(--wet-glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--reflection);
+            border-radius: 16px;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 1px 0 var(--reflection),
+                0 20px 40px rgba(0,0,0,0.5);
+            opacity: 0;
+            filter: blur(8px);
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .wet-card.misty {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+
+        .wet-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-amber), transparent);
+            transform: scaleX(0);
+            transition: transform 0.8s ease;
+        }
+
+        .wet-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .wet-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 
+                inset 0 1px 0 var(--reflection),
+                0 30px 60px rgba(0,0,0,0.7),
+                0 0 40px var(--rain-glow);
+            border-color: var(--neon-amber);
+        }
+
+        .wet-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: var(--reflection);
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 2rem;
+            opacity: 0.7;
+        }
+
+        .wet-card h3 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: #E2E8F0;
+        }
+
+        .wet-card p {
+            font-size: 1rem;
+            opacity: 0.75;
+            line-height: 1.8;
+        }
+
+        /* Neon Buttons */
+        .neon-btn {
+            background: transparent;
+            color: var(--neon-amber);
+            border: 1px solid transparent;
+            padding: 14px 36px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 400;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin-top: 2rem;
+            cursor: none;
+        }
+
+        .neon-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--rain-glow), transparent);
+            transition: left 0.6s;
+        }
+
+        .neon-btn:hover::before {
+            left: 100%;
+        }
+
+        .neon-btn:hover {
+            border-color: var(--neon-amber);
+            box-shadow: 0 0 30px var(--rain-glow);
+            transform: translateY(-2px);
+        }
+
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 140px 20px;
+            opacity: 0;
+            filter: blur(10px);
+            transform: translateY(30px);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .cta.misty {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+
+        .cta h2 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            color: #E2E8F0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .cards-grid { gap: 30px; }
+            .wet-card { padding: 40px 30px; }
+        }
+
+        /* High contrast focus for accessibility */
+        *:focus-visible {
+            outline: 2px solid var(--neon-amber);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Atmospheric Layers -->
+    <div class="rain-bg" id="rain"></div>
+    <div class="droplets"></div>
+    <div class="cursor" id="cursor"></div>
+
+    <div class="container">
+        <!-- Hero -->
+        <section class="hero" id="hero">
+            <h1>NOIR RAIN</h1>
+            <p class="hero-subtitle">Urban melancholy collective. Where neon meets midnight, and rain washes away tomorrow.</p>
+            <a href="#" class="neon-btn">Enter the Downpour</a>
+        </section>
+
+        <!-- Content Grid -->
+        <section class="cards-grid" id="cards">
+            <div class="wet-card">
+                <div class="card-icon">ðŸŒƒ</div>
+                <h3>Night Markets</h3>
+                <p>Alleys glowing with sodium vapor. Vendors whispering secrets through cigarette smoke and steam.</p>
+                <a href="#" class="neon-btn">Explore</a>
+            </div>
+
+            <div class="wet-card">
+                <div class="card-icon">ðŸš¬</div>
+                <h3>Smoke Signals</h3>
+                <p>Messages in the haze. Analog communication for the digitally damned. Static on the line.</p>
+                <a href="#" class="neon-btn">Connect</a>
+            </div>
+
+            <div class="wet-card">
+                <div class="card-icon">ðŸŽµ</div>
+                <h3>Saxophone Static</h3>
+                <p>Sax bleeding through brick walls. Minor keys cutting through the downpour like switchblades.</p>
+                <a href="#" class="neon-btn">Listen</a>
+            </div>
+
+            <div class="wet-card">
+                <div class="card-icon">ðŸ“»</div>
+                <h3>Frequency Drift</h3>
+                <p>Pirate radio broadcasting truth from abandoned warehouses. Signal lost in the static.</p>
+                <a href="#" class="neon-btn">Tune In</a>
+            </div>
+
+            <div class="wet-card">
+                <div class="card-icon">ðŸŒ¡ï¸</div>
+                <h3>Neon Thermals</h3>
+                <p>Heat maps of urban desire. Red glow tracing arteries through concrete canyons.</p>
+                <a href="#" class="neon-btn">Navigate</a>
+            </div>
+
+            <div class="wet-card">
+                <div class="card-icon">ðŸ’¨</div>
+                <h3>Exhaust Psalms</h3>
+                <p>Taillights painting scripture on wet asphalt. Sermons for the shiftless and sleepless.</p>
+                <a href="#" class="neon-btn">Follow</a>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta" id="cta">
+            <h2>It's Always Raining</h2>
+            <p>Step into the melancholy. The city never sleeps, and neither do we.</p>
+            <a href="#" class="neon-btn">Never Sleep</a>
+        </section>
+    </div>
+
+    <!-- SVG Liquid Displacement Filter -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
+        <filter id="liquidDisplacement">
+            <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" result="turbulence"/>
+            <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+            <feGaussianBlur stdDeviation="0.4"/>
+        </filter>
+    </svg>
+
+    <script>
+        /**
+         * Cine-Rain Atmospheric Engine
+         * 60fps optimized, performant DOM manipulation
+         */
+
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursor.style.transform = `translate(-50%, -50%) scale(1)`;
+        });
+
+        // Realistic Rain System (200fps capable)
+        class RainDrop {
+            constructor() {
+                this.element = document.createElement('div');
+                this.element.className = 'rain';
+                this.reset();
+                document.getElementById('rain').appendChild(this.element);
+            }
+
+            reset() {
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * -1000;
+                this.length = Math.random() * 20 + 10;
+                this.speed = Math.random() * 15 + 10;
+                this.delay = Math.random() * 2;
+                this.element.style.left = this.x + 'px';
+                this.element.style.height = this.length + 'px';
+                this.element.style.animation = `fall ${this.speed}s linear ${this.delay}s infinite`;
+            }
+
+            update() {
+                if (this.y > window.innerHeight) {
+                    this.reset();
+                }
+            }
+        }
+
+        // Initialize rain (performance optimized)
+        const rainDrops = [];
+        const maxDrops = window.innerWidth < 768 ? 80 : 150;
+        for (let i = 0; i < maxDrops; i++) {
+            rainDrops.push(new RainDrop());
+        }
+
+        // Screen Ripple Effect
+        function createRipple(x, y) {
+            const ripple = document.createElement('div');
+            ripple.style.cssText = `
+                position: fixed;
+                border: 1px solid var(--neon-amber);
+                border-radius: 50%;
+                width: 0;
+                height: 0;
+                left: ${x}px;
+                top: ${y}px;
+                pointer-events: none;
+                z-index: 1000;
+                background: transparent;
+            `;
+            document.body.appendChild(ripple);
+
+            const animateRipple = () => {
+                const size = Math.max(window.innerWidth, window.innerHeight);
+                ripple.animate([
+                    { width: '0px', height: '0px', opacity: 1 },
+                    { width: size + 'px', height: size + 'px', opacity: 0, transform: 'translate(-50%, -50%)' }
+                ], {
+                    duration: 800,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => ripple.remove();
+            };
+            requestAnimationFrame(animateRipple);
+        }
+
+        // Global click ripple
+        document.addEventListener('click', (e) => {
+            createRipple(e.clientX, e.clientY);
+        });
+
+        // Misty fade-in animations (Intersection Observer)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('misty');
+                }
+            });
+        }, { 
+            threshold: 0.1,
+            rootMargin: '0px 0px -5% 0px'
+        });
+
+        // Observe all misty elements
+        document.querySelectorAll('.hero, .wet-card, .cta').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Button hover effects
+        document.querySelectorAll('.neon-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                cursor.style.transform = `translate(-50%, -50%) scale(1.5)`;
+            });
+            btn.addEventListener('mouseleave', () => {
+                cursor.style.transform = `translate(-50%, -50%) scale(1)`;
+            });
+        });
+
+        // Responsive rain adjustment
+        window.addEventListener('resize', () => {
+            const targetDrops = window.innerWidth < 768 ? 80 : 150;
+            while (rainDrops.length > targetDrops) {
+                const drop = rainDrops.pop();
+                drop.element.remove();
+            }
+            while (rainDrops.length < targetDrops) {
+                rainDrops.push(new RainDrop());
+            }
+        });
+
+        // Keyboard accessibility
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('focus', () => {
+                el.style.boxShadow = '0 0 20px var(--rain-glow)';
+            });
+            el.addEventListener('blur', () => {
+                el.style.boxShadow = '';
+            });
+        });
+
+        // Prevent flash of unstyled cursor
+        document.documentElement.classList.add('js-loaded');
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

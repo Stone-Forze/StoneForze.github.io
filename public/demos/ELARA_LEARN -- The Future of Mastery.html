@@ -1,0 +1,258 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Elara Learn - Advanced modular education for the modern professional.">
+    <title>ELARA_LEARN // The Future of Mastery</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Theme: Light (Default) */
+            --bg: #fdfdfd;
+            --surface: rgba(255, 255, 255, 0.7);
+            --surface-solid: #ffffff;
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --text: #1e293b;
+            --text-dim: #64748b;
+            --border: rgba(99, 102, 241, 0.1);
+            --shadow: 0 20px 40px -15px rgba(0,0,0,0.05);
+            --font-main: 'Outfit', sans-serif;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --surface: rgba(30, 41, 59, 0.7);
+            --surface-solid: #1e293b;
+            --text: #f1f5f9;
+            --text-dim: #94a3b8;
+            --border: rgba(255, 255, 255, 0.05);
+            --shadow: 0 20px 40px -15px rgba(0,0,0,0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            transition: background 0.4s var(--ease);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- Glassmorphism Components --- */
+        .glass {
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            width: calc(100% - 40px); max-width: 1100px; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 24px;
+        }
+        .logo { font-weight: 800; font-size: 1.4rem; color: var(--primary); letter-spacing: -1px; }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 180px 0 100px;
+            display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px;
+            align-items: center;
+        }
+        .hero h1 { font-size: clamp(3rem, 6vw, 4.5rem); line-height: 1.1; margin-bottom: 24px; font-weight: 800; letter-spacing: -2px; }
+        .hero p { font-size: 1.15rem; color: var(--text-dim); margin-bottom: 32px; max-width: 500px; }
+
+        /* --- Progress Widget --- */
+        .progress-widget { padding: 30px; position: relative; }
+        .progress-circle {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: conic-gradient(var(--primary) 75%, transparent 0);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; position: relative;
+        }
+        .progress-circle::after {
+            content: '75%'; position: absolute; width: 100px; height: 100px;
+            background: var(--surface-solid); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        /* --- Course Grid --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .course-card { padding: 20px; transition: 0.3s var(--ease); cursor: pointer; }
+        .course-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .course-img { height: 180px; background: var(--border); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; background: var(--border); color: var(--primary); margin-bottom: 12px; }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block; padding: 16px 32px; border-radius: 14px;
+            font-weight: 600; text-decoration: none; transition: 0.3s;
+            border: none; cursor: pointer; font-family: var(--font-main);
+        }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4); }
+        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-ghost { color: var(--text); }
+
+        /* --- Animations --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .theme-toggle { background: none; border: none; cursor: pointer; color: var(--text); padding: 8px; font-size: 1.2rem; }
+
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; text-align: center; }
+            .hero p { margin: 0 auto 32px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="glass">
+        <div class="logo">ELARA_</div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <button class="theme-toggle" id="themeBtn">â—</button>
+            <a href="#" class="btn btn-primary" style="padding: 10px 20px;">Start Learning</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <div>
+                <h1 class="reveal">Master the Art of <span style="color: var(--primary);">Modular</span> Growth.</h1>
+                <p class="reveal" style="transition-delay: 0.1s;">Access a curated library of high-fidelity courses designed by industry architects. No fluff, just pure skill acquisition.</p>
+                <div class="reveal" style="transition-delay: 0.2s;">
+                    <a href="#courses" class="btn btn-primary">Browse Catalog</a>
+                    <a href="#" class="btn btn-ghost">Meet the Faculty</a>
+                </div>
+            </div>
+            <div class="glass progress-widget reveal" style="transition-delay: 0.3s;">
+                <div class="progress-circle" id="mainProgress"></div>
+                <div style="text-align: center;">
+                    <h3 style="margin-bottom: 5px;">Advanced UI/UX</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Module 4 of 12: Visual Hierarchy</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="courses" style="padding: 100px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;" class="reveal">
+                <div>
+                    <span class="tag">CURATED CONTENT</span>
+                    <h2 style="font-size: 2.5rem;">Popular Pathways</h2>
+                </div>
+                <a href="#" style="color: var(--primary); font-weight: 600;">View All â†’</a>
+            </div>
+
+            <div class="grid">
+                <div class="glass course-card reveal">
+                    <div class="course-img" style="background: linear-gradient(45deg, #6366f1, #a855f7);"></div>
+                    <span class="tag">ENGINEERING</span>
+                    <h3>Full-Stack Architecture</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); margin-top: 10px;">Master the art of building scalable, production-ready applications from scratch.</p>
+                </div>
+                <div class="glass course-card reveal" style="transition-delay: 0.1s;">
+                    <div class="course-img" style="background: linear-gradient(45deg, #f59e0b, #ef4444);"></div>
+                    <span class="tag">DESIGN</span>
+                    <h3>Design Systems 101</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); margin-top: 10px;">Learn to create robust components and style guides that empower large teams.</p>
+                </div>
+                <div class="glass course-card reveal" style="transition-delay: 0.2s;">
+                    <div class="course-img" style="background: linear-gradient(45deg, #10b981, #3b82f6);"></div>
+                    <span class="tag">BUSINESS</span>
+                    <h3>Product Management</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); margin-top: 10px;">Bridge the gap between business needs and technical execution with clarity.</p>
+                </div>
+            </div>
+        </section>
+
+        
+        <section style="padding: 100px 0; text-align: center;" class="reveal">
+            <h2 style="font-size: 3rem; margin-bottom: 50px;">Investment in You.</h2>
+            <div class="grid" style="max-width: 900px; margin: 50px auto 0;">
+                <div class="glass" style="padding: 40px; border-radius: 32px;">
+                    <h3 style="margin-bottom: 10px;">Standard</h3>
+                    <div style="font-size: 3rem; font-weight: 800;">$29<span style="font-size: 1rem; color: var(--text-dim);">/mo</span></div>
+                    <ul style="list-style: none; margin: 30px 0; color: var(--text-dim); text-align: left;">
+                        <li>âœ“ Unlimited Course Access</li>
+                        <li>âœ“ Community Discord</li>
+                        <li>âœ“ Offline Downloads</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" style="width: 100%;">Join Now</a>
+                </div>
+                <div class="glass" style="padding: 40px; border-radius: 32px; border: 2px solid var(--primary);">
+                    <h3 style="margin-bottom: 10px;">Lifetime</h3>
+                    <div style="font-size: 3rem; font-weight: 800;">$599</div>
+                    <ul style="list-style: none; margin: 30px 0; color: var(--text-dim); text-align: left;">
+                        <li>âœ“ Everything in Monthly</li>
+                        <li>âœ“ Private Mentorship</li>
+                        <li>âœ“ Job Placement Support</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" style="width: 100%;">Get Lifetime</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer style="padding: 100px 0 50px; border-top: 1px solid var(--border); text-align: center;">
+        <div class="logo" style="margin-bottom: 20px;">ELARA_LEARN</div>
+        <p style="color: var(--text-dim); font-size: 0.9rem;">&copy; 2026 ELARA EDUCATION SYSTEMS. BUILT FOR THE NEXT GENERATION.</p>
+    </footer>
+
+    <script>
+        // --- Theme Switcher ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+        });
+
+        // --- Scroll Reveal Logic ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Progress Widget Simulation ---
+        let progress = 75;
+        const circle = document.getElementById('mainProgress');
+        
+        // Dynamic update simulation
+        setInterval(() => {
+            progress = progress >= 100 ? 0 : progress + 1;
+            circle.style.background = `conic-gradient(var(--primary) ${progress}%, transparent 0)`;
+            // Update the pseudo-element via CSS Variable trick for better performance
+            circle.style.setProperty('--progress-val', `'${progress}%'`);
+        }, 5000);
+
+        // --- Smooth Scroll ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

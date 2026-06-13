@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="THE CHRONICLE â€” Global insights, local impact. Premium digital journalism.">
+    <title>THE CHRONICLE // Digital News Portal</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&family=Public+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f4f4f4;
+            --text: #1a1a1a;
+            --text-dim: #555555;
+            --accent: #b11313; /* Classic News Red */
+            --border: #e0e0e0;
+            --font-serif: 'Fraunces', serif;
+            --font-sans: 'Public Sans', sans-serif;
+            --transition: cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f0f0f;
+            --surface: #1a1a1a;
+            --text: #f5f5f5;
+            --text-dim: #aaaaaa;
+            --border: #333333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            transition: background 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+        /* --- Header & Ticker --- */
+        .ticker {
+            background: var(--text); color: var(--bg);
+            padding: 8px 0; font-size: 0.75rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+            overflow: hidden; white-space: nowrap;
+        }
+        .ticker-content { display: inline-block; animation: scroll 30s linear infinite; }
+        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        header { padding: 40px 0; border-bottom: 4px double var(--text); text-align: center; }
+        .logo { font-family: var(--font-serif); font-size: 4rem; letter-spacing: -2px; }
+
+        nav {
+            position: sticky; top: 0; background: var(--bg); z-index: 1000;
+            padding: 15px 0; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: center; gap: 30px;
+        }
+        .nav-link { 
+            text-decoration: none; color: var(--text); font-weight: 700; 
+            font-size: 0.8rem; text-transform: uppercase; cursor: pointer;
+        }
+        .nav-link:hover { color: var(--accent); }
+
+        /* --- Editorial Grid --- */
+        .main-grid {
+            display: grid; grid-template-columns: 1fr 300px; gap: 40px; padding: 40px 0;
+        }
+        
+        .featured-story {
+            display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;
+            padding-bottom: 40px; border-bottom: 1px solid var(--border);
+        }
+        .featured-story img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--surface); transition: 0.5s; }
+        .featured-story:hover img { filter: grayscale(100%); }
+        .featured-content h2 { font-family: var(--font-serif); font-size: 2.5rem; line-height: 1.1; margin-bottom: 15px; }
+
+        .sub-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; padding: 40px 0;
+        }
+        .story-card { border-bottom: 1px solid var(--border); padding-bottom: 20px; cursor: pointer; }
+        .story-card h3 { font-family: var(--font-serif); font-size: 1.4rem; margin: 15px 0 10px; }
+        .category-label { color: var(--accent); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; }
+
+        /* --- Sidebar & Paywall --- */
+        .sidebar-item { margin-bottom: 40px; padding: 20px; background: var(--surface); border-radius: 4px; }
+        .sidebar-item h4 { margin-bottom: 15px; border-bottom: 2px solid var(--text); display: inline-block; }
+
+        .paywall {
+            background: var(--text); color: var(--bg); padding: 80px 0;
+            text-align: center; margin: 60px 0;
+        }
+        .btn {
+            display: inline-block; padding: 15px 40px; background: var(--accent);
+            color: white; text-decoration: none; font-weight: 700; margin-top: 20px;
+        }
+
+        /* --- Reveal --- */
+        .reveal { opacity: 0; transform: translateY(20px); transition: 0.8s var(--transition); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 900px) {
+            .main-grid, .featured-story, .sub-grid { grid-template-columns: 1fr; }
+            .logo { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ticker">
+        <div class="ticker-content">
+            BREAKING: Global Markets Respond to New Tech Regulation â€” SpaceX Announces Mars Mission Update â€” Central Bank Maintains Interest Rates â€” 
+        </div>
+    </div>
+
+    <header class="container">
+        <div class="logo">The Chronicle</div>
+        <p style="font-family: var(--font-serif); font-style: italic; color: var(--text-dim);">Truth. Clarity. Perspective. â€” Since 1924</p>
+    </header>
+
+    <nav>
+        <span class="nav-link" onclick="filterNews('all')">Latest</span>
+        <span class="nav-link" onclick="filterNews('tech')">Technology</span>
+        <span class="nav-link" onclick="filterNews('politics')">Politics</span>
+        <span class="nav-link" onclick="filterNews('culture')">Culture</span>
+        <button id="themeBtn" style="background:none; border:none; cursor:pointer; font-size: 1rem;">â—</button>
+    </nav>
+
+    <main class="container">
+        <div class="main-grid">
+            <section id="news-feed">
+                <article class="featured-story reveal story-item tech">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="Main Visual">
+                    <div class="featured-content">
+                        <span class="category-label">Deep Tech</span>
+                        <h2>The Silicon Renaissance: How Quantum Computing is Redefining the Decade.</h2>
+                        <p style="color: var(--text-dim); margin-bottom: 20px;">Experts suggest that the current trajectory of chip design will lead to a 1000% increase in efficiency by 2027.</p>
+                        <small>BY ELARA VANCE â€” 4 MIN READ</small>
+                    </div>
+                </article>
+
+                
+
+                <div class="sub-grid">
+                    <article class="story-card reveal story-item politics">
+                        <span class="category-label">Global Policy</span>
+                        <h3>New Trade Agreements Signed in Zurich.</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-dim);">European leaders finalize the framework for the next decade of digital trade.</p>
+                    </article>
+                    <article class="story-card reveal story-item culture">
+                        <span class="category-label">Arts & Design</span>
+                        <h3>The Return of Physical Media.</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-dim);">Why Gen Z is driving the revival of print magazines and vinyl records.</p>
+                    </article>
+                </div>
+            </section>
+
+            <aside>
+                <div class="sidebar-item reveal">
+                    <h4>Most Read</h4>
+                    <ol style="padding-left: 15px; font-family: var(--font-serif); line-height: 1.8;">
+                        <li>The Future of Work is Asynchronous</li>
+                        <li>Electric Aviation Takes Flight</li>
+                        <li>A Guide to Sovereign Investing</li>
+                    </ol>
+                </div>
+                <div class="sidebar-item reveal">
+                    <h4>Newsletter</h4>
+                    <p style="font-size: 0.8rem; margin-bottom: 10px;">The daily digest of everything you need to know.</p>
+                    <input type="email" placeholder="Email address" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border);">
+                    <button class="btn" style="width: 100%; padding: 10px; margin-top: 0;">Subscribe</button>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <section class="paywall reveal">
+        <div class="container">
+            <h2 style="font-family: var(--font-serif); font-size: 3rem; margin-bottom: 10px;">Support Quality Journalism</h2>
+            <p>Access exclusive insights and deep-dives for just $2/week.</p>
+            <a href="#" class="btn">Start Your Trial</a>
+        </div>
+    </section>
+
+    <footer style="padding: 60px 0; border-top: 1px solid var(--border); text-align: center; color: var(--text-dim); font-size: 0.8rem;">
+        <div class="logo" style="font-size: 1.5rem; margin-bottom: 20px;">The Chronicle</div>
+        <p>&copy; 2026 CHRONICLE MEDIA GROUP. ALL RIGHTS RESERVED. <br> TERMS â€” PRIVACY â€” ADVERTISING</p>
+    </footer>
+
+    <script>
+        // --- Category Filtering ---
+        function filterNews(category) {
+            const stories = document.querySelectorAll('.story-item');
+            stories.forEach(story => {
+                if (category === 'all' || story.classList.contains(category)) {
+                    story.style.display = 'grid';
+                    if (window.innerWidth <= 900) story.style.display = 'block';
+                } else {
+                    story.style.display = 'none';
+                }
+            });
+        }
+
+        // --- Reveal Logic ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Theme Switcher ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

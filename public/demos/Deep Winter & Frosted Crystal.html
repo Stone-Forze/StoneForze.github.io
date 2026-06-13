@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Winter & Frosted Crystal</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   GLOBAL
+========================= */
+:root{
+  --cyan:#7fefff;
+  --glass:rgba(255,255,255,0.18);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Inter,sans-serif;
+  background:linear-gradient(180deg,#cfefff,#f6fbff);
+  color:#0f2a33;
+  overflow-x:hidden;
+}
+
+/* =========================
+   FROSTED GLASS
+========================= */
+section{
+  max-width:1100px;
+  margin:60px auto;
+  padding:40px 20px;
+}
+
+.card{
+  position:relative;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.6);
+  border-radius:18px;
+  padding:24px;
+  margin-bottom:24px;
+  overflow:hidden;
+  transform:translateY(60px);
+  opacity:0;
+  transition:all .7s cubic-bezier(.22,1,.36,1);
+}
+
+.card.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+.card h3{
+  font-family:'Playfair Display',serif;
+  margin-bottom:10px;
+}
+
+/* snow accumulation top */
+.snow-top{
+  position:absolute;
+  top:0;
+  left:0;
+  height:6px;
+  background:white;
+  width:0%;
+  transition:width .5s linear;
+}
+
+/* =========================
+   HERO
+========================= */
+.hero{
+  text-align:center;
+  padding:120px 20px 60px;
+}
+
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:48px;
+}
+
+.hero p{
+  margin-top:15px;
+  opacity:.85;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 22px;
+  border-radius:10px;
+  background:white;
+  border:1px solid rgba(255,255,255,0.7);
+  transition:.3s;
+}
+
+.btn:hover{
+  box-shadow:0 0 18px var(--cyan);
+  color:#007c91;
+}
+
+/* =========================
+   SNOW PARTICLES
+========================= */
+.flake{
+  position:fixed;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:white;
+  pointer-events:none;
+  z-index:999;
+  opacity:.8;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media(max-width:600px){
+.hero h1{font-size:34px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="hero">
+  <h1>Deep Winter & Frosted Crystal</h1>
+  <p>Elegant frozen interface inspired by arctic calm and crystalline frost.</p>
+  <div class="btn">Explore Collection</div>
+</header>
+
+<section>
+  <article class="card">
+    <div class="snow-top"></div>
+    <h3>Ice Formations</h3>
+    <p>Layered frosted glass panels crafted for clarity and calm immersion.</p>
+  </article>
+
+  <article class="card">
+    <div class="snow-top"></div>
+    <h3>Frozen Architecture</h3>
+    <p>Minimal, elegant winter-inspired layout with drifting motion effects.</p>
+  </article>
+
+  <article class="card">
+    <div class="snow-top"></div>
+    <h3>Crystal Interface</h3>
+    <p>Soft cyan glow interactions with frosted depth and refined motion.</p>
+  </article>
+</section>
+
+<script>
+/* =========================
+   SNOWFALL PARTICLE SYSTEM
+========================= */
+const cards=document.querySelectorAll(".card");
+function createFlake(){
+  const f=document.createElement("div");
+  f.className="flake";
+  f.style.left=Math.random()*window.innerWidth+"px";
+  f.style.top="-10px";
+  document.body.appendChild(f);
+
+  let y=0;
+  const speed=1+Math.random()*2;
+
+  function fall(){
+    y+=speed;
+    f.style.top=y+"px";
+    f.style.transform=`translateX(${Math.sin(y/40)*20}px)`;
+
+    cards.forEach(card=>{
+      const rect=card.getBoundingClientRect();
+      if(y>rect.top && y<rect.top+10){
+        const snow=card.querySelector(".snow-top");
+        let w=parseFloat(snow.style.width)||0;
+        if(w<100){snow.style.width=(w+2)+"%";}
+      }
+    });
+
+    if(y<window.innerHeight+20){
+      requestAnimationFrame(fall);
+    }else{
+      f.remove();
+    }
+  }
+  fall();
+}
+
+setInterval(createFlake,120);
+
+/* =========================
+   INTERSECTION OBSERVER
+========================= */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add("show");
+    }
+  });
+},{threshold:.2});
+
+cards.forEach(c=>observer.observe(c));
+</script>
+
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

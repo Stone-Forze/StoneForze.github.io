@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Sea Submersion â€” Aquarium Boutique</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* =============================
+   ROOT + GLOBAL
+============================= */
+:root{
+  --cyan:#00f0ff;
+  --emerald:#00ffb3;
+  --glass:rgba(255,255,255,0.08);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Quicksand',sans-serif;
+  background:#02121a;
+  color:#e8fdff;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+main{position:relative;z-index:2}
+
+section{
+  padding:80px 20px;
+  max-width:1100px;
+  margin:auto;
+}
+
+/* =============================
+   UNDERWATER BACKGROUND
+============================= */
+.bg{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  z-index:0;
+}
+
+/* caustic rays */
+.bg::before{
+  content:"";
+  position:absolute;
+  inset:-50%;
+  background:
+    repeating-linear-gradient(
+      120deg,
+      rgba(0,255,255,0.04) 0px,
+      rgba(0,255,255,0.04) 60px,
+      transparent 120px
+    );
+  animation:causticMove 18s linear infinite;
+}
+
+@keyframes causticMove{
+  from{transform:translateY(0)}
+  to{transform:translateY(200px)}
+}
+
+/* bubbles */
+.bubble{
+  position:absolute;
+  bottom:-60px;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  animation:rise linear infinite;
+}
+
+@keyframes rise{
+  from{transform:translateY(0)}
+  to{transform:translateY(-120vh)}
+}
+
+/* =============================
+   HERO
+============================= */
+.hero{
+  text-align:center;
+}
+
+.hero h1{
+  font-size:48px;
+  filter:url(#waterRipple);
+}
+
+.hero p{
+  margin-top:15px;
+  opacity:.85;
+}
+
+/* =============================
+   LIQUID GLASS CARDS
+============================= */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:24px;
+}
+
+.card{
+  background:var(--glass);
+  border-radius:18px;
+  padding:20px;
+  backdrop-filter:blur(16px);
+  box-shadow:
+    0 0 20px rgba(0,255,255,0.25),
+    0 0 40px rgba(0,255,179,0.2);
+  transform:translateY(60px);
+  opacity:0;
+  transition:all .7s cubic-bezier(.22,1,.36,1);
+}
+
+.card.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+.card h3{margin-bottom:10px}
+
+/* =============================
+   CUSTOM CURSOR
+============================= */
+.cursor{
+  position:fixed;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.7);
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+}
+
+.trail{
+  position:fixed;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  pointer-events:none;
+  z-index:9998;
+  animation:fade 1s linear forwards;
+}
+
+@keyframes fade{
+  to{opacity:0;transform:translateY(-20px)}
+}
+
+/* =============================
+   RESPONSIVE
+============================= */
+@media(max-width:600px){
+  .hero h1{font-size:34px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- SVG WATER DISTORTION -->
+<svg width="0" height="0">
+<filter id="waterRipple">
+  <feTurbulence type="turbulence" baseFrequency="0.01 0.02" numOctaves="2" result="warp"/>
+  <feDisplacementMap in="SourceGraphic" in2="warp" scale="12"/>
+</filter>
+</svg>
+
+<div class="bg" id="bg"></div>
+<div class="cursor" id="cursor"></div>
+
+<main>
+
+<section class="hero">
+  <h1>Deep Sea Submersion</h1>
+  <p>Premium Aquarium & Exotic Fish Boutique Experience</p>
+</section>
+
+<section>
+  <div class="grid">
+    <article class="card"><h3>Neon Tetra</h3><p>Bioluminescent schooling fish ideal for planted tanks.</p></article>
+    <article class="card"><h3>Coral Reef Kit</h3><p>Professional reef ecosystem starter bundle.</p></article>
+    <article class="card"><h3>Betta Royale</h3><p>Elegant ornamental species with vibrant fins.</p></article>
+    <article class="card"><h3>Ocean Drift Tank</h3><p>Minimalist glass aquarium engineered for clarity.</p></article>
+  </div>
+</section>
+
+</main>
+
+<script>
+/* =============================
+   GENERATE BACKGROUND BUBBLES
+============================= */
+const bg=document.getElementById("bg");
+for(let i=0;i<35;i++){
+  const b=document.createElement("div");
+  b.className="bubble";
+  b.style.left=Math.random()*100+"%";
+  b.style.animationDuration=(8+Math.random()*10)+"s";
+  b.style.opacity=Math.random();
+  bg.appendChild(b);
+}
+
+/* =============================
+   INTERSECTION OBSERVER DRIFT
+============================= */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add("show");
+    }
+  });
+},{threshold:.2});
+
+document.querySelectorAll(".card").forEach(c=>obs.observe(c));
+
+/* =============================
+   CUSTOM CURSOR + BUBBLE TRAIL
+============================= */
+const cursor=document.getElementById("cursor");
+
+window.addEventListener("mousemove",e=>{
+  cursor.style.left=e.clientX+"px";
+  cursor.style.top=e.clientY+"px";
+
+  const t=document.createElement("div");
+  t.className="trail";
+  t.style.left=e.clientX+"px";
+  t.style.top=e.clientY+"px";
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),1000);
+});
+</script>
+
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

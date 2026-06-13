@@ -1,0 +1,374 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Landing Page Kit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,600&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- GLOBAL RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow-x: hidden; }
+        
+        /* --- TEMPLATE SWITCHER (The top bar) --- */
+        #switcher {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            border-radius: 50px;
+            display: flex;
+            gap: 10px;
+            z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .switch-btn {
+            background: transparent;
+            color: #aaa;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .switch-btn.active, .switch-btn:hover {
+            background: white;
+            color: black;
+        }
+
+        /* Hide all templates by default, show active */
+        .template-wrapper { display: none; }
+        .template-wrapper.active { display: block; animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* =========================================
+           TEMPLATE 1: SAAS / STARTUP (Clean, Blue)
+           ========================================= */
+        #t1 {
+            font-family: 'Inter', sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+        }
+
+        #t1 header {
+            display: flex;
+            justify-content: space-between;
+            padding: 30px 10%;
+            align-items: center;
+        }
+
+        #t1 .hero {
+            text-align: center;
+            padding: 100px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #t1 h1 {
+            font-size: 4rem;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #2563eb, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #t1 .btn {
+            padding: 15px 35px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+            transition: transform 0.2s;
+        }
+        #t1 .btn:hover { transform: translateY(-3px); }
+
+        #t1 .dashboard-preview {
+            width: 80%;
+            margin: 50px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            padding: 40px;
+            border: 1px solid #eee;
+            position: relative;
+        }
+
+        #t1 .stat-row { display: flex; gap: 20px; margin-top: 20px; }
+        #t1 .stat-card { flex: 1; height: 100px; background: #f1f5f9; border-radius: 10px; }
+
+        /* =========================================
+           TEMPLATE 2: PORTFOLIO (Minimal, Dark)
+           ========================================= */
+        #t2 {
+            font-family: 'Playfair Display', serif;
+            background: #111;
+            color: #e0e0e0;
+        }
+
+        #t2 nav {
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #333;
+        }
+
+        #t2 .hero {
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+        }
+
+        #t2 h1 {
+            font-size: 6rem;
+            line-height: 1;
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        #t2 p {
+            font-family: 'Inter', sans-serif;
+            color: #888;
+            margin-top: 20px;
+            max-width: 400px;
+        }
+
+        #t2 .gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 1px solid #333;
+        }
+
+        #t2 .work-item {
+            height: 500px;
+            border-right: 1px solid #333;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        #t2 .work-item:hover img { transform: scale(1.1); opacity: 0.6; }
+        #t2 .work-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: 0.5s; opacity: 0.4;
+        }
+        
+        #t2 .work-title {
+            position: absolute;
+            font-size: 2rem;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* =========================================
+           TEMPLATE 3: EVENT / HYPE (Neon, Bold)
+           ========================================= */
+        #t3 {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #000;
+            background-image: radial-gradient(#2a2a2a 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: #fff;
+            text-align: center;
+        }
+
+        #t3 .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 100px;
+        }
+
+        #t3 .date-badge {
+            display: inline-block;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        #t3 h1 {
+            font-size: 5rem;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0,255,0,0.5);
+        }
+
+        #t3 .timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 50px 0;
+        }
+
+        #t3 .time-box {
+            border: 2px solid #333;
+            padding: 20px;
+            width: 100px;
+            background: #111;
+        }
+
+        #t3 .time-val { font-size: 2.5rem; font-weight: 700; }
+        #t3 .time-label { color: #666; font-size: 0.8rem; text-transform: uppercase; }
+
+        #t3 .cta-btn {
+            background: #00ff00;
+            color: black;
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            clip-path: polygon(10% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 20%);
+            transition: 0.2s;
+        }
+        
+        #t3 .cta-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #00ff00;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="switcher">
+        <button class="switch-btn active" onclick="switchTemp('t1', this)">SaaS Product</button>
+        <button class="switch-btn" onclick="switchTemp('t2', this)">Portfolio</button>
+        <button class="switch-btn" onclick="switchTemp('t3', this)">Event Hype</button>
+    </div>
+
+    <div id="t1" class="template-wrapper active">
+        <header>
+            <div style="font-weight:800; font-size:1.5rem;">Bolt.io</div>
+            <button class="btn" style="padding:10px 20px; font-size:0.9rem; background:#1a1a1a;">Sign In</button>
+        </header>
+
+        <section class="hero">
+            <h1>Automate your workflow <br>at lightning speed.</h1>
+            <p style="font-size: 1.2rem; color: #666; margin: 20px 0 40px;">Stop wasting time on manual tasks. Bolt integrates with your favorite tools to save you 20+ hours a week.</p>
+            <button class="btn">Get Started for Free</button>
+
+            <div class="dashboard-preview">
+                <div style="height: 20px; width: 40%; background: #e2e8f0; border-radius: 5px; margin-bottom: 20px;"></div>
+                <div style="height: 200px; background: #f8fafc; border-radius: 10px; display: flex; align-items: flex-end; padding: 20px; justify-content: space-around;">
+                    <div style="width: 40px; height: 60%; background: #3b82f6; border-radius: 5px;"></div>
+                    <div style="width: 40px; height: 80%; background: #3b82f6; border-radius: 5px;"></div>
+                    <div style="width: 40px; height: 40%; background: #3b82f6; border-radius: 5px;"></div>
+                    <div style="width: 40px; height: 90%; background: #3b82f6; border-radius: 5px;"></div>
+                </div>
+                <div class="stat-row">
+                    <div class="stat-card"></div>
+                    <div class="stat-card"></div>
+                    <div class="stat-card"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="t2" class="template-wrapper">
+        <nav>
+            <div>ALEXANDER.</div>
+            <div>Contact</div>
+        </nav>
+
+        <section class="hero">
+            <div>
+                <h1>Visual <br>Storyteller</h1>
+                <p>Based in Tokyo. Specializing in high-end editorial photography and digital art direction.</p>
+            </div>
+        </section>
+
+        <section class="gallery">
+            <div class="work-item">
+                <div class="work-title">Fashion</div>
+                <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Fashion">
+            </div>
+            <div class="work-item">
+                <div class="work-title">Architecture</div>
+                <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Architecture">
+            </div>
+            <div class="work-item">
+                <div class="work-title">Portrait</div>
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Portrait">
+            </div>
+            <div class="work-item">
+                <div class="work-title">Film</div>
+                <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Film">
+            </div>
+        </section>
+    </div>
+
+    <div id="t3" class="template-wrapper">
+        <div class="container">
+            <div class="date-badge">August 24, 2025 â€¢ New York</div>
+            <h1>Cyber<br>Summit</h1>
+            <p style="font-size: 1.5rem; color: #aaa;">The future of tech is darker than you think.</p>
+
+            <div class="timer">
+                <div class="time-box">
+                    <div class="time-val">12</div>
+                    <div class="time-label">Days</div>
+                </div>
+                <div class="time-box">
+                    <div class="time-val">08</div>
+                    <div class="time-label">Hours</div>
+                </div>
+                <div class="time-box">
+                    <div class="time-val">45</div>
+                    <div class="time-label">Mins</div>
+                </div>
+            </div>
+
+            <button class="cta-btn">Secure Ticket</button>
+
+            <div style="margin-top: 80px; border-top: 1px solid #333; padding-top: 40px;">
+                <p style="text-transform: uppercase; letter-spacing: 2px; color: #555; margin-bottom: 20px;">Sponsored By</p>
+                <div style="display: flex; justify-content: center; gap: 40px; font-weight: 700; color: #444; font-size: 1.5rem;">
+                    <span>CORP.</span>
+                    <span>NEXUS</span>
+                    <span>OMEGA</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTemp(id, btn) {
+            // Hide all templates
+            document.querySelectorAll('.template-wrapper').forEach(el => el.classList.remove('active'));
+            // Remove active class from buttons
+            document.querySelectorAll('.switch-btn').forEach(el => el.classList.remove('active'));
+            
+            // Show selected template
+            document.getElementById(id).classList.add('active');
+            // Highlight button
+            btn.classList.add('active');
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

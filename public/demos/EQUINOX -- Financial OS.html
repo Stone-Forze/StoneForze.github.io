@@ -1,0 +1,333 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Equinox - Next-generation Fintech Operating System for Global Enterprise.">
+    <title>EQUINOX // Financial OS</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Theme: Dark (Default) */
+            --bg: #030303;
+            --surface: rgba(255, 255, 255, 0.03);
+            --surface-solid: #111111;
+            --text: #ffffff;
+            --text-dim: #94a3b8;
+            --primary: #6366f1; /* Indigo */
+            --primary-glow: rgba(99, 102, 241, 0.3);
+            --border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(12px);
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --surface: rgba(0, 0, 0, 0.02);
+            --surface-solid: #ffffff;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.1);
+            --border: rgba(0, 0, 0, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            transition: background 0.5s var(--ease);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 20px; left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 1000px;
+            background: var(--surface);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 1000;
+        }
+
+        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -1px; }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 220px 0 100px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 10vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -3px;
+            margin-bottom: 24px;
+            background: linear-gradient(to bottom, var(--text) 50%, var(--text-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- Glass Cards --- */
+        .glass-card {
+            background: var(--surface);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px var(--primary-glow);
+        }
+
+        /* --- Calculator Section --- */
+        .calc-section { padding: 100px 0; }
+        
+        .calculator {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .input-group { margin-bottom: 24px; }
+        label { display: block; font-size: 0.8rem; margin-bottom: 12px; color: var(--text-dim); text-transform: uppercase; }
+        
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+            height: 4px;
+            cursor: pointer;
+        }
+
+        .calc-result {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 20px 0;
+        }
+
+        /* --- Pricing Grid --- */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 60px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: var(--primary);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        /* --- Animations --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Background Glows */
+        .glow {
+            position: absolute;
+            width: 400px; height: 400px;
+            background: var(--primary);
+            filter: blur(150px);
+            opacity: 0.15;
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        /* Toggle Button */
+        .theme-btn {
+            background: none; border: none; cursor: pointer; color: var(--text);
+            padding: 8px; border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            nav { width: calc(100% - 20px); top: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow" style="top: 0; left: 0;"></div>
+    <div class="glow" style="bottom: 0; right: 0;"></div>
+
+    <nav>
+        <div class="logo">EQUINOX.</div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <button class="theme-btn" id="themeSwitcher" aria-label="Toggle Theme">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zm2.12 8.485l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 111.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg>
+            </button>
+            <a href="#" class="btn" style="padding: 10px 20px;">Open Account</a>
+        </div>
+    </nav>
+
+    <header class="hero container">
+        <h1 id="hero-text">The Worldâ€™s Most <br> Fluid Capital OS.</h1>
+        <p>A unified operating system for global treasury, programmable payments, and enterprise-grade asset management.</p>
+        <div style="display: flex; gap: 16px; justify-content: center;">
+            <a href="#" class="btn">Get Started</a>
+            <a href="#" class="btn btn-outline">Watch Demo</a>
+        </div>
+    </header>
+
+    <section class="container" style="padding: 60px 0; opacity: 0.5; text-align: center;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 60px; font-weight: 700; letter-spacing: 2px; font-size: 0.8rem;">
+            <span>GOLDMAN_SEC</span>
+            <span>CITI_CORP</span>
+            <span>JP_MORPH</span>
+            <span>BLACK_ROCK</span>
+        </div>
+    </section>
+
+    <section class="container calc-section">
+        <div class="glass-card reveal">
+            <div class="calculator">
+                <h2 style="font-size: 2rem; margin-bottom: 20px;">ROI Impact Calculator</h2>
+                <p style="margin-bottom: 40px; color: var(--text-dim);">See how much you save by switching to Equinox automated treasury.</p>
+                
+                <div class="input-group">
+                    <label>Monthly Transaction Volume ($)</label>
+                    <input type="range" id="volume" min="10000" max="1000000" step="10000" value="100000">
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        <span>$10k</span>
+                        <span id="volumeVal" style="color: var(--primary); font-weight: 700;">$100,000</span>
+                        <span>$1M</span>
+                    </div>
+                </div>
+
+                <div class="calc-result">
+                    <span style="font-size: 1rem; color: var(--text-dim); display: block; font-weight: 400;">Potential Annual Savings</span>
+                    $<span id="savings">4,200</span>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-dim);">*Based on average 0.35% reduction in cross-border friction.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" style="padding: 100px 0;">
+        <h2 style="text-align: center; font-size: 3rem;">Scale at your pace.</h2>
+        <div class="pricing-grid">
+            <div class="glass-card reveal">
+                <div style="font-weight: 800; font-size: 0.8rem; color: var(--primary); text-transform: uppercase;">Growth</div>
+                <div style="font-size: 2.5rem; font-weight: 800; margin: 20px 0;">$499<span style="font-size: 1rem; color: var(--text-dim);">/mo</span></div>
+                <ul style="list-style: none; color: var(--text-dim); line-height: 2.5; margin-bottom: 30px;">
+                    <li>âœ“ 2.5% Treasury APY</li>
+                    <li>âœ“ Unlimited Virtual Cards</li>
+                    <li>âœ“ Basic API Access</li>
+                </ul>
+                <a href="#" class="btn btn-outline" style="width: 100%; text-align: center;">Get Started</a>
+            </div>
+            
+            <div class="glass-card reveal" style="border-color: var(--primary); background: var(--primary-glow);">
+                <div style="font-weight: 800; font-size: 0.8rem; color: var(--primary); text-transform: uppercase;">Enterprise</div>
+                <div style="font-size: 2.5rem; font-weight: 800; margin: 20px 0;">Custom</div>
+                <ul style="list-style: none; color: var(--text-dim); line-height: 2.5; margin-bottom: 30px;">
+                    <li>âœ“ Custom Liquidity Pools</li>
+                    <li>âœ“ Dedicated Account Node</li>
+                    <li>âœ“ Full SDK Suite</li>
+                </ul>
+                <a href="#" class="btn" style="width: 100%; text-align: center;">Contact Sales</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="container" style="padding: 80px 0; border-top: 1px solid var(--border); text-align: center;">
+        <div style="font-weight: 800; margin-bottom: 20px;">EQUINOX.</div>
+        <p style="color: var(--text-dim); font-size: 0.9rem;">&copy; 2026 EQUINOX FINANCIAL SYSTEMS. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script>
+        // --- Calculator Logic ---
+        const volumeInput = document.getElementById('volume');
+        const volumeVal = document.getElementById('volumeVal');
+        const savingsText = document.getElementById('savings');
+
+        function updateSavings() {
+            const val = parseInt(volumeInput.value);
+            volumeVal.innerText = `$${val.toLocaleString()}`;
+            // Simulating a 4.2% efficiency gain over 12 months
+            const annualSavings = (val * 0.042) * 12;
+            savingsText.innerText = Math.floor(annualSavings).toLocaleString();
+        }
+
+        volumeInput.addEventListener('input', updateSavings);
+
+        // --- Scroll Reveal ---
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Theme Switcher ---
+        const themeBtn = document.getElementById('themeSwitcher');
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', nextTheme);
+        });
+
+        // --- Hero Animation ---
+        window.addEventListener('load', () => {
+            const h1 = document.getElementById('hero-text');
+            h1.style.opacity = '0';
+            h1.style.transform = 'translateY(20px)';
+            h1.style.transition = '1s var(--ease)';
+            
+            setTimeout(() => {
+                h1.style.opacity = '1';
+                h1.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

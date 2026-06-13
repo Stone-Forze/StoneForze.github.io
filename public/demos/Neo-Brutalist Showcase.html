@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo-Brutalist Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Day-Glo Light Mode */
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #FFFF00; /* Cyber Yellow */
+            --text-primary: #000000;
+            --text-secondary: #00FFFF; /* Electric Blue */
+            --accent: #FF00FF; /* Magenta */
+            --border: #000000;
+            --shadow: 12px 12px 0 #000000;
+            --shadow-pressed: 4px 4px 0 #000000;
+        }
+
+        [data-theme="dark"] {
+            /* Deep-Void Dark Mode */
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #FFFFFF;
+            --text-primary: #FFFFFF;
+            --text-secondary: #000000;
+            --accent: #FFFF00;
+            --border: #FFFFFF;
+            --shadow: -12px -12px 0 #FFFFFF;
+            --shadow-pressed: -4px -4px 0 #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Archivo Black', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Massive Borders & Hard Shadows */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            border: 8px solid var(--border);
+            box-shadow: var(--shadow);
+            min-height: 100vh;
+        }
+
+        /* Ultra-Bold Typography */
+        h1 {
+            font-size: clamp(3rem, 8vw, 8rem);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.5em;
+            border: 6px solid var(--accent);
+            padding: 20px;
+            display: inline-block;
+            box-shadow: var(--shadow);
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: var(--accent);
+            margin: 60px 0 30px;
+            border-bottom: 5px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        p, li {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            margin-bottom: 1em;
+            font-weight: 900;
+        }
+
+        /* Mechanical Button */
+        .theme-toggle {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            z-index: 1000;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 6px solid var(--border);
+            padding: 20px 40px;
+            font-size: 1.3rem;
+            font-family: 'Archivo Black', sans-serif;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-transform: uppercase;
+        }
+
+        .theme-toggle:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 8px 8px 0 var(--border);
+        }
+
+        .theme-toggle:active {
+            transform: translate(4px, 4px);
+            box-shadow: var(--shadow-pressed);
+        }
+
+        /* Grid Sections */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin: 60px 0;
+        }
+
+        .feature-card {
+            border: 8px solid var(--border);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 20px 20px 0 var(--border);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--accent);
+        }
+
+        /* Animate on Scroll */
+        .section {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .section.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+            
+            .theme-toggle {
+                top: 20px;
+                right: 20px;
+                padding: 15px 30px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Call to Action */
+        .cta {
+            text-align: center;
+            margin: 80px 0;
+            padding: 60px;
+            border: 10px dashed var(--accent);
+            background: transparent;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--bg-primary);
+            padding: 25px 60px;
+            font-size: 1.8rem;
+            text-decoration: none;
+            border: 6px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-transform: uppercase;
+            margin-top: 30px;
+        }
+
+        .cta-button:hover {
+            transform: translate(3px, 3px);
+            box-shadow: 10px 10px 0 var(--border);
+        }
+
+        .cta-button:active {
+            transform: translate(6px, 6px);
+            box-shadow: var(--shadow-pressed);
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <button class="theme-toggle" id="themeToggle">ðŸŒ— Toggle Mode</button>
+
+    <div class="container">
+        <header>
+            <h1>Neo-Brutalist</h1>
+            <p>Raw. Loud. Unapologetic. Anti-design that demands attention through brutal honesty and mechanical precision.</p>
+        </header>
+
+        <section class="section" id="features">
+            <h2>Core Principles</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>ðŸ–¥ï¸ Massive Borders</h3>
+                    <p>8px+ black/white borders that scream structure. No subtlety, no compromise.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>ðŸŽ¨ Day-Glo Palette</h3>
+                    <p>Cyber Yellow, Electric Blue, Magenta. Light mode hits like neon signage.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>ðŸŒ‘ Deep-Void Mode</h3>
+                    <p>Perfect black/white inversion. Maximum contrast, zero distractions.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>âš™ï¸ Mechanical Motion</h3>
+                    <p>Buttons physically depress. Sections snap into view with custom easing.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="showcase">
+            <h2>Interactive Showcase</h2>
+            <p>Hover cards lift aggressively. Click buttons feel industrial. Every interaction has weight.</p>
+            <div style="height: 200px; border: 5px solid var(--border); margin: 40px 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: var(--shadow);">
+                Hover the feature cards above â†‘
+            </div>
+        </section>
+
+        <section class="cta section" id="cta">
+            <h2>Ready to Build?</h2>
+            <p>This single-file template is production-ready. Copy, customize, deploy.</p>
+            <a href="#" class="cta-button">Download Template</a>
+        </section>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const toggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        toggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            body.setAttribute('data-theme', currentTheme === 'light' ? 'dark' : 'light');
+            toggle.textContent = currentTheme === 'light' ? 'â˜€ï¸ Light Mode' : 'ðŸŒ™ Dark Mode';
+        });
+
+        // Scroll-triggered animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // CTA button click animation
+        document.querySelector('.cta-button').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Template downloaded! ðŸš€\n\nThis demonstrates perfect Neo-Brutalist execution.');
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

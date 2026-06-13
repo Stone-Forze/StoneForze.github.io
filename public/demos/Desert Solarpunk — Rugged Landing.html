@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desert Solarpunk â€” Rugged Landing</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Stint+Ultra+Expanded&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   ROOT
+========================= */
+:root{
+  --sienna:#a3472d;
+  --ochre:#c98a2e;
+  --sand:#e4c79a;
+  --dark:#3b2a1e;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Inter,sans-serif;
+  background:var(--sand);
+  color:var(--dark);
+  overflow-x:hidden;
+}
+
+/* grain texture */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    repeating-linear-gradient(45deg,rgba(0,0,0,.03) 0 2px,transparent 2px 4px);
+  pointer-events:none;
+  z-index:5;
+}
+
+/* =========================
+   PARALLAX LAYERS
+========================= */
+.parallax{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  z-index:-1;
+}
+
+.layer{
+  position:absolute;
+  width:200%;
+  height:60vh;
+  left:-50%;
+  border-radius:50%;
+}
+
+.dune1{background:var(--ochre);bottom:-10vh}
+.dune2{background:var(--sienna);bottom:-20vh}
+.dune3{background:#7b4a2c;bottom:-30vh}
+
+/* =========================
+   HERO
+========================= */
+.hero{
+  padding:120px 20px 80px;
+  text-align:center;
+}
+
+.hero h1{
+  font-family:'Stint Ultra Expanded',serif;
+  font-size:48px;
+  filter:url(#heatHaze);
+}
+
+.hero p{
+  margin-top:15px;
+  opacity:.85;
+}
+
+/* =========================
+   CARDS (RUSTED SLATE)
+========================= */
+section{
+  max-width:1100px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:24px;
+}
+
+.card{
+  background:#d6b184;
+  padding:20px;
+  border:3px solid #6e4a2e;
+  box-shadow:8px 8px 0 #6e4a2e;
+  transform:translateY(60px);
+  opacity:0;
+  transition:all .7s cubic-bezier(.22,1,.36,1);
+}
+
+.card.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+.card h3{
+  font-family:'Stint Ultra Expanded',serif;
+  margin-bottom:10px;
+}
+
+/* =========================
+   SAND PARTICLES
+========================= */
+.particle{
+  position:fixed;
+  width:4px;
+  height:4px;
+  background:#a07b4e;
+  pointer-events:none;
+  opacity:.6;
+  z-index:2;
+  animation:fade 1s linear forwards;
+}
+
+@keyframes fade{
+  to{transform:translateY(-20px);opacity:0}
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media(max-width:600px){
+.hero h1{font-size:34px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- SVG HEAT HAZE FILTER -->
+<svg width="0" height="0">
+<filter id="heatHaze">
+  <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="warp"/>
+  <feDisplacementMap in="SourceGraphic" in2="warp" scale="10"/>
+</filter>
+</svg>
+
+<div class="parallax">
+  <div class="layer dune1" data-speed="0.1"></div>
+  <div class="layer dune2" data-speed="0.2"></div>
+  <div class="layer dune3" data-speed="0.3"></div>
+</div>
+
+<header class="hero">
+  <h1>Desert Solarpunk Frontier</h1>
+  <p>Handcrafted rugged design forged under relentless desert suns.</p>
+</header>
+
+<section>
+  <div class="grid">
+    <article class="card"><h3>Nomadic Shelter</h3><p>Solar-woven tensile structures built for shifting dunes.</p></article>
+    <article class="card"><h3>Sunforged Tools</h3><p>Handcrafted gear engineered for extreme environments.</p></article>
+    <article class="card"><h3>Desert Caravan</h3><p>Off-grid transport powered by renewable desert energy.</p></article>
+    <article class="card"><h3>Dust Market</h3><p>Local artisan goods shaped by wind, sand, and fire.</p></article>
+  </div>
+</section>
+
+<script>
+/* =========================
+   PARALLAX SCROLL
+========================= */
+const layers=document.querySelectorAll(".layer");
+
+window.addEventListener("scroll",()=>{
+  const y=window.scrollY;
+  layers.forEach(l=>{
+    const speed=l.dataset.speed;
+    l.style.transform=`translateY(${y*speed}px)`;
+  });
+});
+
+/* =========================
+   INTERSECTION OBSERVER
+========================= */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add("show");
+    }
+  });
+},{threshold:.2});
+
+document.querySelectorAll(".card").forEach(c=>observer.observe(c));
+
+/* =========================
+   SAND DRIFT PARTICLES
+========================= */
+let lastScroll=0;
+
+window.addEventListener("scroll",()=>{
+  const dir=window.scrollY>lastScroll?1:-1;
+  lastScroll=window.scrollY;
+
+  for(let i=0;i<6;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    p.style.left=Math.random()*window.innerWidth+"px";
+    p.style.top=(window.innerHeight/2+Math.random()*200)+"px";
+    p.style.transform=`translateY(${dir*10}px)`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),1000);
+  }
+});
+</script>
+
+<script src="../template-injector.js"></script>
+</body>
+</html>

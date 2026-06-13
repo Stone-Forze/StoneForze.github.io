@@ -1,0 +1,787 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dark Alchemy â€” A mystical pitch-black UI with flashlight cursor revealing hidden secrets">
+    <title>Dark Alchemy â€” Discover the Hidden</title>
+    
+    <!-- Typography: Quicksand (thin, elegant) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           CSS VARIABLES â€” Design System
+        ======================================== */
+        :root {
+            /* Color Palette */
+            --pitch-black: #0a0a0a;
+            --deep-shadow: #121212;
+            --smoke-grey: #2a2a2a;
+            --mist-grey: #5a5a5a;
+            --bright-white: #ffffff;
+            --alchemy-purple: #8b5cf6;
+            --alchemy-gold: #fbbf24;
+            --glow-cyan: #06b6d4;
+            
+            /* Typography */
+            --font-primary: 'Quicksand', sans-serif;
+            --font-weight-thin: 300;
+            --font-weight-normal: 400;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+            --spacing-xl: 6rem;
+            
+            /* Shadow-Morphism */
+            --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.3),
+                           0 0 80px rgba(139, 92, 246, 0.2);
+            --shadow-soft: 0 8px 32px rgba(139, 92, 246, 0.15);
+            
+            /* Animations */
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* ========================================
+           RESET & BASE STYLES
+        ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: var(--font-primary);
+            font-weight: var(--font-weight-thin);
+            color: var(--mist-grey);
+            background-color: var(--pitch-black);
+            overflow-x: hidden;
+            line-height: 1.6;
+            cursor: none; /* Custom cursor enabled */
+        }
+        
+        /* ========================================
+           CUSTOM CURSOR â€” Flashlight Effect
+        ======================================== */
+        #custom-cursor {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(
+                circle,
+                rgba(139, 92, 246, 0.4) 0%,
+                rgba(139, 92, 246, 0.2) 20%,
+                rgba(139, 92, 246, 0.05) 50%,
+                transparent 70%
+            );
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+            transition: transform 0.15s var(--transition-smooth);
+            will-change: transform;
+        }
+        
+        /* ========================================
+           CANVAS OVERLAY â€” Smoke/Ink Animation
+        ======================================== */
+        #canvas-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.15;
+            mix-blend-mode: screen;
+        }
+        
+        /* ========================================
+           MAIN CONTAINER
+        ======================================== */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-lg) var(--spacing-md);
+        }
+        
+        /* ========================================
+           HERO SECTION
+        ======================================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+        
+        .hero__title {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: var(--font-weight-thin);
+            color: var(--mist-grey);
+            letter-spacing: 0.05em;
+            margin-bottom: var(--spacing-md);
+            transition: color 0.4s var(--transition-smooth);
+            opacity: 0;
+            animation: fadeInUp 1.2s var(--transition-smooth) 0.3s forwards;
+        }
+        
+        .hero__title:hover {
+            color: var(--bright-white);
+            text-shadow: var(--shadow-glow);
+        }
+        
+        .hero__subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            font-weight: var(--font-weight-normal);
+            color: var(--mist-grey);
+            letter-spacing: 0.1em;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0;
+            animation: fadeInUp 1.2s var(--transition-smooth) 0.6s forwards;
+            transition: color 0.4s var(--transition-smooth);
+        }
+        
+        .hero__subtitle:hover {
+            color: var(--bright-white);
+        }
+        
+        .hero__cta {
+            display: inline-block;
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 1.1rem;
+            font-weight: var(--font-weight-semibold);
+            color: var(--mist-grey);
+            text-decoration: none;
+            background: transparent;
+            border: 2px solid var(--smoke-grey);
+            border-radius: 50px;
+            transition: all 0.4s var(--transition-smooth);
+            box-shadow: var(--shadow-soft);
+            opacity: 0;
+            animation: fadeInUp 1.2s var(--transition-smooth) 0.9s forwards;
+            letter-spacing: 0.05em;
+        }
+        
+        .hero__cta:hover {
+            color: var(--bright-white);
+            border-color: var(--alchemy-purple);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-4px);
+        }
+        
+        /* ========================================
+           HIDDEN CONTENT SECTIONS
+        ======================================== */
+        .hidden-section {
+            padding: var(--spacing-xl) var(--spacing-md);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .hidden-section__title {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: var(--font-weight-thin);
+            color: var(--mist-grey);
+            letter-spacing: 0.05em;
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+            transition: color 0.4s var(--transition-smooth);
+        }
+        
+        .hidden-section__title:hover {
+            color: var(--bright-white);
+            text-shadow: var(--shadow-glow);
+        }
+        
+        /* ========================================
+           SHADOW-MORPHISM CARDS
+        ======================================== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--spacing-md);
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: linear-gradient(
+                135deg,
+                rgba(139, 92, 246, 0.05),
+                rgba(6, 182, 212, 0.05)
+            );
+            border-radius: 24px;
+            padding: var(--spacing-md);
+            transition: all 0.5s var(--transition-smooth);
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(
+                135deg,
+                var(--alchemy-purple),
+                var(--glow-cyan)
+            );
+            border-radius: 24px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.5s var(--transition-smooth);
+        }
+        
+        .card:hover::before {
+            opacity: 0.3;
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-8px);
+            background: linear-gradient(
+                135deg,
+                rgba(139, 92, 246, 0.1),
+                rgba(6, 182, 212, 0.1)
+            );
+        }
+        
+        .card__icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-sm);
+            opacity: 0.6;
+            transition: opacity 0.4s var(--transition-smooth);
+        }
+        
+        .card:hover .card__icon {
+            opacity: 1;
+        }
+        
+        .card__title {
+            font-size: 1.8rem;
+            font-weight: var(--font-weight-semibold);
+            color: var(--mist-grey);
+            margin-bottom: var(--spacing-xs);
+            transition: color 0.4s var(--transition-smooth);
+        }
+        
+        .card:hover .card__title {
+            color: var(--bright-white);
+        }
+        
+        .card__description {
+            font-size: 1rem;
+            font-weight: var(--font-weight-normal);
+            color: var(--mist-grey);
+            line-height: 1.8;
+            transition: color 0.4s var(--transition-smooth);
+        }
+        
+        .card:hover .card__description {
+            color: var(--bright-white);
+        }
+        
+        /* ========================================
+           GALLERY SECTION
+        ======================================== */
+        .gallery {
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+        
+        .gallery__title {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: var(--font-weight-thin);
+            color: var(--mist-grey);
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            transition: color 0.4s var(--transition-smooth);
+        }
+        
+        .gallery__title:hover {
+            color: var(--bright-white);
+            text-shadow: var(--shadow-glow);
+        }
+        
+        .gallery__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .gallery__item {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            overflow: hidden;
+            background: linear-gradient(
+                135deg,
+                var(--deep-shadow),
+                var(--smoke-grey)
+            );
+            box-shadow: var(--shadow-soft);
+            transition: all 0.5s var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            opacity: 0.3;
+        }
+        
+        .gallery__item:hover {
+            box-shadow: var(--shadow-glow);
+            transform: scale(1.05);
+            opacity: 1;
+        }
+        
+        /* ========================================
+           FOOTER
+        ======================================== */
+        .footer {
+            padding: var(--spacing-lg) var(--spacing-md);
+            text-align: center;
+            color: var(--mist-grey);
+            font-size: 0.9rem;
+            font-weight: var(--font-weight-normal);
+            letter-spacing: 0.05em;
+            border-top: 1px solid var(--smoke-grey);
+        }
+        
+        .footer__link {
+            color: var(--mist-grey);
+            text-decoration: none;
+            transition: color 0.4s var(--transition-smooth);
+        }
+        
+        .footer__link:hover {
+            color: var(--bright-white);
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+        }
+        
+        /* ========================================
+           ANIMATIONS
+        ======================================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* ========================================
+           ACCESSIBILITY
+        ======================================== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* ========================================
+           RESPONSIVE DESIGN
+        ======================================== */
+        @media (max-width: 768px) {
+            :root {
+                --spacing-lg: 3rem;
+                --spacing-xl: 4rem;
+            }
+            
+            body {
+                cursor: auto; /* Disable custom cursor on mobile */
+            }
+            
+            #custom-cursor {
+                display: none;
+            }
+            
+            .hero {
+                padding: var(--spacing-lg) var(--spacing-sm);
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-sm);
+            }
+            
+            .gallery__grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero__title {
+                letter-spacing: 0.02em;
+            }
+            
+            .hero__subtitle {
+                letter-spacing: 0.05em;
+            }
+        }
+        
+        /* ========================================
+           FOCUS STATES (Keyboard Navigation)
+        ======================================== */
+        a:focus,
+        button:focus {
+            outline: 2px solid var(--alchemy-purple);
+            outline-offset: 4px;
+        }
+        
+        /* Screen Reader Only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas Overlay for Smoke/Ink Animation -->
+    <canvas id="canvas-overlay"></canvas>
+    
+    <!-- Custom Cursor (Flashlight Effect) -->
+    <div id="custom-cursor" aria-hidden="true"></div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero" aria-labelledby="hero-title">
+            <h1 id="hero-title" class="hero__title">Dark Alchemy</h1>
+            <p class="hero__subtitle">Discover the Hidden Mysteries</p>
+            <a href="#features" class="hero__cta">Begin Your Journey</a>
+        </section>
+        
+        <!-- Features Section (Hidden Content) -->
+        <section id="features" class="hidden-section" aria-labelledby="features-title">
+            <h2 id="features-title" class="hidden-section__title">Mystical Features</h2>
+            <div class="cards-grid">
+                <article class="card">
+                    <div class="card__icon" aria-hidden="true">ðŸ”®</div>
+                    <h3 class="card__title">Shadow Reveal</h3>
+                    <p class="card__description">
+                        Move your cursor to unveil hidden secrets lurking in the darkness. 
+                        Each movement illuminates new mysteries waiting to be discovered.
+                    </p>
+                </article>
+                
+                <article class="card">
+                    <div class="card__icon" aria-hidden="true">âš—ï¸</div>
+                    <h3 class="card__title">Ethereal Design</h3>
+                    <p class="card__description">
+                        Soft outer glows and shadow-morphism create an otherworldly interface 
+                        that feels both ancient and futuristic.
+                    </p>
+                </article>
+                
+                <article class="card">
+                    <div class="card__icon" aria-hidden="true">âœ¨</div>
+                    <h3 class="card__title">Mystical Interactions</h3>
+                    <p class="card__description">
+                        Every hover, every click transforms the ordinary into the extraordinary. 
+                        Experience UI that responds to your presence.
+                    </p>
+                </article>
+                
+                <article class="card">
+                    <div class="card__icon" aria-hidden="true">ðŸŒ™</div>
+                    <h3 class="card__title">Nighttime Canvas</h3>
+                    <p class="card__description">
+                        A pitch-black backdrop animated with smoke and ink, creating a living, 
+                        breathing canvas that shifts with time.
+                    </p>
+                </article>
+                
+                <article class="card">
+                    <div class="card__icon" aria-hidden="true">ðŸ”¥</div>
+                    <h3 class="card__title">Alchemical Glow</h3>
+                    <p class="card__description">
+                        Purple and gold accents illuminate the darkness, guiding you through 
+                        an immersive journey of discovery.
+                    </p>
+                </article>
+                
+                <article class="card">
+                    <div class="card__icon" aria-hidden="true">ðŸ—ï¸</div>
+                    <h3 class="card__title">Hidden Treasures</h3>
+                    <p class="card__description">
+                        Secrets wait in every corner. Only those who explore deeply will 
+                        uncover the full depth of the experience.
+                    </p>
+                </article>
+            </div>
+        </section>
+        
+        <!-- Gallery Section -->
+        <section class="gallery" aria-labelledby="gallery-title">
+            <h2 id="gallery-title" class="gallery__title">Arcane Gallery</h2>
+            <div class="gallery__grid">
+                <div class="gallery__item" aria-label="Gallery item 1">ðŸŒŒ</div>
+                <div class="gallery__item" aria-label="Gallery item 2">ðŸª</div>
+                <div class="gallery__item" aria-label="Gallery item 3">ðŸ’«</div>
+                <div class="gallery__item" aria-label="Gallery item 4">ðŸŒ </div>
+                <div class="gallery__item" aria-label="Gallery item 5">âœ¨</div>
+                <div class="gallery__item" aria-label="Gallery item 6">ðŸ”®</div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <p>
+                Crafted with precision by 
+                <a href="#" class="footer__link">Senior Creative Developer</a> 
+                &copy; 2026
+            </p>
+            <p style="margin-top: 1rem;">
+                Dark Alchemy â€” Where Mystery Meets Technology
+            </p>
+        </footer>
+    </div>
+    
+    <!-- Vanilla JavaScript -->
+    <script>
+        /* ========================================
+           CUSTOM CURSOR â€” Flashlight Effect
+        ======================================== */
+        const cursor = document.getElementById('custom-cursor');
+        let mouseX = 0;
+        let mouseY = 0;
+        let cursorX = 0;
+        let cursorY = 0;
+        
+        // Track mouse position
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        // Smooth cursor animation using RAF
+        function animateCursor() {
+            // Exponential smoothing for natural movement
+            const dx = mouseX - cursorX;
+            const dy = mouseY - cursorY;
+            cursorX += dx * 0.15;
+            cursorY += dy * 0.15;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        
+        animateCursor();
+        
+        // Expand cursor on clickable elements
+        const clickables = document.querySelectorAll('a, button, .card');
+        clickables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.3)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        });
+        
+        /* ========================================
+           CANVAS SMOKE/INK ANIMATION
+        ======================================== */
+        const canvas = document.getElementById('canvas-overlay');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Particle system for smoke effect
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 100 + 50;
+                this.speedY = Math.random() * 0.3 + 0.1;
+                this.speedX = (Math.random() - 0.5) * 0.2;
+                this.opacity = Math.random() * 0.3;
+            }
+            
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                
+                // Subtle drift
+                this.speedX += (Math.random() - 0.5) * 0.01;
+                
+                // Reset if off screen
+                if (this.y < -this.size) {
+                    this.reset();
+                }
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                
+                // Gradient for smoke effect
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size
+                );
+                gradient.addColorStop(0, `rgba(139, 92, 246, ${this.opacity})`);
+                gradient.addColorStop(0.5, `rgba(139, 92, 246, ${this.opacity * 0.5})`);
+                gradient.addColorStop(1, 'rgba(139, 92, 246, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.fill();
+            }
+        }
+        
+        // Create particle array
+        const particles = [];
+        const particleCount = 20;
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        
+        // Animation loop
+        function animateSmoke() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            requestAnimationFrame(animateSmoke);
+        }
+        
+        animateSmoke();
+        
+        /* ========================================
+           INTERSECTION OBSERVER â€” Reveal Animations
+        ======================================== */
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all cards and gallery items
+        const revealElements = document.querySelectorAll('.card, .gallery__item');
+        revealElements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px)';
+            el.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            observer.observe(el);
+        });
+        
+        /* ========================================
+           SMOOTH SCROLL
+        ======================================== */
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        /* ========================================
+           DISABLE CUSTOM CURSOR ON TOUCH DEVICES
+        ======================================== */
+        if ('ontouchstart' in window) {
+            cursor.style.display = 'none';
+            document.body.style.cursor = 'auto';
+        }
+        
+        /* ========================================
+           PERFORMANCE OPTIMIZATION
+        ======================================== */
+        // Reduce particle count on lower-end devices
+        if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
+            while (particles.length > 10) {
+                particles.pop();
+            }
+        }
+        
+        // Pause animations when tab is not visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Optionally pause animations here
+            }
+        });
+        
+        console.log('ðŸ”® Dark Alchemy initialized successfully');
+        console.log('âœ¨ Custom cursor, smoke animation, and reveal effects active');
+        console.log('ðŸŒ™ Experience optimized for 60fps performance');
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

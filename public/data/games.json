@@ -1,0 +1,57 @@
+{
+  "category": "games",
+  "subcategories": [
+    {
+      "label": "2D & Web Games",
+      "icon": "🎮",
+      "projects": [
+        {
+          "title": "Pixel Knight Quest",
+          "description": "Retro-styled 2D platformer game featuring a knight. Includes custom level map layouts, enemies with simple pathfinding AI, coin collectibles, and high-score saves.",
+          "featured": false,
+          "status": "sample",
+          "year": "2023",
+          "platform": "Web",
+          "screens": 3,
+          "thumbnailEmoji": "⚔️",
+          "thumbnailBg": "linear-gradient(135deg, #1e1b4b 0%, #030712 100%)",
+          "thumbnailUrl": "",
+          "keyFeatures": [
+            "Custom Unity 2D Map",
+            "Enemy Pathfinding AI",
+            "Coin & Score Collection",
+            "Local Save State Persistence"
+          ],
+          "tags": ["Unity", "C#", "Pixel Art", "2D Physics"],
+          "links": {
+            "demo": "https://stonemz.itch.io/pixel-knight",
+            "github": ""
+          }
+        },
+        {
+          "title": "Space Shooter Classic",
+          "description": "High-octane HTML5 canvas space arcade game. Destroy incoming asteroids, gather ship weapon upgrades, and survive increasingly difficult enemy waves.",
+          "featured": false,
+          "status": "active",
+          "year": "2022",
+          "platform": "Web",
+          "screens": 1,
+          "thumbnailEmoji": "🚀",
+          "thumbnailBg": "linear-gradient(135deg, #09090b 0%, #020617 100%)",
+          "thumbnailUrl": "",
+          "keyFeatures": [
+            "HTML5 Canvas Graphics",
+            "Procedural Asteroid Waves",
+            "Weapon Power-ups Shop",
+            "Web Audio Soundtrack"
+          ],
+          "tags": ["HTML5 Canvas", "Vanilla JavaScript", "Web Audio API"],
+          "links": {
+            "demo": "https://spaceshooter.example.com",
+            "github": "https://github.com/stonemz/space-shooter"
+          }
+        }
+      ]
+    }
+  ]
+}

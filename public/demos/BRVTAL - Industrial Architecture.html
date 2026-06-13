@@ -1,0 +1,884 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRVTAL | Industrial Architecture</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Reset with Brutalist Approach */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        :root {
+            --concrete-dark: #2a2a2a;
+            --concrete-light: #3d3d3d;
+            --concrete-texture: #333333;
+            --steel-color: #4a4a4a;
+            --charcoal-shadow: #1a1a1a;
+            --industrial-red: #c22;
+            --industrial-yellow: #db0;
+            --text-primary: #eee;
+            --text-secondary: #aaa;
+            --border-thickness: 3px;
+            --shadow-offset: 10px;
+            --grid-line: rgba(100, 100, 100, 0.15);
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background-color: var(--concrete-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            /* Concrete texture with grid overlay */
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(0deg, var(--concrete-texture) 0%, var(--concrete-dark) 100%);
+            background-size: 50px 50px, 50px 50px, 100% 100%;
+            background-attachment: fixed;
+        }
+
+        /* Utility Classes */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        /* Header & Vertical Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 30px 0;
+            position: relative;
+            border-bottom: var(--border-thickness) solid var(--steel-color);
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4.5rem;
+            letter-spacing: 3px;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            line-height: 0.9;
+            text-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--charcoal-shadow);
+            transform: translateY(0);
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .logo:hover {
+            transform: translateY(-5px);
+        }
+
+        .logo-accent {
+            color: var(--industrial-red);
+            display: block;
+            font-size: 5.5rem;
+        }
+
+        /* Vertical Navigation */
+        .vertical-nav {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            padding-right: 20px;
+        }
+
+        .nav-item {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 15px 5px;
+            border: var(--border-thickness) solid transparent;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative;
+        }
+
+        .nav-item:hover,
+        .nav-item:focus {
+            color: var(--text-primary);
+            border-right: var(--border-thickness) solid var(--industrial-red);
+            background-color: rgba(34, 34, 34, 0.7);
+        }
+
+        .nav-item.active {
+            color: var(--industrial-red);
+            border-right: var(--border-thickness) solid var(--industrial-red);
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 8px;
+            height: 8px;
+            background-color: var(--steel-color);
+            transition: background-color 0.3s;
+        }
+
+        .nav-item:hover::after {
+            background-color: var(--industrial-red);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-bottom: 80px;
+            animation: slide-in-left 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.2s both;
+        }
+
+        .hero-tagline {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            line-height: 1;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--charcoal-shadow);
+            max-width: 900px;
+        }
+
+        .hero-tagline-accent {
+            color: var(--industrial-yellow);
+            display: block;
+            font-size: 6rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-bottom: 40px;
+            border-left: var(--border-thickness) solid var(--industrial-red);
+            padding-left: 20px;
+        }
+
+        /* Stacked Slabs Cards */
+        .slabs-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 100px;
+        }
+
+        .slab-card {
+            background-color: var(--concrete-light);
+            border: var(--border-thickness) solid var(--steel-color);
+            position: relative;
+            padding: 30px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(0);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            /* Heavy shadow */
+            box-shadow: 
+                var(--shadow-offset) var(--shadow-offset) 0 var(--charcoal-shadow),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Staggered entrance animations */
+        .slab-card:nth-child(1) { animation: slide-up-heavy 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.3s both; }
+        .slab-card:nth-child(2) { animation: slide-up-heavy 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.5s both; }
+        .slab-card:nth-child(3) { animation: slide-up-heavy 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.7s both; }
+        .slab-card:nth-child(4) { animation: slide-up-heavy 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.9s both; }
+
+        .slab-card:hover {
+            transform: translateY(-15px) translateX(-5px);
+            box-shadow: 
+                calc(var(--shadow-offset) + 5px) calc(var(--shadow-offset) + 5px) 0 var(--charcoal-shadow),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .slab-card::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: var(--border-thickness) solid rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+        }
+
+        .slab-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--industrial-red);
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .slab-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+        }
+
+        .slab-content {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            flex-grow: 1;
+        }
+
+        /* Stats Section */
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 100px;
+            padding: 40px 0;
+            border-top: var(--border-thickness) solid var(--steel-color);
+            border-bottom: var(--border-thickness) solid var(--steel-color);
+            animation: slide-in-right 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) 1.1s both;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .stat-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4.5rem;
+            color: var(--industrial-yellow);
+            display: block;
+            line-height: 1;
+            margin-bottom: 10px;
+            text-shadow: calc(var(--shadow-offset)/2) calc(var(--shadow-offset)/2) 0 var(--charcoal-shadow);
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background-color: var(--concrete-light);
+            border: var(--border-thickness) solid var(--steel-color);
+            padding: 60px 40px;
+            margin-bottom: 80px;
+            text-align: center;
+            position: relative;
+            box-shadow: 
+                var(--shadow-offset) var(--shadow-offset) 0 var(--charcoal-shadow),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            animation: slide-up-heavy 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) 1.3s both;
+        }
+
+        .cta-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .cta-text {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        /* Industrial Button */
+        .industrial-button {
+            display: inline-block;
+            background-color: var(--industrial-red);
+            color: var(--text-primary);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 20px 50px;
+            border: var(--border-thickness) solid var(--charcoal-shadow);
+            text-decoration: none;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            box-shadow: 5px 5px 0 var(--charcoal-shadow);
+        }
+
+        .industrial-button:hover,
+        .industrial-button:focus {
+            background-color: var(--charcoal-shadow);
+            transform: translate(3px, 3px);
+            box-shadow: 2px 2px 0 var(--charcoal-shadow);
+        }
+
+        .industrial-button:active {
+            transform: translate(5px, 5px);
+            box-shadow: 0 0 0 var(--charcoal-shadow);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: var(--border-thickness) solid var(--steel-color);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover,
+        .footer-links a:focus {
+            color: var(--industrial-red);
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--steel-color);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes slide-in-left {
+            0% {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slide-in-right {
+            0% {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            80% {
+                transform: translateX(-10px);
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slide-up-heavy {
+            0% {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            80% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mechanical shake animation */
+        @keyframes mechanical-shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .mechanical-shake {
+            animation: mechanical-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        /* Accessibility Focus States */
+        *:focus {
+            outline: 3px solid var(--industrial-yellow);
+            outline-offset: 2px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1100px) {
+            .vertical-nav {
+                position: static;
+                transform: none;
+                flex-direction: row;
+                justify-content: center;
+                margin-top: 40px;
+                padding-right: 0;
+                order: 3;
+                width: 100%;
+            }
+            
+            .nav-item {
+                writing-mode: horizontal-tb;
+                transform: none;
+                padding: 10px 20px;
+                border-right: none;
+                border-bottom: var(--border-thickness) solid transparent;
+            }
+            
+            .nav-item:hover,
+            .nav-item:focus,
+            .nav-item.active {
+                border-right: none;
+                border-bottom: var(--border-thickness) solid var(--industrial-red);
+            }
+            
+            .nav-item::after {
+                display: none;
+            }
+            
+            header {
+                flex-wrap: wrap;
+            }
+            
+            .logo {
+                font-size: 3.5rem;
+            }
+            
+            .logo-accent {
+                font-size: 4.5rem;
+            }
+            
+            .hero-tagline {
+                font-size: 3.5rem;
+            }
+            
+            .hero-tagline-accent {
+                font-size: 4.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slabs-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-tagline {
+                font-size: 2.8rem;
+            }
+            
+            .hero-tagline-accent {
+                font-size: 3.5rem;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .logo-accent {
+                font-size: 3.8rem;
+            }
+            
+            .slab-card {
+                min-height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .hero-tagline {
+                font-size: 2.2rem;
+            }
+            
+            .hero-tagline-accent {
+                font-size: 2.8rem;
+            }
+            
+            .cta-title {
+                font-size: 2.5rem;
+            }
+            
+            .slab-card {
+                padding: 20px;
+            }
+            
+            .vertical-nav {
+                gap: 10px;
+            }
+            
+            .nav-item {
+                font-size: 1.4rem;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="sr-only">Skip to main content</a>
+    
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                BRVTAL
+                <span class="logo-accent">ARCHITECTURE</span>
+            </div>
+            
+            <!-- Vertical Navigation -->
+            <nav class="vertical-nav" aria-label="Main Navigation">
+                <a href="#projects" class="nav-item active" id="nav-projects">Projects</a>
+                <a href="#materials" class="nav-item" id="nav-materials">Materials</a>
+                <a href="#process" class="nav-item" id="nav-process">Process</a>
+                <a href="#contact" class="nav-item" id="nav-contact">Contact</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Hero Section -->
+            <section class="hero" aria-labelledby="hero-heading">
+                <h1 id="hero-heading" class="hero-tagline">
+                    Structural Integrity
+                    <span class="hero-tagline-accent">Meets Raw Power</span>
+                </h1>
+                <p class="hero-subtitle">
+                    We design brutalist architecture that embraces raw materials, structural honesty, and monumental forms. 
+                    Our work rejects ornamentation in favor of pure, functional expression.
+                </p>
+            </section>
+
+            <!-- Stacked Slabs Cards -->
+            <section class="slabs-container" id="projects" aria-labelledby="projects-heading">
+                <h2 class="sr-only" id="projects-heading">Our Projects</h2>
+                
+                <article class="slab-card">
+                    <div class="slab-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3 class="slab-title">Concrete Monolith</h3>
+                    <p class="slab-content">
+                        A 40-story residential tower showcasing raw concrete formwork with intentional board marks. 
+                        Structural elements are expressed rather than concealed.
+                    </p>
+                </article>
+                
+                <article class="slab-card">
+                    <div class="slab-icon">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <h3 class="slab-title">Steel Framework</h3>
+                    <p class="slab-content">
+                        Industrial complex where structural steel is left exposed, with welded joints visible and 
+                        load-bearing mechanisms highlighted as design features.
+                    </p>
+                </article>
+                
+                <article class="slab-card">
+                    <div class="slab-icon">
+                        <i class="fas fa-vector-square"></i>
+                    </div>
+                    <h3 class="slab-title">Geometric Precision</h3>
+                    <p class="slab-content">
+                        Museum of industrial design featuring massive geometric volumes with precise, unadorned 
+                        surfaces that play with light and shadow.
+                    </p>
+                </article>
+                
+                <article class="slab-card">
+                    <div class="slab-icon">
+                        <i class="fas fa-weight-hanging"></i>
+                    </div>
+                    <h3 class="slab-title">Mass & Volume</h3>
+                    <p class="slab-content">
+                        Civic center emphasizing weight and permanence through monumental scale and deeply recessed 
+                        windows that create dramatic shadow lines.
+                    </p>
+                </article>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="stats-container" id="materials" aria-labelledby="materials-heading">
+                <h2 class="sr-only" id="materials-heading">Materials & Statistics</h2>
+                
+                <div class="stat-item">
+                    <span class="stat-number">247</span>
+                    <span class="stat-label">Concrete Structures</span>
+                </div>
+                
+                <div class="stat-item">
+                    <span class="stat-number">18.5k</span>
+                    <span class="stat-label">Tons of Steel</span>
+                </div>
+                
+                <div class="stat-item">
+                    <span class="stat-number">42</span>
+                    <span class="stat-label">International Awards</span>
+                </div>
+                
+                <div class="stat-item">
+                    <span class="stat-number">1963</span>
+                    <span class="stat-label">Year Established</span>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta-section" id="process" aria-labelledby="cta-heading">
+                <h2 id="cta-heading" class="cta-title">Build with Substance</h2>
+                <p class="cta-text">
+                    Our architectural philosophy embraces weight, texture, and structural honesty. 
+                    We design buildings that feel permanent, substantial, and authentically material.
+                </p>
+                <a href="#contact" class="industrial-button" id="contact-button">
+                    Forge an Alliance
+                </a>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer id="contact" aria-labelledby="contact-heading">
+            <div class="footer-col">
+                <h3 class="footer-title" id="contact-heading">Contact</h3>
+                <ul class="footer-links">
+                    <li><a href="mailto:structure@brvtal.arch">structure@brvtal.arch</a></li>
+                    <li><a href="tel:+15551234567">+1 (555) 123-4567</a></li>
+                    <li>Industrial District 7</li>
+                    <li>Concrete City, CC 10001</li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3 class="footer-title">Materials</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Raw Concrete</a></li>
+                    <li><a href="#">Structural Steel</a></li>
+                    <li><a href="#">Reclaimed Timber</a></li>
+                    <li><a href="#">Glass & Iron</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3 class="footer-title">Principles</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Form Follows Function</a></li>
+                    <li><a href="#">Material Honesty</a></li>
+                    <li><a href="#">Structural Expression</a></li>
+                    <li><a href="#">Monumental Scale</a></li>
+                </ul>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 BRVTAL ARCHITECTURE. All structures preserved. No ornamentation tolerated.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Mechanical interactions and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add mechanical shake to certain interactions
+            const heavyElements = document.querySelectorAll('.slab-card, .industrial-button, .logo');
+            
+            heavyElements.forEach(element => {
+                element.addEventListener('click', function(e) {
+                    // Prevent default only for demonstration links
+                    if(this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                    }
+                    
+                    // Add mechanical shake animation
+                    this.classList.add('mechanical-shake');
+                    
+                    // Remove animation class after it completes
+                    setTimeout(() => {
+                        this.classList.remove('mechanical-shake');
+                    }, 500);
+                });
+            });
+            
+            // Navigation active state management
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('section');
+            
+            // Update active nav item on scroll
+            function updateActiveNav() {
+                let currentSection = '';
+                const scrollPosition = window.scrollY + 100;
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if(scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if(item.getAttribute('href') === `#${currentSection}`) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+            
+            // Initial call
+            updateActiveNav();
+            
+            // Update on scroll
+            window.addEventListener('scroll', updateActiveNav);
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    
+                    if(targetId === '#') return;
+                    
+                    e.preventDefault();
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        // Calculate offset for header
+                        const headerOffset = 100;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        
+                        // Mechanical scroll with easing
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Add load animations for elements
+            function animateOnScroll() {
+                const elements = document.querySelectorAll('.slab-card, .stats-container, .cta-section');
+                
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.2;
+                    
+                    if(elementPosition < screenPosition) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            
+            // Initial check
+            animateOnScroll();
+            
+            // Check on scroll
+            window.addEventListener('scroll', animateOnScroll);
+            
+            // Keyboard navigation enhancement
+            document.addEventListener('keydown', function(e) {
+                // Tab key navigation - add visual indicator
+                if(e.key === 'Tab') {
+                    document.body.classList.add('keyboard-navigation');
+                }
+            });
+            
+            document.addEventListener('mousedown', function() {
+                document.body.classList.remove('keyboard-navigation');
+            });
+            
+            // Add CSS for keyboard navigation
+            const keyboardStyles = document.createElement('style');
+            keyboardStyles.textContent = `
+                .keyboard-navigation *:focus {
+                    outline: 3px solid var(--industrial-yellow) !important;
+                    outline-offset: 2px !important;
+                }
+            `;
+            document.head.appendChild(keyboardStyles);
+            
+            // Concrete texture animation on scroll
+            let lastScrollY = window.scrollY;
+            const concreteBackground = document.querySelector('body');
+            
+            window.addEventListener('scroll', function() {
+                const scrollY = window.scrollY;
+                const scrollDiff = scrollY - lastScrollY;
+                
+                // Subtle parallax effect on concrete grid
+                concreteBackground.style.backgroundPosition = `${scrollY * 0.05}px ${scrollY * 0.05}px, ${scrollY * 0.05}px ${scrollY * 0.05}px, 0% 0%`;
+                
+                lastScrollY = scrollY;
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

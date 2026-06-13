@@ -1,0 +1,394 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapCut - Creative Studio</title>
+    <style>
+        /* --- CORE VARIABLES --- */
+        :root {
+            --bg-dark: #0f0f11;
+            --text-main: #ffffff;
+            --accent-cyan: #00f2ea;
+            --accent-blue: #007aff;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shine: rgba(255, 255, 255, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- ANIMATED BACKGROUND BLOBS --- */
+        .blob-cont {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-cyan);
+            top: -100px;
+            left: -100px;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-blue);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* --- GLASSMORPHISM UTILITY --- */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .glass:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--glass-shine);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        /* --- NAV BAR --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(15, 15, 17, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #fff, #bbb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-btn {
+            padding: 10px 24px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: none;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-btn:hover { transform: scale(1.05); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .new-project-card {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plus-icon {
+            font-size: 4rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            transition: transform 0.5s;
+        }
+
+        .new-project-card:hover .plus-icon {
+            transform: rotate(90deg) scale(1.2);
+        }
+
+        /* --- TOOLS GRID --- */
+        .tools-section {
+            padding: 100px 10%;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 1s forwards;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .tool-card {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Shimmer Effect on Cards */
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .tool-card:hover::before {
+            left: 100%;
+        }
+
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+
+        .tool-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
+        .tool-desc { font-size: 0.9rem; color: rgba(255,255,255,0.6); }
+
+        /* --- TIMELINE UI MOCKUP --- */
+        .timeline-section {
+            padding: 50px 10% 150px;
+        }
+
+        .timeline-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            overflow: hidden;
+        }
+
+        .track {
+            height: 60px;
+            background: rgba(0, 122, 255, 0.3);
+            border-radius: 10px;
+            margin-right: 10px;
+            position: relative;
+            border: 1px solid rgba(0, 122, 255, 0.5);
+        }
+
+        .track-1 { width: 40%; animation: slideIn 1.5s ease-out; }
+        .track-2 { width: 25%; background: rgba(0, 242, 234, 0.3); border-color: rgba(0, 242, 234, 0.5); animation: slideIn 1.8s ease-out; }
+        .track-3 { width: 20%; animation: slideIn 2.1s ease-out; }
+
+        .playhead {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: white;
+            box-shadow: 0 0 10px white;
+            z-index: 10;
+        }
+
+        .playhead::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -6px;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 10px solid white;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { width: 0; opacity: 0; }
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="blob-cont">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <nav>
+        <div class="logo">CapCut</div>
+        <button class="nav-btn">Download</button>
+    </nav>
+
+    <section class="hero">
+        <h1>Video Editing,<br><span>Reimagined.</span></h1>
+        
+        <div class="glass new-project-card">
+            <div class="plus-icon">+</div>
+            <p>New Project</p>
+        </div>
+    </section>
+
+    <section class="tools-section">
+        <h2 class="section-title">Creative Tools</h2>
+        <div class="grid">
+            <div class="glass tool-card">
+                <div class="tool-icon">âœ‚ï¸</div>
+                <div class="tool-title">Smart Cut</div>
+                <div class="tool-desc">Remove backgrounds instantly with AI-powered precision.</div>
+            </div>
+            <div class="glass tool-card">
+                <div class="tool-icon">âš¡</div>
+                <div class="tool-title">Speed Ramping</div>
+                <div class="tool-desc">Create professional slow-motion curves effortlessly.</div>
+            </div>
+            <div class="glass tool-card">
+                <div class="tool-icon">âœ¨</div>
+                <div class="tool-title">Effects</div>
+                <div class="tool-desc">Access thousands of trending effects and filters.</div>
+            </div>
+            <div class="glass tool-card">
+                <div class="tool-icon">ðŸŽµ</div>
+                <div class="tool-title">Audio Sync</div>
+                <div class="tool-desc">Auto-beat sync matches your cuts to the rhythm.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="timeline-section">
+        <h2 class="section-title" style="margin-bottom: 20px;">Precision Editing</h2>
+        <div class="glass timeline-container">
+            <div class="playhead"></div>
+            <div class="track track-1"></div>
+            <div class="track track-2"></div>
+            <div class="track track-3"></div>
+        </div>
+    </section>
+
+    <script>
+        // Simple Scroll Reveal Animation Script
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // Select elements to animate
+        const hiddenElements = document.querySelectorAll('.tool-card, .timeline-container');
+        
+        // Add initial styles for JS animation
+        hiddenElements.forEach((el) => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(50px)';
+            el.style.transition = 'all 0.8s ease-out';
+            observer.observe(el);
+        });
+
+        // Hover Sound Effect Simulation (Optional Console Log)
+        const cards = document.querySelectorAll('.glass');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // In a real app, play a subtle "whoosh" sound here
+            });
+        });
+    </script>
+
+<script src="../template-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ONYX - The private operating system for the world's most ambitious.">
+    <title>ONYX // Private Alpha Access</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0a0a0a;
+            --primary: #ffffff;
+            --accent: #9d8253; /* Muted Gold */
+            --text: #ffffff;
+            --text-dim: #707070;
+            --border: rgba(255, 255, 255, 0.08);
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Inter', sans-serif;
+            --ease: cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 30px; }
+
+        /* --- Ambient Background --- */
+        .ambient-glow {
+            position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+            width: 80vw; height: 40vh;
+            background: radial-gradient(circle, rgba(157, 130, 83, 0.08) 0%, transparent 70%);
+            z-index: -1; pointer-events: none;
+        }
+
+        /* --- Navigation --- */
+        nav { padding: 40px 0; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-serif); font-size: 1.6rem; font-style: italic; letter-spacing: 2px; }
+
+        /* --- Hero --- */
+        .hero { padding: 120px 0 80px; text-align: center; }
+        .hero h1 { 
+            font-family: var(--font-serif); font-size: clamp(3.5rem, 10vw, 7.5rem); 
+            line-height: 0.85; font-style: italic; font-weight: 300; margin-bottom: 40px;
+        }
+        .hero p { font-size: 1.1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto 50px; text-transform: uppercase; letter-spacing: 3px; }
+
+        /* --- Waitlist Form --- */
+        .glass-form {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 10px;
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            transition: 0.3s var(--ease);
+        }
+        .glass-form:focus-within { border-color: var(--accent); box-shadow: 0 0 30px rgba(157, 130, 83, 0.15); }
+        .glass-form input {
+            background: transparent; border: none; flex: 1; padding: 0 30px;
+            color: white; font-size: 1rem; outline: none;
+        }
+        .glass-form button {
+            background: var(--primary); color: black; border: none;
+            padding: 15px 35px; border-radius: 50px; font-weight: 700;
+            cursor: pointer; transition: 0.3s;
+        }
+        .glass-form button:hover { background: var(--accent); color: white; }
+
+        /* --- Counter --- */
+        .scarcity { margin-top: 30px; font-size: 0.75rem; color: var(--accent); letter-spacing: 2px; }
+
+        /* --- Reveal Sections --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin: 150px 0; }
+        .feature-item h3 { font-family: var(--font-serif); font-size: 2rem; font-style: italic; margin-bottom: 15px; }
+        .feature-item p { color: var(--text-dim); font-size: 0.9rem; }
+
+        /* --- Pricing Preview --- */
+        .pricing-preview { text-align: center; border-top: 1px solid var(--border); padding: 100px 0; }
+        .price-text { font-family: var(--font-serif); font-size: 3rem; font-style: italic; color: var(--accent); }
+
+        /* --- Testimonial --- */
+        .testimonial { padding: 100px 0; text-align: center; font-style: italic; }
+        .testimonial blockquote { font-family: var(--font-serif); font-size: 2rem; max-width: 800px; margin: 0 auto 30px; }
+        .testimonial cite { font-family: var(--font-sans); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: var(--text-dim); font-style: normal; }
+
+        /* --- Animations --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1.5s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .glass-form { border-radius: 20px; flex-direction: column; gap: 10px; }
+            .hero h1 { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <nav class="container">
+        <div class="logo">ONYX.</div>
+        <div style="font-size: 0.7rem; letter-spacing: 2px; color: var(--text-dim);">ALPHA_ACCESS_2026</div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1 class="reveal">The Quiet <br> <i>Revolution.</i></h1>
+            <p class="reveal" style="transition-delay: 0.2s;">Intelligent asset orchestration for the sovereign elite.</p>
+            
+            <div class="reveal" style="transition-delay: 0.4s;">
+                <form class="glass-form" onsubmit="return handleSignup(event)">
+                    <input type="email" placeholder="Private email address..." required>
+                    <button type="submit">Join Waitlist</button>
+                </form>
+                <div class="scarcity">SPOT_COUNT: <span id="spots">42</span>/1000 REMAINING</div>
+            </div>
+        </section>
+
+        <section class="grid">
+            <div class="feature-item reveal">
+                <h3>Absolute Discretion</h3>
+                <p>Zero-knowledge architecture. Your financial data is encrypted at the hardware level, invisible even to us.</p>
+            </div>
+            <div class="feature-item reveal" style="transition-delay: 0.2s;">
+                <h3>Neural Intelligence</h3>
+                <p>A private AI model trained on centuries of wealth patterns, executing strategies in milliseconds.</p>
+            </div>
+            <div class="feature-item reveal" style="transition-delay: 0.4s;">
+                <h3>Global Concierge</h3>
+                <p>Direct bridge to off-market assets, private credit, and sovereign wealth networks.</p>
+            </div>
+        </section>
+
+        <section class="testimonial reveal">
+            <blockquote>"The first tool that understands that true power is invisible."</blockquote>
+            <cite>Managing Partner, Euler Equity</cite>
+        </section>
+
+        <section class="pricing-preview reveal">
+            <p style="text-transform: uppercase; letter-spacing: 4px; font-size: 0.7rem; margin-bottom: 20px;">Membership Investment</p>
+            <div class="price-text">â‚¬2,500<i>/yr</i></div>
+            <p style="color: var(--text-dim); margin-top: 20px; font-size: 0.8rem;">Exclusive of private brokerage fees.</p>
+        </section>
+    </main>
+
+    <footer style="padding: 100px 0 60px; text-align: center; border-top: 1px solid var(--border);">
+        <p style="color: var(--text-dim); font-size: 0.7rem; letter-spacing: 2px;">&copy; 2026 ONYX COGNITIVE. BY INVITATION ONLY.</p>
+    </footer>
+
+    <script>
+        // --- Scroll Reveal ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Spot Counter Logic ---
+        let spots = 42;
+        const spotsEl = document.getElementById('spots');
+        setInterval(() => {
+            if (spots > 3) {
+                spots -= Math.floor(Math.random() * 2);
+                spotsEl.innerText = spots;
+            }
+        }, 5000);
+
+        // --- Form Interaction ---
+        function handleSignup(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const input = e.target.querySelector('input');
+            btn.innerText = "Verifying...";
+            btn.style.opacity = "0.5";
+            
+            setTimeout(() => {
+                btn.innerText = "Request Sent";
+                btn.style.background = "#9d8253";
+                input.value = "Welcome to the inner circle.";
+                input.disabled = true;
+            }, 1500);
+            return false;
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

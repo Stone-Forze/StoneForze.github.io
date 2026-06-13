@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebula Core | Deep Space Collective</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --space-black: #000000;
+            --nebula-purple: #8B5CF6;
+            --cosmic-blue: #06B6D4;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glow-purple: rgba(139, 92, 246, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, sans-serif;
+            background: var(--space-black);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        #starfield {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: radial-gradient(ellipse at 30% 20%, rgba(139,92,246,0.1) 0%, transparent 50%);
+        }
+
+        .cosmic-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            text-align: center;
+            background: linear-gradient(135deg, var(--nebula-purple), var(--cosmic-blue), white);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10vh 0 2rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            padding: 100px 0;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            border-radius: 24px;
+            padding: 60px 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.6s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 0 50px var(--glow-purple);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    <div class="cosmic-container">
+        <section class="hero">
+            <h1>NEBULA CORE</h1>
+        </section>
+    </div>
+<script src="../template-injector.js"></script>
+</body>
+</html>

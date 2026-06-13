@@ -1,0 +1,1018 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Immersive deep sea aquarium boutique featuring premium marine life and aquatic supplies">
+    <title>AQUATICA - Deep Sea Boutique</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           RESET & BASE STYLES
+           ======================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Deep Sea Color Palette */
+            --deep-ocean: #001220;
+            --ocean-mid: #002240;
+            --ocean-light: #003366;
+            --cyan-glow: #00D9FF;
+            --emerald-glow: #00FFA3;
+            --coral-accent: #FF6B9D;
+            --pearl-white: #F0F8FF;
+            --glass-tint: rgba(0, 217, 255, 0.08);
+            
+            /* Typography */
+            --font-primary: 'Quicksand', sans-serif;
+            
+            /* Spacing */
+            --section-padding: clamp(3rem, 8vw, 8rem);
+            --card-padding: clamp(1.5rem, 3vw, 2.5rem);
+            
+            /* Performance */
+            --will-change: transform, opacity;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: linear-gradient(180deg, var(--deep-ocean) 0%, var(--ocean-mid) 50%, var(--ocean-light) 100%);
+            color: var(--pearl-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            cursor: none;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ========================================
+           CUSTOM CURSOR WITH BUBBLE TRAIL
+           ======================================== */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--cyan-glow);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: all 0.1s ease;
+            mix-blend-mode: screen;
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        .cursor-bubble {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 217, 255, 0.8), rgba(0, 217, 255, 0.1));
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: bubbleRise 2s ease-out forwards;
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+
+        @keyframes bubbleRise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* ========================================
+           ANIMATED BACKGROUND - CAUSTIC LIGHT RAYS
+           ======================================== */
+        .caustic-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.15;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(0, 217, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 60%, rgba(0, 255, 163, 0.2) 0%, transparent 50%);
+            animation: causticMove 20s ease-in-out infinite;
+        }
+
+        @keyframes causticMove {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                filter: brightness(1);
+            }
+            25% {
+                transform: translate(-30px, 20px) scale(1.05);
+                filter: brightness(1.2);
+            }
+            50% {
+                transform: translate(20px, -30px) scale(0.95);
+                filter: brightness(0.9);
+            }
+            75% {
+                transform: translate(-20px, -20px) scale(1.03);
+                filter: brightness(1.1);
+            }
+        }
+
+        /* ========================================
+           RISING BUBBLES ANIMATION
+           ======================================== */
+        .bubbles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.5), rgba(0, 217, 255, 0.1));
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: bubbleFloat linear infinite;
+            box-shadow: 
+                inset 0 0 10px rgba(255, 255, 255, 0.3),
+                0 0 20px rgba(0, 217, 255, 0.2);
+        }
+
+        @keyframes bubbleFloat {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-120vh) translateX(var(--bubble-drift));
+                opacity: 0;
+            }
+        }
+
+        /* ========================================
+           SVG DISPLACEMENT FILTER FOR RIPPLE EFFECT
+           ======================================== */
+        .svg-filters {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+
+        .ripple-text {
+            filter: url(#waterRipple);
+            animation: rippleDistort 4s ease-in-out infinite;
+        }
+
+        @keyframes rippleDistort {
+            0%, 100% {
+                filter: url(#waterRipple) hue-rotate(0deg);
+            }
+            50% {
+                filter: url(#waterRipple) hue-rotate(10deg);
+            }
+        }
+
+        /* ========================================
+           HEADER & NAVIGATION
+           ======================================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.5rem var(--section-padding);
+            background: rgba(0, 18, 32, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--cyan-glow);
+            text-shadow: 0 0 30px rgba(0, 217, 255, 0.6);
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--pearl-white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan-glow), var(--emerald-glow));
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--cyan-glow);
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* ========================================
+           HERO SECTION - UNDERWATER IMMERSION
+           ======================================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--section-padding);
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: driftIn 1.5s ease-out 0.5s forwards;
+        }
+
+        @keyframes driftIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--cyan-glow) 0%, var(--emerald-glow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(0, 217, 255, 0.3);
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: rgba(240, 248, 255, 0.85);
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(0, 255, 163, 0.2));
+            border: 2px solid var(--cyan-glow);
+            border-radius: 50px;
+            color: var(--pearl-white);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 0 30px rgba(0, 217, 255, 0.3),
+                inset 0 0 20px rgba(0, 217, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.3), transparent);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 10px 50px rgba(0, 217, 255, 0.5),
+                inset 0 0 30px rgba(0, 217, 255, 0.2);
+            border-color: var(--emerald-glow);
+        }
+
+        /* ========================================
+           LIQUID GLASS PRODUCT CARDS
+           ======================================== */
+        .products-section {
+            padding: var(--section-padding);
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 600;
+            color: var(--cyan-glow);
+            text-shadow: 0 0 40px rgba(0, 217, 255, 0.4);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: linear-gradient(135deg, rgba(0, 34, 64, 0.4), rgba(0, 51, 102, 0.3));
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 30px;
+            padding: var(--card-padding);
+            border: 1px solid rgba(0, 217, 255, 0.15);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(0, 217, 255, 0.1),
+                inset 0 0 30px rgba(0, 217, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(80px) scale(0.9);
+            will-change: var(--will-change);
+        }
+
+        .product-card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 
+                0 20px 60px rgba(0, 217, 255, 0.3),
+                0 0 80px rgba(0, 255, 163, 0.2),
+                inset 0 0 50px rgba(0, 217, 255, 0.1);
+            border-color: var(--emerald-glow);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(0, 255, 163, 0.1));
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                transform: rotate(45deg) translate(-100%, -100%);
+            }
+            50% {
+                transform: rotate(45deg) translate(100%, 100%);
+            }
+        }
+
+        .product-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--pearl-white);
+        }
+
+        .product-description {
+            font-size: 1rem;
+            color: rgba(240, 248, 255, 0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .product-price {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--emerald-glow);
+            text-shadow: 0 0 20px rgba(0, 255, 163, 0.4);
+            margin-bottom: 1.5rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(0, 255, 163, 0.2));
+            border: 2px solid var(--cyan-glow);
+            border-radius: 15px;
+            color: var(--pearl-white);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-family: var(--font-primary);
+        }
+
+        .add-to-cart:hover {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.3), rgba(0, 255, 163, 0.3));
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* ========================================
+           FEATURES SECTION - OCEAN CURRENT DRIFT
+           ======================================== */
+        .features-section {
+            padding: var(--section-padding);
+            position: relative;
+            z-index: 10;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(0, 34, 64, 0.3), rgba(0, 51, 102, 0.2));
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateX(0);
+            animation: oceanDrift 3s ease-in-out infinite;
+        }
+
+        @keyframes oceanDrift {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-10px) translateX(5px);
+            }
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 0 50px rgba(0, 217, 255, 0.3);
+            border-color: var(--emerald-glow);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.5));
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--cyan-glow);
+        }
+
+        .feature-description {
+            font-size: 0.95rem;
+            color: rgba(240, 248, 255, 0.7);
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        footer {
+            padding: 3rem var(--section-padding);
+            text-align: center;
+            background: rgba(0, 18, 32, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        footer p {
+            color: rgba(240, 248, 255, 0.6);
+            font-size: 0.95rem;
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.9rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .custom-cursor {
+                display: none;
+            }
+
+            body {
+                cursor: auto;
+            }
+        }
+
+        /* ========================================
+           ACCESSIBILITY
+           ======================================== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* ========================================
+           PERFORMANCE OPTIMIZATIONS
+           ======================================== */
+        .gpu-accelerated {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Filters for Water Ripple Effect -->
+    <svg class="svg-filters" aria-hidden="true">
+        <defs>
+            <filter id="waterRipple">
+                <feTurbulence 
+                    type="fractalNoise" 
+                    baseFrequency="0.01 0.02" 
+                    numOctaves="3" 
+                    result="noise">
+                    <animate 
+                        attributeName="baseFrequency" 
+                        dur="10s" 
+                        values="0.01 0.02;0.015 0.025;0.01 0.02" 
+                        repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap 
+                    in="SourceGraphic" 
+                    in2="noise" 
+                    scale="5" 
+                    xChannelSelector="R" 
+                    yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Caustic Light Rays Layer -->
+    <div class="caustic-layer gpu-accelerated" aria-hidden="true"></div>
+
+    <!-- Rising Bubbles Container -->
+    <div class="bubbles-container gpu-accelerated" id="bubblesContainer" aria-hidden="true"></div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="customCursor" aria-hidden="true"></div>
+
+    <!-- ========================================
+         HEADER & NAVIGATION
+         ======================================== -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">AQUATICA</a>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="#products">Fish</a></li>
+                    <li><a href="#features">Aquariums</a></li>
+                    <li><a href="#contact">Supplies</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========================================
+         HERO SECTION
+         ======================================== -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="ripple-text">Dive Into the Deep</h1>
+            <p>Discover premium marine life and aquatic treasures from the ocean's most mysterious depths.</p>
+            <a href="#products" class="cta-button">Explore Collection</a>
+        </div>
+    </section>
+
+    <!-- ========================================
+         PRODUCTS SECTION
+         ======================================== -->
+    <section class="products-section" id="products">
+        <h2 class="section-title">Featured Species</h2>
+        <div class="products-grid">
+            <article class="product-card">
+                <div class="product-image">ðŸ </div>
+                <h3 class="product-title">Bioluminescent Jellyfish</h3>
+                <p class="product-description">Mesmerizing deep-sea jellyfish with natural bioluminescent properties. Tank size: 50+ gallons.</p>
+                <p class="product-price">$349.99</p>
+                <button class="add-to-cart">Add to Collection</button>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">ðŸ¡</div>
+                <h3 class="product-title">Electric Blue Tang</h3>
+                <p class="product-description">Vibrant tropical fish known for its stunning electric blue coloration. Reef-safe and peaceful.</p>
+                <p class="product-price">$129.99</p>
+                <button class="add-to-cart">Add to Collection</button>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">ðŸ¦‘</div>
+                <h3 class="product-title">Miniature Octopus</h3>
+                <p class="product-description">Highly intelligent cephalopod with color-changing abilities. Requires advanced care.</p>
+                <p class="product-price">$599.99</p>
+                <button class="add-to-cart">Add to Collection</button>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">ðŸ™</div>
+                <h3 class="product-title">Giant Pacific Octopus</h3>
+                <p class="product-description">Majestic deep-sea creature with unparalleled intelligence. Custom tank setup included.</p>
+                <p class="product-price">$1,299.99</p>
+                <button class="add-to-cart">Add to Collection</button>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">ðŸ¦</div>
+                <h3 class="product-title">Crystal Red Shrimp</h3>
+                <p class="product-description">Exquisite freshwater shrimp with striking red and white patterns. Perfect for planted tanks.</p>
+                <p class="product-price">$24.99</p>
+                <button class="add-to-cart">Add to Collection</button>
+            </article>
+
+            <article class="product-card">
+                <div class="product-image">ðŸš</div>
+                <h3 class="product-title">Nautilus Shell Collection</h3>
+                <p class="product-description">Authentic fossilized nautilus shells from the Cretaceous period. Museum-quality specimens.</p>
+                <p class="product-price">$189.99</p>
+                <button class="add-to-cart">Add to Collection</button>
+            </article>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FEATURES SECTION
+         ======================================== -->
+    <section class="features-section" id="features">
+        <h2 class="section-title">Why Choose Aquatica</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">ðŸŒŠ</div>
+                <h3 class="feature-title">Ethically Sourced</h3>
+                <p class="feature-description">All marine life is sustainably sourced from certified aquaculture facilities.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">ðŸ”¬</div>
+                <h3 class="feature-title">Expert Care</h3>
+                <p class="feature-description">24/7 marine biologist support for all your aquatic care questions.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">ðŸšš</div>
+                <h3 class="feature-title">Safe Delivery</h3>
+                <p class="feature-description">Temperature-controlled shipping with 100% live arrival guarantee.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">ðŸ’Ž</div>
+                <h3 class="feature-title">Premium Quality</h3>
+                <p class="feature-description">Hand-selected specimens meeting the highest health and beauty standards.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer>
+        <p>&copy; 2026 AQUATICA - Deep Sea Boutique. Engineered by Lead Immersive Experience Designer.</p>
+        <p>All marine life ethically sourced. Conservation-first approach.</p>
+    </footer>
+
+    <!-- ========================================
+         JAVASCRIPT - INTERACTIONS & ANIMATIONS
+         ======================================== -->
+    <script>
+        // ========================================
+        // CUSTOM CURSOR WITH BUBBLE TRAIL
+        // ========================================
+        const cursor = document.getElementById('customCursor');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+        let lastBubbleTime = 0;
+
+        // Smooth cursor movement with RAF
+        function updateCursor() {
+            const dx = mouseX - cursorX;
+            const dy = mouseY - cursorY;
+            
+            cursorX += dx * 0.15;
+            cursorY += dy * 0.15;
+            
+            cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
+            
+            requestAnimationFrame(updateCursor);
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Create bubble trail (throttled for performance)
+            const now = Date.now();
+            if (now - lastBubbleTime > 50) {
+                createCursorBubble(e.clientX, e.clientY);
+                lastBubbleTime = now;
+            }
+        });
+
+        function createCursorBubble(x, y) {
+            const bubble = document.createElement('div');
+            bubble.className = 'cursor-bubble';
+            bubble.style.left = x + 'px';
+            bubble.style.top = y + 'px';
+            document.body.appendChild(bubble);
+            
+            setTimeout(() => bubble.remove(), 2000);
+        }
+
+        // Start cursor animation
+        if (window.innerWidth > 768) {
+            updateCursor();
+        }
+
+        // ========================================
+        // RISING BUBBLES BACKGROUND ANIMATION
+        // ========================================
+        const bubblesContainer = document.getElementById('bubblesContainer');
+        const bubbleCount = 30;
+
+        function createBackgroundBubbles() {
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                
+                const size = Math.random() * 50 + 20;
+                const startPosition = Math.random() * 100;
+                const duration = Math.random() * 10 + 15;
+                const delay = Math.random() * 10;
+                const drift = (Math.random() - 0.5) * 200;
+                
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.left = startPosition + '%';
+                bubble.style.animationDuration = duration + 's';
+                bubble.style.animationDelay = delay + 's';
+                bubble.style.setProperty('--bubble-drift', drift + 'px');
+                
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+
+        createBackgroundBubbles();
+
+        // ========================================
+        // INTERSECTION OBSERVER - DRIFT-IN ANIMATIONS
+        // ========================================
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100); // Stagger animations
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all product cards
+        document.querySelectorAll('.product-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // ========================================
+        // SMOOTH SCROLL WITH OFFSET
+        // ========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ========================================
+        // ADD TO CART INTERACTION
+        // ========================================
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                // Visual feedback
+                this.textContent = 'Added! âœ“';
+                this.style.background = 'linear-gradient(135deg, rgba(0, 255, 163, 0.3), rgba(0, 217, 255, 0.3))';
+                this.style.borderColor = 'var(--emerald-glow)';
+                
+                // Create floating bubble effect
+                const rect = this.getBoundingClientRect();
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        createCursorBubble(
+                            rect.left + rect.width / 2 + (Math.random() - 0.5) * 50,
+                            rect.top + rect.height / 2
+                        );
+                    }, i * 100);
+                }
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    this.textContent = 'Add to Collection';
+                    this.style.background = '';
+                    this.style.borderColor = '';
+                }, 2000);
+            });
+        });
+
+        // ========================================
+        // PERFORMANCE: DEBOUNCE RESIZE
+        // ========================================
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                // Re-calculate positions if needed
+                console.log('Window resized - recalculating layouts');
+            }, 250);
+        });
+
+        // ========================================
+        // ACCESSIBILITY: KEYBOARD NAVIGATION
+        // ========================================
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    button.click();
+                }
+            });
+        });
+
+        // ========================================
+        // PERFORMANCE MONITORING (DEV ONLY)
+        // ========================================
+        if (window.performance && window.performance.mark) {
+            performance.mark('page-interactive');
+            
+            // Log FPS for development
+            let lastTime = performance.now();
+            let frames = 0;
+            
+            function measureFPS() {
+                frames++;
+                const currentTime = performance.now();
+                if (currentTime >= lastTime + 1000) {
+                    const fps = Math.round((frames * 1000) / (currentTime - lastTime));
+                    // console.log('FPS:', fps);
+                    frames = 0;
+                    lastTime = currentTime;
+                }
+                requestAnimationFrame(measureFPS);
+            }
+            
+            // measureFPS(); // Uncomment for FPS monitoring
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

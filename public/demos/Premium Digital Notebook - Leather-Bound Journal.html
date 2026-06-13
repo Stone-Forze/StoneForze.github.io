@@ -1,0 +1,1050 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>Premium Digital Notebook | Leather-Bound Journal</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Special+Elite&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Reset with Physical World Influences */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Wood desk tones */
+            --wood-dark: #4a3729;
+            --wood-medium: #6b4f3a;
+            --wood-light: #8b7356;
+            --wood-grain-highlight: #c4a484;
+            
+            /* Leather binding */
+            --leather-dark: #3c2e22;
+            --leather-medium: #5e4b3a;
+            --leather-accent: #7d6652;
+            --leather-stitching: #d4b48c;
+            
+            /* Paper textures */
+            --paper-cream: #fdf8f0;
+            --paper-warm: #f9f1e3;
+            --paper-edge: #e8d9c5;
+            --ink-dark: #2c3e4e;
+            --ink-soft: #4a5c66;
+            
+            /* Accent colors */
+            --postit-yellow: #fef9c3;
+            --postit-blue: #e0f2fe;
+            --postit-pink: #fce7f3;
+            --ribbon-red: #b91c1c;
+            --tab-gold: #d97706;
+            
+            /* Shadows */
+            --shadow-deep: 0 20px 40px rgba(0,0,0,0.4);
+            --shadow-medium: 0 10px 30px rgba(0,0,0,0.3);
+            --shadow-soft: 0 5px 15px rgba(0,0,0,0.2);
+            --shadow-inner: inset 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        body {
+            background: linear-gradient(145deg, var(--wood-dark), var(--wood-medium));
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            font-family: 'Special Elite', cursive;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Wood Grain Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 2px, transparent 2px, transparent 8px),
+                repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 3px, transparent 3px, transparent 12px);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.2) 100%);
+            pointer-events: none;
+            z-index: 11;
+        }
+
+        /* Main Notebook Container */
+        .notebook-container {
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 3000px;
+            transform-style: preserve-3d;
+        }
+
+        /* Leather-Bound Notebook */
+        .notebook {
+            position: relative;
+            width: 1100px;
+            max-width: 90vw;
+            height: 700px;
+            max-height: 90vh;
+            background: var(--leather-dark);
+            border-radius: 12px 30px 30px 12px;
+            box-shadow: 
+                var(--shadow-deep),
+                inset 0 0 30px rgba(0,0,0,0.6),
+                inset 0 0 0 2px var(--leather-stitching);
+            transform: rotateX(2deg) rotateY(-5deg);
+            transition: transform 0.3s ease;
+            padding: 12px;
+            display: flex;
+            position: relative;
+        }
+
+        .notebook:hover {
+            transform: rotateX(1deg) rotateY(-4deg);
+        }
+
+        /* Leather Spine Detail */
+        .notebook::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 15px;
+            bottom: 15px;
+            width: 20px;
+            background: linear-gradient(90deg, var(--leather-dark), var(--leather-medium), var(--leather-dark));
+            border-radius: 10px 2px 2px 10px;
+            box-shadow: inset -2px 0 10px rgba(0,0,0,0.5);
+            z-index: 20;
+        }
+
+        /* Stitching Details */
+        .notebook::after {
+            content: 'âœ¦ âœ¦ âœ¦';
+            position: absolute;
+            left: 0px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            color: var(--leather-stitching);
+            font-size: 14px;
+            letter-spacing: 8px;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+            white-space: nowrap;
+            opacity: 0.7;
+            z-index: 21;
+        }
+
+        /* Left Cover (Inner side) */
+        .cover-left {
+            width: 50px;
+            background: linear-gradient(to right, var(--leather-dark), var(--leather-medium));
+            border-radius: 10px 0 0 10px;
+            position: relative;
+            z-index: 15;
+            box-shadow: inset -2px 0 15px rgba(0,0,0,0.4);
+            flex-shrink: 0;
+        }
+
+        /* Right Cover (Inner side) */
+        .cover-right {
+            width: 50px;
+            background: linear-gradient(to left, var(--leather-dark), var(--leather-medium));
+            border-radius: 0 10px 10px 0;
+            position: relative;
+            z-index: 15;
+            box-shadow: inset 2px 0 15px rgba(0,0,0,0.4);
+            flex-shrink: 0;
+        }
+
+        /* Pages Container - The Flip Magic Happens Here */
+        .pages-container {
+            flex: 1;
+            background: var(--paper-cream);
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.1);
+            display: flex;
+            z-index: 10;
+        }
+
+        /* Book Binding Shadow */
+        .pages-container::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 20px;
+            background: linear-gradient(to right, rgba(0,0,0,0.2), transparent);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .pages-container::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 20px;
+            background: linear-gradient(to left, rgba(0,0,0,0.2), transparent);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Current Spread (Two Pages Visible) */
+        .spread {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Individual Page */
+        .page {
+            flex: 1;
+            background: var(--paper-warm);
+            position: relative;
+            padding: 35px 30px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--leather-accent) transparent;
+        }
+
+        /* Custom Scrollbar */
+        .page::-webkit-scrollbar {
+            width: 6px;
+        }
+        .page::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .page::-webkit-scrollbar-thumb {
+            background: var(--leather-accent);
+            border-radius: 20px;
+            opacity: 0.5;
+        }
+
+        /* Left Page - Subtle Shadow Edge */
+        .page:first-child {
+            border-right: 1px solid rgba(0,0,0,0.05);
+            background: linear-gradient(to right, var(--paper-warm), var(--paper-cream));
+        }
+
+        /* Right Page - Subtle Shadow Edge */
+        .page:last-child {
+            border-left: 1px solid rgba(0,0,0,0.05);
+            background: linear-gradient(to left, var(--paper-warm), var(--paper-cream));
+        }
+
+        /* Paper Texture & Dot Grid */
+        .page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                /* Dot grid pattern */
+                radial-gradient(circle at 25px 25px, rgba(150, 130, 110, 0.1) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 75px 75px, rgba(150, 130, 110, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px, 100px 100px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.7;
+        }
+
+        /* Paper Grain Texture */
+        .page::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.08 0"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.08"/></svg>');
+            background-size: 150px 150px;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 2;
+            mix-blend-mode: multiply;
+        }
+
+        /* Handwriting Font */
+        .handwriting {
+            font-family: 'La Belle Aurore', cursive;
+            font-size: 1.4rem;
+            color: var(--ink-dark);
+            line-height: 1.8;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Typewriter Headings */
+        h1, h2, h3 {
+            font-family: 'Special Elite', cursive;
+            color: var(--ink-soft);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            border-bottom: 2px dashed rgba(100, 80, 60, 0.2);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+        }
+
+        /* SVG Hand-Drawn Underline Animation */
+        .hand-drawn-underline {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hand-drawn-underline svg {
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            stroke: var(--tab-gold);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 300;
+            stroke-dashoffset: 300;
+            transition: stroke-dashoffset 1.2s ease;
+        }
+
+        .hand-drawn-underline.animate svg {
+            stroke-dashoffset: 0;
+        }
+
+        /* Page Flip Animation Container */
+        .flip-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            perspective: 2000px;
+            transform-style: preserve-3d;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .flipping-page {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--paper-warm);
+            transform-origin: left center;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: -10px 0 20px rgba(0,0,0,0.2);
+            pointer-events: auto;
+            cursor: pointer;
+            border-left: 1px solid rgba(0,0,0,0.1);
+            background-image: radial-gradient(circle at 25px 25px, rgba(150, 130, 110, 0.1) 1.5px, transparent 1.5px);
+            background-size: 50px 50px;
+        }
+
+        .flipping-page.flipping {
+            transform: rotateY(-180deg);
+            pointer-events: none;
+        }
+
+        .flipping-page .page-content {
+            padding: 35px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* Page Edge Click Areas */
+        .page-edge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 100%;
+            background: linear-gradient(to left, rgba(0,0,0,0.05), transparent);
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .page-edge:hover {
+            background: linear-gradient(to left, rgba(150, 130, 110, 0.2), transparent);
+            color: rgba(0,0,0,0.6);
+        }
+
+        .page-edge i {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 20px;
+            font-family: 'Special Elite', cursive;
+        }
+
+        /* Draggable Post-it Notes */
+        .postit {
+            position: absolute;
+            width: 180px;
+            padding: 20px 15px;
+            background: var(--postit-yellow);
+            box-shadow: 
+                0 8px 15px rgba(0,0,0,0.2),
+                inset 0 0 0 1px rgba(255,255,255,0.8),
+                inset 0 0 0 2px rgba(0,0,0,0.05);
+            font-family: 'La Belle Aurore', cursive;
+            font-size: 1.1rem;
+            color: var(--ink-dark);
+            transform: rotate(2deg);
+            z-index: 100;
+            cursor: grab;
+            transition: box-shadow 0.2s, transform 0.2s;
+            border-radius: 2px 20px 2px 20px;
+            line-height: 1.6;
+        }
+
+        .postit.blue {
+            background: var(--postit-blue);
+            transform: rotate(-1deg);
+        }
+
+        .postit.pink {
+            background: var(--postit-pink);
+            transform: rotate(3deg);
+        }
+
+        .postit:hover {
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+            cursor: grabbing;
+        }
+
+        .postit.dragging {
+            opacity: 0.9;
+            transform: rotate(0deg) scale(1.02);
+            cursor: grabbing;
+            z-index: 200;
+        }
+
+        /* Ribbon Bookmark Navigation */
+        .ribbon-menu {
+            position: absolute;
+            top: 20px;
+            right: -10px;
+            width: 40px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ribbon {
+            background: var(--ribbon-red);
+            color: white;
+            padding: 12px 8px;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-family: 'Special Elite', cursive;
+            font-size: 14px;
+            letter-spacing: 5px;
+            border-radius: 0 5px 5px 0;
+            box-shadow: 
+                3px 3px 10px rgba(0,0,0,0.3),
+                inset -1px -1px 0 rgba(0,0,0,0.2),
+                inset 1px 1px 0 rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .ribbon:hover {
+            right: -5px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+            background: #a51616;
+        }
+
+        .ribbon::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 10px solid #7a1010;
+        }
+
+        /* Page Number */
+        .page-number {
+            position: absolute;
+            bottom: 15px;
+            right: 25px;
+            font-family: 'Special Elite', cursive;
+            color: var(--leather-accent);
+            font-size: 0.9rem;
+            opacity: 0.7;
+            z-index: 20;
+        }
+
+        /* Content Styling */
+        .content-item {
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .timestamp {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.85rem;
+            color: var(--leather-accent);
+            margin-bottom: 5px;
+        }
+
+        .separator {
+            width: 100%;
+            height: 1px;
+            background: repeating-linear-gradient(to right, transparent, transparent 5px, rgba(100,80,60,0.2) 5px, rgba(100,80,60,0.2) 10px);
+            margin: 25px 0;
+        }
+
+        /* Responsive Scaling */
+        @media (max-width: 1024px) {
+            .notebook {
+                height: 650px;
+            }
+            .page {
+                padding: 25px;
+            }
+            h1 { font-size: 1.8rem; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .notebook {
+                height: 550px;
+            }
+            .page {
+                padding: 20px;
+            }
+            .postit {
+                width: 140px;
+                padding: 15px;
+                font-size: 0.95rem;
+            }
+            h1 { font-size: 1.5rem; }
+            .handwriting { font-size: 1.1rem; }
+        }
+
+        @media (max-width: 600px) {
+            .cover-left, .cover-right {
+                width: 25px;
+            }
+            .page {
+                padding: 15px;
+            }
+            .ribbon-menu {
+                right: -15px;
+            }
+        }
+
+        /* Animation Keyframes */
+        @keyframes bookmark-wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            75% { transform: rotate(-2deg); }
+        }
+
+        .ribbon:hover {
+            animation: bookmark-wiggle 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="notebook-container">
+        <!-- The Main Notebook -->
+        <div class="notebook">
+            <div class="cover-left"></div>
+            
+            <!-- Pages Container - Heart of the Flip Mechanism -->
+            <div class="pages-container" id="pagesContainer">
+                <!-- Current Spread -->
+                <div class="spread" id="currentSpread">
+                    <!-- Page 1 (Left) -->
+                    <div class="page" id="page1">
+                        <h1 class="hand-drawn-underline">
+                            Architect's Log
+                            <svg viewBox="0 0 300 20" preserveAspectRatio="none">
+                                <path d="M5,10 Q50,0 100,10 T200,10 T295,8" stroke="currentColor" fill="none" stroke-width="2"/>
+                            </svg>
+                        </h1>
+                        
+                        <div class="content-item">
+                            <div class="timestamp">âœ§ 11.02.2026 - 14:23</div>
+                            <span class="handwriting">The foundation sketches are complete. The interplay of light through the atrium will define the entire structure.</span>
+                        </div>
+                        
+                        <div class="separator"></div>
+                        
+                        <div class="content-item">
+                            <h2>Material Studies</h2>
+                            <span class="handwriting">Warm brass against cool concrete. The contrast creates tension, but also harmony.</span>
+                        </div>
+                        
+                        <!-- Draggable Post-it Note -->
+                        <div class="postit" id="postit1" style="top: 220px; left: 30px;">
+                            <strong>Reminder:</strong><br>
+                            Order samples of<br>oxidized copper
+                        </div>
+                    </div>
+                    
+                    <!-- Page 2 (Right) -->
+                    <div class="page" id="page2">
+                        <h2 class="hand-drawn-underline">
+                            Concept Sketches
+                            <svg viewBox="0 0 250 15" preserveAspectRatio="none">
+                                <path d="M3,8 Q80,2 150,8 T247,7" stroke="currentColor" fill="none" stroke-width="2"/>
+                            </svg>
+                        </h2>
+                        
+                        <div class="content-item">
+                            <span class="handwriting">The client wants to preserve the existing oak doors. I'll design around them rather than replacing.</span>
+                        </div>
+                        
+                        <div class="separator"></div>
+                        
+                        <div class="content-item">
+                            <span class="handwriting">Note to self: Visit the site at golden hour to study shadow patterns.</span>
+                        </div>
+                        
+                        <!-- Post-it with different color -->
+                        <div class="postit blue" id="postit2" style="top: 200px; left: 40px;">
+                            <strong>Budget note:</strong><br>
+                            Reclaimed timber<br>available at 30% below market
+                        </div>
+                        
+                        <div class="page-number">â€” 14 â€”</div>
+                    </div>
+                </div>
+                
+                <!-- Page Edge Click Target -->
+                <div class="page-edge" id="pageEdge">
+                    <i>âŸ«</i>
+                </div>
+                
+                <!-- Flip Animation Container -->
+                <div class="flip-container" id="flipContainer">
+                    <div class="flipping-page" id="flippingPage">
+                        <div class="page-content" id="nextPageContent">
+                            <!-- Dynamic content inserted via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cover-right"></div>
+            
+            <!-- Ribbon Bookmark Navigation -->
+            <div class="ribbon-menu">
+                <div class="ribbon" data-page="1">JOURNAL</div>
+                <div class="ribbon" data-page="2">SKETCHES</div>
+                <div class="ribbon" data-page="3">NOTES</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class DigitalNotebook {
+            constructor() {
+                // Core elements
+                this.pagesContainer = document.getElementById('pagesContainer');
+                this.currentSpread = document.getElementById('currentSpread');
+                this.pageEdge = document.getElementById('pageEdge');
+                this.flippingPage = document.getElementById('flippingPage');
+                this.nextPageContent = document.getElementById('nextPageContent');
+                
+                // State management
+                this.currentPage = 1;
+                this.isFlipping = false;
+                this.postitNotes = [];
+                this.pageData = this.initializePageData();
+                
+                // Bind methods
+                this.init();
+            }
+
+            initializePageData() {
+                return {
+                    1: {
+                        left: {
+                            title: "Architect's Log",
+                            content: [
+                                { type: 'timestamp', text: 'âœ§ 11.02.2026 - 14:23' },
+                                { type: 'handwriting', text: 'The foundation sketches are complete. The interplay of light through the atrium will define the entire structure.' },
+                                { type: 'heading', text: 'Material Studies' },
+                                { type: 'handwriting', text: 'Warm brass against cool concrete. The contrast creates tension, but also harmony.' }
+                            ]
+                        },
+                        right: {
+                            title: 'Concept Sketches',
+                            content: [
+                                { type: 'handwriting', text: 'The client wants to preserve the existing oak doors. I\'ll design around them rather than replacing.' },
+                                { type: 'handwriting', text: 'Note to self: Visit the site at golden hour to study shadow patterns.' }
+                            ],
+                            pageNumber: 14
+                        }
+                    },
+                    2: {
+                        left: {
+                            title: 'Structural Notes',
+                            content: [
+                                { type: 'timestamp', text: 'âœ§ 12.02.2026 - 09:17' },
+                                { type: 'handwriting', text: 'Cantilever calculations are within tolerance. The steel beam will be exposed as a design feature.' },
+                                { type: 'heading', text: 'Joinery Details' },
+                                { type: 'handwriting', text: 'Brass inlays at all corner joints. Hand-finished, not machined.' }
+                            ]
+                        },
+                        right: {
+                            title: 'Site Observations',
+                            content: [
+                                { type: 'handwriting', text: 'Morning light reveals the texture of the existing brickwork. Must preserve this patina.' },
+                                { type: 'handwriting', text: 'The client mentioned wanting more organic forms. Introduce curves in the ceiling planes.' }
+                            ],
+                            pageNumber: 15
+                        }
+                    },
+                    3: {
+                        left: {
+                            title: 'Material Library',
+                            content: [
+                                { type: 'timestamp', text: 'âœ§ 13.02.2026 - 16:42' },
+                                { type: 'handwriting', text: 'Sourced Portuguese limestone. The fossils embedded add narrative to the floor.' },
+                                { type: 'heading', text: 'Textile Selection' },
+                                { type: 'handwriting', text: 'Wool felt in charcoal. Acoustic properties and tactile warmth.' }
+                            ]
+                        },
+                        right: {
+                            title: 'Client Meeting',
+                            content: [
+                                { type: 'handwriting', text: 'Approved the main concept. They love the integration of old and new.' },
+                                { type: 'handwriting', text: 'Concern about budget - need to value engineer the custom fixtures.' }
+                            ],
+                            pageNumber: 16
+                        }
+                    }
+                };
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setupDraggablePostits();
+                this.setupRibbonNavigation();
+                this.animateUnderlines();
+                this.loadNextPageContent();
+            }
+
+            setupEventListeners() {
+                // Page flip on edge click
+                this.pageEdge.addEventListener('click', () => this.flipPage());
+                
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowRight' && !this.isFlipping) {
+                        this.flipPage();
+                    }
+                });
+
+                // Re-initialize draggable notes after page turn
+                document.addEventListener('pageTurned', () => {
+                    this.setupDraggablePostits();
+                    this.animateUnderlines();
+                });
+            }
+
+            flipPage() {
+                if (this.isFlipping) return;
+                
+                // Check if we have more pages
+                if (this.currentPage >= Object.keys(this.pageData).length) {
+                    return; // No more pages
+                }
+
+                this.isFlipping = true;
+                
+                // Start flip animation
+                this.flippingPage.classList.add('flipping');
+                
+                // Update content after animation completes
+                setTimeout(() => {
+                    this.updateSpread();
+                    this.flippingPage.classList.remove('flipping');
+                    
+                    // Load next page content for future flip
+                    this.loadNextPageContent();
+                    
+                    this.isFlipping = false;
+                    
+                    // Dispatch event for post-its and underlines
+                    document.dispatchEvent(new Event('pageTurned'));
+                }, 800); // Match CSS transition
+            }
+
+            updateSpread() {
+                // Move to next spread
+                this.currentPage++;
+                
+                // Get current page data
+                const pageData = this.pageData[this.currentPage];
+                if (!pageData) return;
+                
+                // Update left page
+                const leftPage = document.getElementById('page1');
+                this.renderPage(leftPage, pageData.left);
+                
+                // Update right page
+                const rightPage = document.getElementById('page2');
+                this.renderPage(rightPage, pageData.right);
+            }
+
+            renderPage(pageElement, data) {
+                // Clear page but preserve post-its
+                const postits = pageElement.querySelectorAll('.postit');
+                const postitData = [];
+                postits.forEach(p => {
+                    postitData.push({
+                        html: p.outerHTML,
+                        style: {
+                            top: p.style.top,
+                            left: p.style.left,
+                            class: p.className
+                        }
+                    });
+                });
+                
+                // Clear content except post-its
+                Array.from(pageElement.children).forEach(child => {
+                    if (!child.classList || !child.classList.contains('postit')) {
+                        child.remove();
+                    }
+                });
+                
+                // Render new content
+                if (data.title) {
+                    const titleEl = document.createElement(data.title.includes('Log') ? 'h1' : 'h2');
+                    titleEl.className = 'hand-drawn-underline';
+                    titleEl.innerHTML = `
+                        ${data.title}
+                        <svg viewBox="0 0 ${data.title.includes('Log') ? '300' : '250'} 20" preserveAspectRatio="none">
+                            <path d="M5,10 Q50,0 100,10 T200,10 T${data.title.includes('Log') ? '295,8' : '247,7'}" stroke="currentColor" fill="none" stroke-width="2"/>
+                        </svg>
+                    `;
+                    pageElement.appendChild(titleEl);
+                }
+                
+                // Add content items
+                data.content.forEach(item => {
+                    if (item.type === 'timestamp') {
+                        const div = document.createElement('div');
+                        div.className = 'timestamp';
+                        div.textContent = item.text;
+                        pageElement.appendChild(div);
+                    } else if (item.type === 'handwriting') {
+                        const span = document.createElement('span');
+                        span.className = 'handwriting content-item';
+                        span.textContent = item.text;
+                        pageElement.appendChild(span);
+                    } else if (item.type === 'heading') {
+                        const h2 = document.createElement('h2');
+                        h2.textContent = item.text;
+                        pageElement.appendChild(h2);
+                    }
+                    
+                    // Add separator between items
+                    if (item !== data.content[data.content.length - 1]) {
+                        const sep = document.createElement('div');
+                        sep.className = 'separator';
+                        pageElement.appendChild(sep);
+                    }
+                });
+                
+                // Add page number if exists
+                if (data.pageNumber) {
+                    const pageNum = document.createElement('div');
+                    pageNum.className = 'page-number';
+                    pageNum.textContent = `â€” ${data.pageNumber} â€”`;
+                    pageElement.appendChild(pageNum);
+                }
+                
+                // Restore post-its
+                postitData.forEach(p => {
+                    const temp = document.createElement('div');
+                    temp.innerHTML = p.html;
+                    const restoredPostit = temp.firstChild;
+                    restoredPostit.style.top = p.style.top;
+                    restoredPostit.style.left = p.style.left;
+                    restoredPostit.style.position = 'absolute';
+                    pageElement.appendChild(restoredPostit);
+                });
+            }
+
+            loadNextPageContent() {
+                // Load content for next page in the flip animation
+                const nextPage = this.currentPage + 1;
+                const pageData = this.pageData[nextPage];
+                
+                if (pageData && pageData.left) {
+                    this.nextPageContent.innerHTML = '';
+                    
+                    const titleEl = document.createElement('h2');
+                    titleEl.textContent = pageData.left.title || 'Next Page';
+                    this.nextPageContent.appendChild(titleEl);
+                    
+                    pageData.left.content.forEach(item => {
+                        if (item.type === 'handwriting') {
+                            const span = document.createElement('span');
+                            span.className = 'handwriting';
+                            span.textContent = item.text;
+                            this.nextPageContent.appendChild(span);
+                        }
+                    });
+                }
+            }
+
+            setupDraggablePostits() {
+                const postits = document.querySelectorAll('.postit');
+                
+                postits.forEach(postit => {
+                    // Remove existing listeners
+                    postit.removeEventListener('mousedown', this.dragStart);
+                    
+                    // Add new listener
+                    postit.addEventListener('mousedown', (e) => this.dragStart(e, postit));
+                    
+                    // Make postits focusable
+                    postit.setAttribute('tabindex', '0');
+                    postit.style.position = 'absolute';
+                    postit.style.cursor = 'grab';
+                });
+            }
+
+            dragStart(e, postit) {
+                e.preventDefault();
+                
+                postit.classList.add('dragging');
+                
+                // Store initial positions
+                const startX = e.clientX;
+                const startY = e.clientY;
+                const startLeft = parseFloat(postit.style.left) || 30;
+                const startTop = parseFloat(postit.style.top) || 200;
+                
+                const onDrag = (moveEvent) => {
+                    moveEvent.preventDefault();
+                    
+                    const dx = moveEvent.clientX - startX;
+                    const dy = moveEvent.clientY - startY;
+                    
+                    postit.style.left = `${startLeft + dx}px`;
+                    postit.style.top = `${startTop + dy}px`;
+                };
+                
+                const onDragEnd = () => {
+                    postit.classList.remove('dragging');
+                    document.removeEventListener('mousemove', onDrag);
+                    document.removeEventListener('mouseup', onDragEnd);
+                };
+                
+                document.addEventListener('mousemove', onDrag);
+                document.addEventListener('mouseup', onDragEnd);
+            }
+
+            setupRibbonNavigation() {
+                const ribbons = document.querySelectorAll('.ribbon');
+                
+                ribbons.forEach((ribbon, index) => {
+                    ribbon.addEventListener('click', () => {
+                        const targetPage = index + 1;
+                        this.navigateToPage(targetPage);
+                    });
+                });
+            }
+
+            navigateToPage(targetPage) {
+                if (this.isFlipping) return;
+                
+                // Flip until we reach target page
+                if (targetPage > this.currentPage) {
+                    const flipsNeeded = targetPage - this.currentPage;
+                    this.flipMultiplePages(flipsNeeded);
+                }
+            }
+
+            flipMultiplePages(count) {
+                if (count === 0 || this.isFlipping) return;
+                
+                this.flipPage();
+                
+                setTimeout(() => {
+                    this.flipMultiplePages(count - 1);
+                }, 900); // Wait for animation to complete
+            }
+
+            animateUnderlines() {
+                const underlines = document.querySelectorAll('.hand-drawn-underline');
+                underlines.forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('animate');
+                    }, index * 300);
+                });
+            }
+        }
+
+        // Initialize the Digital Notebook when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            window.notebook = new DigitalNotebook();
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONVERT_FLOW // Marketing Automation OS</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #030712;
+            --surface: #0f172a;
+            --primary: #8b5cf6; /* Electric Violet */
+            --secondary: #06b6d4; /* Cyber Cyan */
+            --text: #f9fafb;
+            --text-dim: #94a3b8;
+            --border: rgba(255, 255, 255, 0.06);
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: rgba(0, 0, 0, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            transition: background 0.5s var(--ease);
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- Header & Nav --- */
+        nav {
+            padding: 24px 0; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; background: rgba(var(--bg), 0.8); backdrop-filter: blur(12px);
+        }
+        .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 24px; height: 24px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 6px; }
+
+        /* --- Hero --- */
+        .hero { padding: 120px 0 80px; text-align: center; position: relative; }
+        .hero h1 { 
+            font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 800; line-height: 0.95; 
+            letter-spacing: -4px; margin-bottom: 30px; 
+            background: linear-gradient(to bottom, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        [data-theme="light"] .hero h1 { background: linear-gradient(to bottom, #0f172a, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* --- Animated Funnel --- */
+        .funnel-container {
+            max-width: 600px; margin: 60px auto; position: relative; padding: 40px;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
+        }
+        .funnel-stage {
+            height: 40px; margin: 10px auto; background: var(--primary);
+            opacity: 0.3; border-radius: 4px; transition: 1s var(--ease);
+            display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: white;
+        }
+        .stage-1 { width: 100%; }
+        .stage-2 { width: 70%; }
+        .stage-3 { width: 40%; }
+        .stage-4 { width: 15%; background: var(--secondary); opacity: 1; }
+
+        /* --- Features --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin: 100px 0; }
+        .card { 
+            padding: 40px; background: var(--surface); border: 1px solid var(--border); 
+            border-radius: 20px; transition: 0.3s; 
+        }
+        .card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .card h3 { margin-bottom: 12px; font-weight: 700; }
+        .card p { color: var(--text-dim); font-size: 0.95rem; }
+
+        /* --- Pricing --- */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .price-card {
+            padding: 50px 40px; border-radius: 24px; border: 1px solid var(--border);
+            background: var(--surface); position: relative; overflow: hidden;
+        }
+        .price-card.featured { border-color: var(--primary); }
+        .price-card.featured::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary);
+        }
+
+        /* --- Interactive UI Elements --- */
+        .btn {
+            display: inline-block; padding: 16px 32px; border-radius: 12px;
+            font-weight: 700; text-decoration: none; transition: 0.3s var(--ease);
+            cursor: pointer; border: none; font-family: var(--font-main);
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); transform: scale(1.02); }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1s var(--ease); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .theme-toggle { background: none; border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; cursor: pointer; color: var(--text); font-weight: 600; font-size: 0.8rem; }
+
+        /* --- Loader --- */
+        #loader {
+            position: fixed; inset: 0; background: var(--bg); z-index: 2000;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.5s;
+        }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) { .hero h1 { font-size: 3rem; } .funnel-container { padding: 20px; } }
+    </style>
+</head>
+<body>
+
+    <div id="loader"><div class="spinner"></div></div>
+
+    <nav class="container">
+        <div class="logo"><div class="logo-icon"></div> CONVERT_FLOW</div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <button class="theme-toggle" id="themeBtn">â— THEME</button>
+            <a href="#" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.8rem;">Start Free</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1 class="reveal">Marketing that <br> scales itself.</h1>
+            <p class="reveal" style="transition-delay: 0.1s;">Convert_Flow orchestrates your entire customer journey. From first touch to final sale, automate the complex without the code.</p>
+            <div class="reveal" style="transition-delay: 0.2s;">
+                <a href="#" class="btn btn-primary">Launch Your Funnel</a>
+            </div>
+
+            
+            <div class="funnel-container reveal" style="transition-delay: 0.3s;">
+                <div style="margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--secondary);">// LIVE_CONVERSION_SIMULATOR</div>
+                <div class="funnel-stage stage-1">10,000 VISITORS</div>
+                <div class="funnel-stage stage-2">2,450 LEADS</div>
+                <div class="funnel-stage stage-3">890 MQLs</div>
+                <div class="funnel-stage stage-4">124 SALES</div>
+            </div>
+        </section>
+
+        <section class="grid">
+            <div class="card reveal">
+                <div style="color: var(--primary); font-size: 1.5rem; margin-bottom: 20px;">â—ˆ</div>
+                <h3>Omnichannel Flows</h3>
+                <p>Sync your email, SMS, and ad triggers into a single unified timeline. No more fragmented data.</p>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.1s;">
+                <div style="color: var(--secondary); font-size: 1.5rem; margin-bottom: 20px;">â—ˆ</div>
+                <h3>Predictive Scoring</h3>
+                <p>Our AI identifies high-intent behavior patterns before they even fill out a form.</p>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.2s;">
+                <div style="color: var(--primary); font-size: 1.5rem; margin-bottom: 20px;">â—ˆ</div>
+                <h3>Deep Attribution</h3>
+                <p>Trace every dollar spent back to the specific creative that triggered the conversion.</p>
+            </div>
+        </section>
+
+        <section id="pricing" style="padding: 100px 0;">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 class="reveal" style="font-size: 3rem; margin-bottom: 10px;">Built for Growth.</h2>
+                <p class="reveal" style="color: var(--text-dim);">Transparent pricing that evolves with your lead volume.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="price-card reveal">
+                    <h4>Startup</h4>
+                    <div style="font-size: 3rem; font-weight: 800; margin: 20px 0;">$89<span style="font-size: 1rem; color: var(--text-dim);">/mo</span></div>
+                    <ul style="list-style: none; color: var(--text-dim); line-height: 2.5; margin-bottom: 30px;">
+                        <li>âœ“ 5,000 Contacts</li>
+                        <li>âœ“ Visual Flow Builder</li>
+                        <li>âœ“ Basic Attribution</li>
+                    </ul>
+                    <a href="#" class="btn" style="width: 100%; text-align: center; background: var(--border); color: var(--text);">Choose Plan</a>
+                </div>
+                <div class="price-card featured reveal" style="transition-delay: 0.1s;">
+                    <h4>Enterprise</h4>
+                    <div style="font-size: 3rem; font-weight: 800; margin: 20px 0;">$249<span style="font-size: 1rem; color: var(--text-dim);">/mo</span></div>
+                    <ul style="list-style: none; color: var(--text-dim); line-height: 2.5; margin-bottom: 30px;">
+                        <li>âœ“ Unlimited Contacts</li>
+                        <li>âœ“ AI Lead Scoring</li>
+                        <li>âœ“ Custom API Nodes</li>
+                        <li>âœ“ Priority 24/7 Support</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Partner with Us</a>
+                </div>
+            </div>
+        </section>
+
+        <section style="background: linear-gradient(135deg, var(--surface), var(--bg)); border: 1px solid var(--border); padding: 80px 40px; border-radius: 32px; text-align: center; margin-bottom: 100px;" class="reveal">
+            <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Stop leaking revenue.</h2>
+            <p style="color: var(--text-dim); margin-bottom: 40px;">Join 2,000+ marketing teams automating their growth today.</p>
+            <a href="#" class="btn btn-primary">Start Your 14-Day Free Trial</a>
+        </section>
+    </main>
+
+    <footer style="padding: 60px 0; border-top: 1px solid var(--border); text-align: center; color: var(--text-dim); font-size: 0.8rem;">
+        <div class="logo" style="justify-content: center; margin-bottom: 20px; opacity: 0.5;">CONVERT_FLOW</div>
+        <p>&copy; 2026 CONVERT FLOW TECHNOLOGIES. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script>
+        // --- Loader Logic ---
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        });
+
+        // --- Theme Toggle ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+        });
+
+        // --- Scroll Reveal ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Funnel Stage Animation Trigger ---
+        const funnelObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                document.querySelectorAll('.funnel-stage').forEach((stage, i) => {
+                    stage.style.opacity = '1';
+                    stage.style.transitionDelay = `${i * 0.2}s`;
+                });
+            }
+        });
+        funnelObserver.observe(document.querySelector('.funnel-container'));
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

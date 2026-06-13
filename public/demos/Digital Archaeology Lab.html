@@ -1,0 +1,855 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Digital Archaeology Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* ====== GLOBAL ====== */
+    :root {
+      --green: #00ff00;
+      --bg: #020402;
+      --bg-soft: #050b05;
+      --border: #008800;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      background: radial-gradient(circle at top, #021402 0%, #000000 55%, #000000 100%);
+      color: var(--green);
+      font-family: "Courier New", monospace;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ====== CRT EFFECT ====== */
+    .crt {
+      position: relative;
+      width: min(1100px, 100vw - 40px);
+      height: min(650px, 100vh - 40px);
+      background: #000;
+      color: var(--green);
+      padding: 18px 22px;
+      border-radius: 8px;
+      box-shadow:
+        0 0 0 3px #022b03,
+        0 0 25px #00aa00,
+        inset 0 0 40px rgba(0, 255, 0, 0.17);
+      overflow: hidden;
+      text-shadow: 0 0 4px rgba(0, 255, 0, 0.7);
+    }
+
+    /* Scanlines overlay */
+    .crt::before {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.28) 0,
+          rgba(0, 0, 0, 0.28) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+      mix-blend-mode: multiply;
+      opacity: 0.6;
+      z-index: 4;
+    }
+
+    /* Subtle flicker */
+    .crt::after {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(
+        circle at 50% 20%,
+        rgba(255, 255, 255, 0.12),
+        rgba(0, 0, 0, 0.85) 42%
+      );
+      mix-blend-mode: screen;
+      opacity: 0.12;
+      animation: crt-flicker 2.7s infinite steps(2, end);
+      z-index: 1;
+    }
+
+    @keyframes crt-flicker {
+      0%, 100% { opacity: 0.12; }
+      50%      { opacity: 0.23; }
+      72%      { opacity: 0.06; }
+    }
+
+    /* Slight vertical wobble */
+    .crt-inner {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: crt-wobble 11s infinite;
+    }
+
+    @keyframes crt-wobble {
+      0%, 100%   { transform: translateY(0); }
+      33%        { transform: translateY(0.4px); }
+      66%        { transform: translateY(-0.4px); }
+    }
+
+    a {
+      color: var(--green);
+      text-decoration: underline;
+    }
+
+    /* ====== LAYOUT ====== */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid rgba(0, 255, 0, 0.4);
+      padding-bottom: 6px;
+    }
+
+    .title {
+      font-size: 1.35rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 0.78rem;
+      opacity: 0.8;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+      height: 100%;
+      max-height: calc(100% - 40px);
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top, #061607 0, var(--bg-soft) 30%, #000 100%);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.9;
+    }
+
+    .panel-body {
+      flex: 1;
+      overflow: hidden;
+      margin-top: 4px;
+      position: relative;
+    }
+
+    /* ====== DIG TOOL ====== */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.86rem;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      background: #000;
+      color: var(--green);
+      border: 1px solid var(--border);
+      padding: 4px 14px;
+      font-family: inherit;
+      font-size: 0.86rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.03s ease;
+      box-shadow: 0 0 7px rgba(0, 255, 0, 0.35);
+    }
+
+    .button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(0, 255, 0, 0.5) 45%,
+        rgba(0, 255, 0, 0.5) 55%,
+        transparent 100%
+      );
+      opacity: 0;
+      transform: translateX(-120%);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      mix-blend-mode: screen;
+    }
+
+    .button:hover::before {
+      opacity: 0.7;
+      transform: translateX(120%);
+    }
+
+    .button:hover {
+      background: #001700;
+      box-shadow: 0 0 12px rgba(0, 255, 0, 0.65);
+    }
+
+    .button:active {
+      transform: translateY(1px);
+      box-shadow: 0 0 4px rgba(0, 255, 0, 0.4);
+    }
+
+    .button[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .dialup-status {
+      font-size: 0.78rem;
+      opacity: 0.85;
+    }
+
+    .progress-shell {
+      border: 1px solid rgba(0, 255, 0, 0.6);
+      background: #000;
+      height: 16px;
+      width: 100%;
+      margin-top: 4px;
+      overflow: hidden;
+      box-shadow: inset 0 0 4px rgba(0, 255, 0, 0.45);
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(
+        90deg,
+        #004400,
+        #00ff00,
+        #004400
+      );
+      box-shadow:
+        0 0 4px rgba(0, 255, 0, 0.8),
+        0 0 10px rgba(0, 255, 0, 0.6);
+      transition: width 0.15s linear;
+    }
+
+    .progress-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      text-shadow: 0 0 3px rgba(0, 255, 0, 0.9);
+    }
+
+    /* ====== ARTIFACT VIEWER ====== */
+    .artifact-viewer {
+      height: 100%;
+      border-top: 1px dashed rgba(0, 255, 0, 0.4);
+      margin-top: 8px;
+      padding-top: 6px;
+      overflow-y: auto;
+      font-size: 0.83rem;
+      scrollbar-width: thin;
+      scrollbar-color: #00aa00 #000;
+    }
+
+    .artifact-viewer::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .artifact-viewer::-webkit-scrollbar-track {
+      background: #000;
+    }
+
+    .artifact-viewer::-webkit-scrollbar-thumb {
+      background: #00aa00;
+    }
+
+    .artifact-header {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+
+    .artifact-meta {
+      font-size: 0.7rem;
+      opacity: 0.8;
+      margin-bottom: 6px;
+    }
+
+    .artifact-body {
+      border: 1px dashed rgba(0, 255, 0, 0.35);
+      padding: 6px;
+      background: #020902;
+      position: relative;
+    }
+
+    .artifact-placeholder-img {
+      display: inline-block;
+      border: 1px solid rgba(0, 255, 0, 0.7);
+      padding: 4px 8px;
+      margin: 4px 0;
+      font-size: 0.75rem;
+      background: #000;
+      text-align: center;
+    }
+
+    .artifact-tag {
+      display: inline-block;
+      border: 1px solid rgba(0, 255, 0, 0.7);
+      padding: 1px 5px;
+      margin-right: 4px;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .artifact-raw-html {
+      margin-top: 6px;
+      padding-top: 4px;
+      border-top: 1px dashed rgba(0, 255, 0, 0.25);
+      font-size: 0.75rem;
+      opacity: 0.9;
+      white-space: pre-wrap;
+    }
+
+    /* ====== LOG / BIOS ====== */
+    .log-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .log-view {
+      flex: 1;
+      margin-top: 4px;
+      border: 1px solid rgba(0, 255, 0, 0.4);
+      background: #000;
+      padding: 6px;
+      overflow-y: auto;
+      font-size: 0.75rem;
+      line-height: 1.35;
+      position: relative;
+      scrollbar-width: thin;
+      scrollbar-color: #00aa00 #000;
+    }
+
+    .log-view::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .log-view::-webkit-scrollbar-track {
+      background: #000;
+    }
+
+    .log-view::-webkit-scrollbar-thumb {
+      background: #00aa00;
+    }
+
+    .log-line {
+      white-space: pre;
+    }
+
+    .log-line.dim {
+      opacity: 0.7;
+    }
+
+    .log-line.warn {
+      color: #7fff7f;
+    }
+
+    .blink-cursor {
+      display: inline-block;
+      width: 7px;
+      background: var(--green);
+      margin-left: 2px;
+      animation: blink 1s steps(2, start) infinite;
+      box-shadow: 0 0 4px rgba(0, 255, 0, 0.7);
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      50.1%, 100% { opacity: 0; }
+    }
+
+    .log-footer {
+      margin-top: 4px;
+      font-size: 0.7rem;
+      opacity: 0.75;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .log-button {
+      border: none;
+      background: transparent;
+      color: var(--green);
+      font-family: inherit;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .log-button:hover {
+      opacity: 1;
+      text-shadow: 0 0 4px rgba(0, 255, 0, 0.8);
+    }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 900px) {
+      .main {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1.2fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .crt {
+        padding: 12px 10px;
+      }
+
+      .title {
+        font-size: 1.05rem;
+      }
+
+      .subtitle {
+        display: none;
+      }
+
+      .panel {
+        padding: 6px;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="crt">
+    <div class="crt-inner">
+      <header class="header">
+        <div class="title">Digital Archaeology Lab v0.9b</div>
+        <div class="subtitle">/dev/retro/net &mdash; 56k Excavation Console</div>
+      </header>
+
+      <main class="main">
+        <!-- LEFT: EXCAVATOR / ARTIFACT -->
+        <section class="panel">
+          <div class="panel-label">[ Digital Excavator ]</div>
+          <div class="panel-body">
+            <div class="controls">
+              <button id="digButton" class="button">Dig</button>
+              <span id="dialupStatus" class="dialup-status">
+                idling... awaiting excavation command.
+              </span>
+            </div>
+
+            <div class="progress-shell">
+              <div id="progressBar" class="progress-bar"></div>
+              <div id="progressText" class="progress-text">0% &mdash; line idle</div>
+            </div>
+
+            <div class="artifact-viewer" id="artifactViewer">
+              <div class="artifact-header">No artifacts yet.</div>
+              <div class="artifact-meta">
+                Press <strong>DIG</strong> to initiate a 56k retrieval sequence.
+              </div>
+              <div class="artifact-body">
+                System standing by. Sector map cold.  
+                &gt; Waiting for first packet...
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- RIGHT: LOG / BIOS SCROLL -->
+        <section class="panel">
+          <div class="panel-label">[ Excavation Log ]</div>
+          <div class="panel-body log-container">
+            <div id="logView" class="log-view"></div>
+            <div class="log-footer">
+              <span>SCROLL SPEED: <span id="speedLabel">NORMAL</span></span>
+              <div>
+                <button class="log-button" data-speed="slow">SLOW</button>
+                <button class="log-button" data-speed="normal">NORMAL</button>
+                <button class="log-button" data-speed="fast">FAST</button>
+                <button class="log-button" id="clearLogBtn">CLEAR</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // ===============================
+    // Utility helpers
+    // ===============================
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+    // ===============================
+    // BIOS-style Log
+    // ===============================
+    const logView = $("#logView");
+    const speedLabel = $("#speedLabel");
+    const clearLogBtn = $("#clearLogBtn");
+    const speedButtons = $$("[data-speed]");
+
+    let logSpeed = "normal";
+    const speedMap = {
+      slow: 55,
+      normal: 28,
+      fast: 14
+    };
+
+    function appendLogLine(text = "", cssClass = "") {
+      const line = document.createElement("div");
+      line.className = "log-line " + cssClass;
+      line.textContent = text;
+      logView.appendChild(line);
+      logView.scrollTop = logView.scrollHeight;
+    }
+
+    // Typewriter effect for BIOS-style boot
+    async function typeLogLine(text = "", cssClass = "") {
+      const line = document.createElement("div");
+      line.className = "log-line " + cssClass;
+      logView.appendChild(line);
+
+      let i = 0;
+      const delay = speedMap[logSpeed] || speedMap.normal;
+
+      while (i < text.length) {
+        line.textContent += text[i];
+        i++;
+        logView.scrollTop = logView.scrollHeight;
+        await new Promise(r => setTimeout(r, delay));
+      }
+    }
+
+    async function bootSequence() {
+      const lines = [
+        "Phoenix NetBIOS v2.13  (C) 1993-1997 Digital Archaeology Group",
+        "Main Memory Test ....................... OK",
+        "L2 Cache ............................... 512KB  [OK]",
+        "Initializing Retro-Stack............... [DONE]",
+        "Mounting /dev/geo/sector0.............. [OK]",
+        "Calibrating 56k line noise filters..... [OK]",
+        "Scanning for lost HTTP/0.9 endpoints... [FOUND: 12]",
+        "Loading GIF89a decoder................. [OK]",
+        "Loading <BLINK> emulator............... [WARN: DEPRECATED TAG]",
+        "Initializing Digital Excavator......... [READY]",
+        ""
+      ];
+
+      for (const l of lines) {
+        await typeLogLine(l);
+      }
+      appendLogLine("~ System idle. Awaiting DIG command.", "dim");
+      ensureCursor();
+    }
+
+    function ensureCursor() {
+      // Remove old cursor
+      const old = $(".blink-cursor", logView);
+      if (old && old.parentNode) {
+        old.parentNode.removeChild(old);
+      }
+
+      const cursorLine = document.createElement("div");
+      cursorLine.className = "log-line";
+      const cursor = document.createElement("span");
+      cursor.className = "blink-cursor";
+      cursorLine.appendChild(cursor);
+      logView.appendChild(cursorLine);
+      logView.scrollTop = logView.scrollHeight;
+    }
+
+    // Speed controls
+    speedButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        logSpeed = btn.dataset.speed;
+        speedLabel.textContent = logSpeed.toUpperCase();
+      });
+    });
+
+    clearLogBtn.addEventListener("click", () => {
+      logView.innerHTML = "";
+      appendLogLine("~ Log cleared by operator.", "dim");
+      ensureCursor();
+    });
+
+    // ===============================
+    // Digital Excavator / Dial-up
+    // ===============================
+    const digButton = $("#digButton");
+    const dialupStatus = $("#dialupStatus");
+    const progressBar = $("#progressBar");
+    const progressText = $("#progressText");
+    const artifactViewer = $("#artifactViewer");
+
+    let isDigging = false;
+
+    const dialupNoises = [
+      "*screeeeeeeEEEeeee-krchk* handshaking with remote host...",
+      "carrier detected &mdash; negotiating 56k V.90 protocol...",
+      "PPP frames aligning... resist the urge to pick up the phone.",
+      "DNS query over squealing copper wires...",
+      "Retrieving lost assets from /cgi-bin/graveyard/ ...",
+      "HTTP/0.9 response detected, attempting parse...",
+      "Line noise: +12 dB. Applying retro-correction filters..."
+    ];
+
+    const artifacts = [
+      {
+        title: "Animated Under Construction GIF",
+        era: "c. 1995",
+        desc: "Recovered from /~tilde/users/homepage/coming_soon.html. This artifact signaled a page that would never actually be finished.",
+        placeholder: "[ 88x31 ANIMATED GIF: YELLOW CONSTRUCTION SIGN ]",
+        tags: ["GIF89a", "TILED-BG", "INLINE-IMG"],
+        raw: `<center>
+  <img src="under_construction.gif" alt="[Under Construction]"><br>
+  <font size="2">This page is under permanent construction.</font>
+</center>`
+      },
+      {
+        title: "<BLINK> Welcome Message",
+        era: "c. 1996",
+        desc: "A classic usability hazard. Eyestrain guaranteed in under 30 seconds.",
+        placeholder: "[ BLINKING GREEN TEXT ON BLACK BACKGROUND ]",
+        tags: ["BLINK", "TAG-SOUP", "NESTED-FONT"],
+        raw: `<body bgcolor="#000000" text="#00FF00">
+<center>
+  <blink><font size="+3">WELCOME TO MY COOL PAGE!!!</font></blink><br>
+  <font size="2">Best viewed in Netscape 2.0 at 800x600.</font>
+</center>`
+      },
+      {
+        title: "Marquee Scrolling Text",
+        era: "c. 1997",
+        desc: "Scrolling text that took over the entire top of the page, whether you asked for it or not.",
+        placeholder: "[ HORIZONTAL SCROLLING MARQUEE BANNER ]",
+        tags: ["MARQUEE", "INLINE-STYLES", "BGCOLOR"],
+        raw: `<body bgcolor="#000000" text="#00FF00">
+<marquee behavior="alternate" scrollamount="5">
+  <b>WELCOME TO THE FUTURE OF THE INTERNET</b>
+</marquee>`
+      },
+      {
+        title: "Hit Counter CGI Include",
+        era: "c. 1994",
+        desc: "Because knowing you were visitor #0000123 was critical social proof.",
+        placeholder: "[ 90s STYLE ODOMETER HIT COUNTER ]",
+        tags: ["CGI", "SERVER-SIDE", "GIF-COUNTER"],
+        raw: `<center>
+  <img src="/cgi-bin/counter.pl?site=home" alt="Visitor Counter">
+  <br><font size="2">You are visitor number:</font> <b>0000123</b>
+</center>`
+      },
+      {
+        title: "Table-Based Layout with Spacer GIFs",
+        era: "c. 1998",
+        desc: "A 3-column layout held together by transparent 1x1 GIFs and sheer determination.",
+        placeholder: "[ COMPLEX TABLE GRID WITH VISIBLE CELL BORDERS ]",
+        tags: ["TABLE-LAYOUT", "SPACER-GIF", "NESTED-TABLES"],
+        raw: `<table border="0" cellpadding="0" cellspacing="0" width="760">
+  <tr>
+    <td width="150" bgcolor="#001100">
+      <img src="spacer.gif" width="150" height="1" alt="">
+      <!-- left nav -->
+    </td>
+    <td width="10"><img src="spacer.gif" width="10" height="1" alt=""></td>
+    <td width="600" bgcolor="#000000">
+      <!-- main content -->
+    </td>
+  </tr>
+</table>`
+      },
+      {
+        title: "Fantasy Guestbook Form",
+        era: "c. 1996",
+        desc: "Before comments sections, there were guestbooks where everyone shouted in ALL CAPS.",
+        placeholder: "[ PLAIN HTML FORM WITH INPUT BOXES AND SUBMIT BUTTON ]",
+        tags: ["FORM", "GUESTBOOK", "CGI-BIN"],
+        raw: `<form action="/cgi-bin/guestbook.pl" method="post">
+  Name: <input type="text" name="name"><br>
+  E-mail: <input type="text" name="email"><br>
+  Comments:<br>
+  <textarea name="comments" cols="40" rows="5"></textarea><br>
+  <input type="submit" value="Sign Guestbook">
+</form>`
+      }
+    ];
+
+    function randomItem(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function setDialupStatus(text) {
+      dialupStatus.innerHTML = text;
+    }
+
+    function updateProgress(pct, label) {
+      progressBar.style.width = pct + "%";
+      progressText.innerHTML = `${pct}% &mdash; ${label}`;
+    }
+
+    async function simulateDialup() {
+      isDigging = true;
+      digButton.disabled = true;
+      progressBar.style.width = "0%";
+      updateProgress(0, "line idle");
+      setDialupStatus("initializing modem handshake sequence...");
+      appendLogLine("> DIG command acknowledged. Spinning up 56k modem...");
+
+      const steps = [
+        { delay: 600, label: "dialing ISP access number...", log: "*beeeeep-beeep-beep-brrrrrrr*" },
+        { delay: 900, label: "negotiating baud rate...", log: randomItem(dialupNoises) },
+        { delay: 1100, label: "authenticating (PAP)...", log: "PPP CHAP/PAP challenge issued to remote host." },
+        { delay: 950, label: "establishing PPP link...", log: randomItem(dialupNoises) },
+        { delay: 700, label: "resolving DNS for lost domains...", log: "Ancient A records detected for geocities.com & angelfire.com." },
+        { delay: 1000, label: "streaming artifact data packets...", log: randomItem(dialupNoises) },
+        { delay: 900, label: "reassembling HTML from packets...", log: "Attempting to reflow <FONT> tags into modern space-time..." }
+      ];
+
+      let pct = 0;
+      for (const s of steps) {
+        const start = pct;
+        const end = Math.min(100, start + Math.floor(Math.random() * 15) + 10);
+
+        const segments = 6;
+        const segDelay = s.delay / segments;
+        for (let i = 1; i <= segments; i++) {
+          if (!isDigging) return;
+          pct = start + ((end - start) * i) / segments;
+          updateProgress(Math.round(pct), s.label);
+          await new Promise(r => setTimeout(r, segDelay));
+        }
+
+        appendLogLine(s.log, "dim");
+        setDialupStatus(s.label);
+      }
+
+      // Finalize
+      pct = 100;
+      updateProgress(100, "artifact stream complete.");
+      setDialupStatus("link stable. decoding artifact payload...");
+      appendLogLine("[OK] Artifact stream captured.", "warn");
+      await new Promise(r => setTimeout(r, 500));
+
+      showRandomArtifact();
+      setDialupStatus("idling... ready for next excavation.");
+      isDigging = false;
+      digButton.disabled = false;
+    }
+
+    function showRandomArtifact() {
+      const a = randomItem(artifacts);
+      artifactViewer.innerHTML = "";
+
+      const header = document.createElement("div");
+      header.className = "artifact-header";
+      header.textContent = a.title;
+
+      const meta = document.createElement("div");
+      meta.className = "artifact-meta";
+      meta.innerHTML = `Era: <strong>${a.era}</strong>  |  Provenance: /dev/retro/http/  |  Integrity: <strong>PARTIAL</strong>`;
+
+      const body = document.createElement("div");
+      body.className = "artifact-body";
+
+      const desc = document.createElement("div");
+      desc.textContent = a.desc;
+
+      const placeholder = document.createElement("div");
+      placeholder.className = "artifact-placeholder-img";
+      placeholder.textContent = a.placeholder;
+
+      const tags = document.createElement("div");
+      tags.style.marginTop = "4px";
+      a.tags.forEach(t => {
+        const span = document.createElement("span");
+        span.className = "artifact-tag";
+        span.textContent = t;
+        tags.appendChild(span);
+      });
+
+      const raw = document.createElement("pre");
+      raw.className = "artifact-raw-html";
+      raw.textContent = a.raw;
+
+      body.appendChild(desc);
+      body.appendChild(placeholder);
+      body.appendChild(tags);
+      body.appendChild(raw);
+
+      artifactViewer.appendChild(header);
+      artifactViewer.appendChild(meta);
+      artifactViewer.appendChild(body);
+
+      appendLogLine(`Artifact recovered: "${a.title}" (${a.era}).`, "warn");
+      ensureCursor();
+    }
+
+    digButton.addEventListener("click", () => {
+      if (isDigging) return;
+      simulateDialup();
+    });
+
+    // ===============================
+    // Init
+    // ===============================
+    (async function init() {
+      appendLogLine("Booting Digital Archaeology Lab firmware...");
+      await new Promise(r => setTimeout(r, 400));
+      await bootSequence();
+    })();
+  </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

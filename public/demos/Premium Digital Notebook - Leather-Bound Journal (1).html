@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Digital Notebook | Leather-Bound Journal</title>
+    <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wood-dark: #4a3729; --leather-dark: #3c2e22; --leather-stitching: #d4b48c;
+            --paper-warm: #f9f1e3; --ink-dark: #2c3e4e;
+        }
+        body {
+            background: linear-gradient(145deg, var(--wood-dark), #6b4f3a);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            font-family: 'Special Elite', cursive; overflow: hidden;
+        }
+        .notebook {
+            position: relative; width: 1100px; max-width: 90vw; height: 700px;
+            background: var(--leather-dark); border-radius: 12px 30px 30px 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 0 0 2px var(--leather-stitching);
+            display: flex; padding: 12px;
+        }
+        .pages-container {
+            flex: 1; background: #fdf8f0; position: relative; overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.1); display: flex;
+        }
+        .page {
+            flex: 1; background: var(--paper-warm); padding: 35px 30px;
+            border-right: 1px solid rgba(0,0,0,0.05); position: relative;
+        }
+        .handwriting { font-family: 'La Belle Aurore', cursive; font-size: 1.4rem; color: var(--ink-dark); }
+        .postit {
+            position: absolute; width: 180px; padding: 20px 15px; background: #fef9c3;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2); transform: rotate(2deg); cursor: grab;
+        }
+        .page-edge {
+            position: absolute; top: 0; right: 0; width: 40px; height: 100%;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="notebook">
+        <div class="pages-container">
+            <div class="page" id="page1">
+                <h1>Architect's Log</h1>
+                <p class="handwriting">The foundation sketches are complete.</p>
+                <div class="postit" style="top: 220px; left: 30px;">Reminder: Order samples.</div>
+            </div>
+            <div class="page" id="page2">
+                <h2>Concept Sketches</h2>
+                <p class="handwriting"> Ð·Ð¾Ð»Ð¾Ñ‚Ð¾Ðµ ÑÐµÑ‡ÐµÐ½Ð¸Ðµ Ð² Ð´Ð¸Ð·Ð°Ð¹Ð½Ðµ.</p>
+                <div class="page-number" style="position:absolute; bottom:15px; right:25px;">â€” 14 â€”</div>
+            </div>
+            <div class="page-edge">âŸ«</div>
+        </div>
+    </div>
+    <script>
+        document.querySelectorAll('.postit').forEach(p => {
+            p.onmousedown = function(e) {
+                let shiftX = e.clientX - p.getBoundingClientRect().left;
+                let shiftY = e.clientY - p.getBoundingClientRect().top;
+                function moveAt(pageX, pageY) {
+                    p.style.left = pageX - shiftX - p.parentElement.getBoundingClientRect().left + 'px';
+                    p.style.top = pageY - shiftY - p.parentElement.getBoundingClientRect().top + 'px';
+                }
+                function onMouseMove(event) { moveAt(event.pageX, event.pageY); }
+                document.addEventListener('mousemove', onMouseMove);
+                p.onmouseup = function() { document.removeEventListener('mousemove', onMouseMove); p.onmouseup = null; };
+            };
+            p.ondragstart = function() { return false; };
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

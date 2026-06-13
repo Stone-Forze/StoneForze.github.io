@@ -1,0 +1,944 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Deep Winter - Frosted Crystal Design. Experience the elegance of ice and the serenity of winter.">
+    <title>CRYSTAL FROST - Deep Winter Elegance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           RESET & BASE STYLES
+           ======================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Deep Winter Palette */
+            --arctic-blue: #C8E6F5;
+            --ice-blue: #E3F2FD;
+            --pearl-white: #F8FBFF;
+            --frost-white: #FFFFFF;
+            --crystal-cyan: #4DD0E1;
+            --deep-blue: #1E3A5F;
+            --snow-shadow: rgba(30, 58, 95, 0.15);
+            --glow-cyan: rgba(77, 208, 225, 0.6);
+            
+            /* Typography */
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Spacing */
+            --section-padding: clamp(4rem, 10vw, 10rem);
+            --card-padding: clamp(2rem, 4vw, 3rem);
+            
+            /* Effects */
+            --frost-blur: 20px;
+            --transition-thaw: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(180deg, 
+                var(--pearl-white) 0%, 
+                var(--ice-blue) 50%, 
+                var(--arctic-blue) 100%);
+            color: var(--deep-blue);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* ========================================
+           SNOWFALL CANVAS
+           ======================================== */
+        #snowCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ========================================
+           FROSTED GLASS UTILITIES
+           ======================================== */
+        .frost-glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(var(--frost-blur)) saturate(180%);
+            -webkit-backdrop-filter: blur(var(--frost-blur)) saturate(180%);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 8px 32px rgba(30, 58, 95, 0.1),
+                inset 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        /* ========================================
+           HEADER & NAVIGATION
+           ======================================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.5rem var(--section-padding);
+            background: rgba(248, 251, 255, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(77, 208, 225, 0.2);
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.05);
+            transition: all 0.3s var(--transition-thaw);
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 30px rgba(30, 58, 95, 0.12);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--deep-blue);
+            text-decoration: none;
+            text-shadow: 0 0 20px rgba(77, 208, 225, 0.3);
+            transition: all 0.3s var(--transition-thaw);
+        }
+
+        .logo:hover {
+            color: var(--crystal-cyan);
+            text-shadow: 0 0 30px var(--glow-cyan);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 1rem;
+            text-decoration: none;
+            color: var(--deep-blue);
+            position: relative;
+            transition: all 0.3s var(--transition-thaw);
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--crystal-cyan), 
+                transparent);
+            transition: width 0.4s var(--transition-thaw);
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        nav a:hover {
+            color: var(--crystal-cyan);
+            text-shadow: 0 0 15px var(--glow-cyan);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* ========================================
+           HERO SECTION - CRYSTALLINE ELEGANCE
+           ======================================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--section-padding);
+            padding-top: calc(var(--section-padding) + 80px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: driftIn 1.2s ease-out 0.3s forwards;
+        }
+
+        @keyframes driftIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--deep-blue);
+            letter-spacing: -0.02em;
+            text-shadow: 
+                0 0 40px rgba(77, 208, 225, 0.4),
+                0 2px 4px rgba(30, 58, 95, 0.1);
+        }
+
+        .hero .tagline {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 300;
+            color: var(--deep-blue);
+            margin-bottom: 3rem;
+            letter-spacing: 0.02em;
+            opacity: 0.85;
+        }
+
+        /* ========================================
+           FROZEN THAW BUTTONS
+           ======================================== */
+        .frozen-btn {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: rgba(77, 208, 225, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(77, 208, 225, 0.4);
+            border-radius: 50px;
+            color: var(--deep-blue);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.4s var(--transition-thaw);
+            box-shadow: 
+                0 4px 20px rgba(77, 208, 225, 0.2),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .frozen-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(77, 208, 225, 0.4), 
+                transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s var(--transition-thaw), height 0.6s var(--transition-thaw);
+        }
+
+        .frozen-btn:hover {
+            background: rgba(77, 208, 225, 0.25);
+            border-color: var(--crystal-cyan);
+            color: var(--crystal-cyan);
+            box-shadow: 
+                0 8px 40px var(--glow-cyan),
+                inset 0 0 30px rgba(77, 208, 225, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .frozen-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .frozen-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* ========================================
+           FROSTED GLASS CARDS
+           ======================================== */
+        .cards-section {
+            padding: var(--section-padding);
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--deep-blue);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            text-shadow: 0 0 30px rgba(77, 208, 225, 0.3);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .frost-card {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(var(--frost-blur)) saturate(180%);
+            -webkit-backdrop-filter: blur(var(--frost-blur)) saturate(180%);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: var(--card-padding);
+            box-shadow: 
+                0 8px 32px var(--snow-shadow),
+                inset 0 0 40px rgba(255, 255, 255, 0.2);
+            transition: all 0.5s var(--transition-thaw);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .frost-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .frost-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 70%
+            );
+            transform: rotate(45deg);
+            transition: all 0.6s var(--transition-thaw);
+        }
+
+        .frost-card:hover::before {
+            left: 100%;
+        }
+
+        .frost-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(77, 208, 225, 0.6);
+            box-shadow: 
+                0 12px 48px rgba(77, 208, 225, 0.25),
+                inset 0 0 60px rgba(77, 208, 225, 0.15);
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 15px var(--glow-cyan));
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--deep-blue);
+            letter-spacing: -0.01em;
+        }
+
+        .card-description {
+            font-size: 1.05rem;
+            color: var(--deep-blue);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.85;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.8rem;
+            background: rgba(77, 208, 225, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(77, 208, 225, 0.3);
+            border-radius: 25px;
+            color: var(--deep-blue);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s var(--transition-thaw);
+        }
+
+        .card-link:hover {
+            background: rgba(77, 208, 225, 0.25);
+            border-color: var(--crystal-cyan);
+            color: var(--crystal-cyan);
+            box-shadow: 0 4px 20px var(--glow-cyan);
+            transform: translateX(5px);
+        }
+
+        /* ========================================
+           FEATURES SECTION - ICY ELEGANCE
+           ======================================== */
+        .features-section {
+            padding: var(--section-padding);
+            position: relative;
+            z-index: 10;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 2.5rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 15px;
+            transition: all 0.4s var(--transition-thaw);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .feature-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.35);
+            border-color: rgba(77, 208, 225, 0.5);
+            box-shadow: 0 8px 32px rgba(77, 208, 225, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 10px var(--glow-cyan));
+        }
+
+        .feature-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--deep-blue);
+        }
+
+        .feature-description {
+            font-size: 1rem;
+            color: var(--deep-blue);
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        /* ========================================
+           FOOTER - CRYSTALLINE BASE
+           ======================================== */
+        footer {
+            padding: 3rem var(--section-padding);
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 2px solid rgba(77, 208, 225, 0.2);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        footer p {
+            color: var(--deep-blue);
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1.5rem;
+            }
+
+            nav a {
+                font-size: 0.9rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+        }
+
+        /* ========================================
+           ACCESSIBILITY
+           ======================================== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            #snowCanvas {
+                display: none;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* ========================================
+           PERFORMANCE OPTIMIZATIONS
+           ======================================== */
+        .gpu-accelerated {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Snowfall Canvas -->
+    <canvas id="snowCanvas" aria-hidden="true"></canvas>
+
+    <!-- ========================================
+         HEADER & NAVIGATION
+         ======================================== -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">CRYSTAL FROST</a>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="#collections">Collections</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========================================
+         HERO SECTION
+         ======================================== -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Deep Winter<br>Elegance</h1>
+            <p class="tagline">Experience the crystalline beauty of frozen perfection</p>
+            <a href="#collections" class="frozen-btn">Explore Collections</a>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FROSTED GLASS CARDS SECTION
+         ======================================== -->
+    <section class="cards-section" id="collections">
+        <h2 class="section-title">Winter Collections</h2>
+        <div class="cards-grid">
+            <article class="frost-card">
+                <div class="card-icon">â„ï¸</div>
+                <h3 class="card-title">Frost Collection</h3>
+                <p class="card-description">
+                    Delicate patterns inspired by morning frost on windowpanes. 
+                    Each piece captures the ephemeral beauty of ice crystals.
+                </p>
+                <a href="#" class="card-link">View Collection â†’</a>
+            </article>
+
+            <article class="frost-card">
+                <div class="card-icon">ðŸ”·</div>
+                <h3 class="card-title">Crystal Series</h3>
+                <p class="card-description">
+                    Geometric precision meets organic beauty. Sharp-edged designs 
+                    reflecting the clarity of perfect ice formations.
+                </p>
+                <a href="#" class="card-link">Discover More â†’</a>
+            </article>
+
+            <article class="frost-card">
+                <div class="card-icon">ðŸ’Ž</div>
+                <h3 class="card-title">Diamond Winter</h3>
+                <p class="card-description">
+                    Premium luxury pieces with brilliant facets that capture and 
+                    refract light like flawless diamonds in snow.
+                </p>
+                <a href="#" class="card-link">Explore Luxury â†’</a>
+            </article>
+
+            <article class="frost-card">
+                <div class="card-icon">ðŸŒ¨ï¸</div>
+                <h3 class="card-title">Aurora Collection</h3>
+                <p class="card-description">
+                    Ethereal designs inspired by the northern lights dancing over 
+                    frozen landscapes. Subtle color shifts and luminescence.
+                </p>
+                <a href="#" class="card-link">View Aurora â†’</a>
+            </article>
+
+            <article class="frost-card">
+                <div class="card-icon">ðŸ§Š</div>
+                <h3 class="card-title">Glacier Series</h3>
+                <p class="card-description">
+                    Bold, architectural pieces inspired by ancient ice formations. 
+                    Timeless elegance carved by centuries of frozen artistry.
+                </p>
+                <a href="#" class="card-link">Explore Glacier â†’</a>
+            </article>
+
+            <article class="frost-card">
+                <div class="card-icon">âœ¨</div>
+                <h3 class="card-title">Starlight Winter</h3>
+                <p class="card-description">
+                    Twinkling brilliance captured in crystalline forms. Designs 
+                    that shimmer and sparkle like stars on a clear winter night.
+                </p>
+                <a href="#" class="card-link">View Starlight â†’</a>
+            </article>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FEATURES SECTION
+         ======================================== -->
+    <section class="features-section" id="features">
+        <h2 class="section-title">Why Choose Crystal Frost</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">ðŸ”ï¸</div>
+                <h3 class="feature-title">Timeless Elegance</h3>
+                <p class="feature-description">
+                    Designs that transcend seasons, capturing the eternal beauty of winter's perfection.
+                </p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">ðŸ’ </div>
+                <h3 class="feature-title">Precision Craftsmanship</h3>
+                <p class="feature-description">
+                    Every detail meticulously crafted to reflect the sharp precision of ice crystals.
+                </p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">ðŸŒŸ</div>
+                <h3 class="feature-title">Luminous Quality</h3>
+                <p class="feature-description">
+                    Materials that capture and reflect light, creating an ethereal glow.
+                </p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">ðŸŽ¨</div>
+                <h3 class="feature-title">Artistic Vision</h3>
+                <p class="feature-description">
+                    Each collection tells a story of winter's transformative beauty.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer id="about">
+        <p>&copy; 2026 Crystal Frost. Designed by Lead Creative Technologist.</p>
+        <p>Experience the elegance of deep winter and frosted perfection.</p>
+    </footer>
+
+    <!-- ========================================
+         JAVASCRIPT - SNOWFALL & INTERACTIONS
+         ======================================== -->
+    <script>
+        // ========================================
+        // SNOWFALL PARTICLE SYSTEM
+        // ========================================
+        const canvas = document.getElementById('snowCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Snowflake {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height;
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -10;
+                this.radius = Math.random() * 3 + 1;
+                this.speed = Math.random() * 1 + 0.5;
+                this.drift = Math.random() * 0.5 - 0.25;
+                this.opacity = Math.random() * 0.6 + 0.3;
+                this.wobble = Math.random() * Math.PI * 2;
+                this.wobbleSpeed = Math.random() * 0.02 + 0.01;
+            }
+
+            update() {
+                this.wobble += this.wobbleSpeed;
+                this.y += this.speed;
+                this.x += Math.sin(this.wobble) * 0.5 + this.drift;
+
+                // Reset when off screen
+                if (this.y > canvas.height + 10) {
+                    this.reset();
+                } else if (this.x > canvas.width + 10) {
+                    this.x = -10;
+                } else if (this.x < -10) {
+                    this.x = canvas.width + 10;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Add subtle glow
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = 'rgba(77, 208, 225, 0.3)';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // Create snowflakes
+        const snowflakes = [];
+        const snowflakeCount = 100;
+        
+        for (let i = 0; i < snowflakeCount; i++) {
+            snowflakes.push(new Snowflake());
+        }
+
+        // Animation loop
+        function animateSnow() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            snowflakes.forEach(flake => {
+                flake.update();
+                flake.draw();
+            });
+
+            requestAnimationFrame(animateSnow);
+        }
+
+        animateSnow();
+
+        // Resize canvas
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // ========================================
+        // SNOW ACCUMULATION ON CARDS
+        // ========================================
+        const cards = document.querySelectorAll('.frost-card');
+        const cardSnowflakes = new Map();
+
+        cards.forEach(card => {
+            const snowLayer = document.createElement('div');
+            snowLayer.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 0;
+                background: linear-gradient(180deg, 
+                    rgba(255, 255, 255, 0.8) 0%, 
+                    rgba(255, 255, 255, 0.3) 100%);
+                pointer-events: none;
+                transition: height 2s ease-out;
+                border-radius: 20px 20px 0 0;
+                z-index: 1;
+            `;
+            card.style.position = 'relative';
+            card.insertBefore(snowLayer, card.firstChild);
+            cardSnowflakes.set(card, snowLayer);
+
+            // Gradually accumulate snow
+            setTimeout(() => {
+                const maxHeight = Math.random() * 10 + 5;
+                snowLayer.style.height = maxHeight + 'px';
+            }, Math.random() * 2000 + 1000);
+        });
+
+        // ========================================
+        // INTERSECTION OBSERVER - DRIFT IN ANIMATIONS
+        // ========================================
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 150);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe frost cards
+        document.querySelectorAll('.frost-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Observe feature items
+        document.querySelectorAll('.feature-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // ========================================
+        // HEADER SCROLL EFFECT
+        // ========================================
+        const header = document.querySelector('header');
+        let lastScrollY = window.pageYOffset;
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.pageYOffset;
+            
+            if (currentScrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+
+        // ========================================
+        // SMOOTH SCROLL WITH OFFSET
+        // ========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 100;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ========================================
+        // FROZEN THAW INTERACTION
+        // ========================================
+        document.querySelectorAll('.frozen-btn, .card-link').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.filter = 'brightness(1.1)';
+            });
+
+            btn.addEventListener('mouseleave', function() {
+                this.style.filter = 'brightness(1)';
+            });
+        });
+
+        // ========================================
+        // ACCESSIBILITY - KEYBOARD NAVIGATION
+        // ========================================
+        document.querySelectorAll('.frozen-btn, .card-link').forEach(button => {
+            button.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    button.click();
+                }
+            });
+        });
+
+        // ========================================
+        // PERFORMANCE: DEBOUNCE RESIZE
+        // ========================================
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                console.log('Window resized - recalculating layouts');
+            }, 250);
+        });
+
+        // ========================================
+        // INITIAL LOAD PERFORMANCE
+        // ========================================
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AURELIUS â€” High-fidelity digital craft for the world's most ambitious brands.">
+    <title>AURELIUS // Digital Editorial Agency</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Inter:wght@200;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --text: #f5f5f5;
+            --text-dim: #888888;
+            --accent: #c5a059; /* Muted Champagne Gold */
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Inter', sans-serif;
+            --transition: cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        [data-theme="light"] {
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-dim: #666666;
+            --accent: #9d7d43;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            transition: background 0.6s var(--transition);
+        }
+
+        /* --- Custom Loader --- */
+        #loader {
+            position: fixed; inset: 0; background: var(--bg); z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            transition: clip-path 1.2s var(--transition);
+            clip-path: inset(0 0 0 0);
+        }
+        .loader-text { font-family: var(--font-serif); font-style: italic; font-size: 2rem; }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 40px;
+            display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+        }
+        .logo { font-family: var(--font-serif); font-size: 1.5rem; letter-spacing: 2px; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 40px; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; }
+        .theme-toggle { cursor: pointer; background: none; border: none; color: var(--text); }
+
+        /* --- Hero --- */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column; 
+            justify-content: center; padding: 0 10%; position: relative;
+        }
+        .hero-title {
+            font-family: var(--font-serif); font-size: clamp(3rem, 12vw, 9rem);
+            line-height: 0.85; font-weight: 300; letter-spacing: -0.03em;
+            margin-bottom: 40px; opacity: 0; transform: translateY(50px);
+        }
+        .hero-meta {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            border-top: 1px solid var(--text-dim); padding-top: 20px;
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* --- Portfolio Grid --- */
+        .portfolio { padding: 150px 10%; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 100px 60px; }
+        .project-card { position: relative; cursor: pointer; }
+        .project-image {
+            width: 100%; aspect-ratio: 4/5; background: var(--surface);
+            overflow: hidden; margin-bottom: 20px; transition: transform 0.8s var(--transition);
+        }
+        .project-image img { 
+            width: 100%; height: 100%; object-fit: cover; 
+            filter: grayscale(100%); transition: 0.8s var(--transition);
+        }
+        .project-card:hover .project-image img { filter: grayscale(0%); transform: scale(1.05); }
+        .project-info { display: flex; justify-content: space-between; font-family: var(--font-serif); font-size: 1.5rem; }
+        .project-category { font-family: var(--font-sans); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); }
+
+        /* --- Content Sections --- */
+        .section-header { margin-bottom: 80px; max-width: 600px; }
+        .section-header h2 { font-family: var(--font-serif); font-size: 4rem; font-weight: 300; }
+
+        /* --- Pricing & CTA --- */
+        .cta-box {
+            background: var(--surface); padding: 100px; text-align: center;
+            margin: 100px 10%; border-radius: 2px;
+        }
+        .btn {
+            display: inline-block; padding: 20px 40px; border: 1px solid var(--text);
+            text-decoration: none; color: var(--text); font-size: 0.7rem;
+            letter-spacing: 3px; text-transform: uppercase; transition: 0.4s;
+        }
+        .btn:hover { background: var(--text); color: var(--bg); }
+
+        /* --- Animations --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1.2s var(--transition); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; gap: 40px; }
+            nav { padding: 20px; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader"><div class="loader-text">Aurelius_</div></div>
+
+    <nav>
+        <div class="logo">Aurelius</div>
+        <div class="nav-links">
+            <a href="#work" style="color:inherit; text-decoration:none;">Work</a>
+            <a href="#about" style="color:inherit; text-decoration:none;">Philosophy</a>
+            <a href="#contact" style="color:inherit; text-decoration:none;">Contact</a>
+            <button class="theme-toggle" id="themeBtn">â—</button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h1 class="hero-title" id="mainTitle">Crafting<br>Digital<br><i>Legacies.</i></h1>
+            <div class="hero-meta">
+                <span>EST. 2024 / London</span>
+                <span style="max-width: 250px;">Bespoke Digital Strategy for High-Net-Worth Entities.</span>
+            </div>
+        </section>
+
+        <section class="portfolio" id="work">
+            <div class="section-header reveal">
+                <h2>Selected Artifacts</h2>
+            </div>
+            <div class="grid">
+                <div class="project-card reveal">
+                    <div class="project-image">
+                        <div style="width:100%; height:100%; background: linear-gradient(45deg, #111, #222);"></div>
+                    </div>
+                    <div class="project-info">
+                        <span>Lumina Velum</span>
+                        <span class="project-category">E-Commerce</span>
+                    </div>
+                </div>
+                <div class="project-card reveal" style="margin-top: 60px;">
+                    <div class="project-image">
+                        <div style="width:100%; height:100%; background: linear-gradient(45deg, #1a1a1a, #050505);"></div>
+                    </div>
+                    <div class="project-info">
+                        <span>The Obsidian</span>
+                        <span class="project-category">Identity</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-box reveal">
+            <h2 style="font-family: var(--font-serif); font-size: 3rem; margin-bottom: 40px;">Ready to transcend the ordinary?</h2>
+            <a href="mailto:hello@aurelius.com" class="btn">Initiate Discussion</a>
+        </section>
+    </main>
+
+    <footer style="padding: 40px 10%; border-top: 1px solid var(--surface); display: flex; justify-content: space-between; font-size: 0.6rem; letter-spacing: 2px; color: var(--text-dim);">
+        <div>&copy; 2026 AURELIUS DIGITAL</div>
+        <div>ALL RIGHTS RESERVED</div>
+    </footer>
+
+    <script>
+        // --- Loader Logic ---
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            const title = document.getElementById('mainTitle');
+            
+            setTimeout(() => {
+                loader.style.clipPath = 'inset(0 0 100% 0)';
+                title.style.opacity = '1';
+                title.style.transform = 'translateY(0)';
+                title.style.transition = '1.5s var(--transition)';
+            }, 1000);
+        });
+
+        // --- Intersection Observer for Reveals ---
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Theme Switching ---
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', nextTheme);
+        });
+
+        // --- Smooth Parallax for Project Images ---
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const images = document.querySelectorAll('.project-image');
+            
+            images.forEach(img => {
+                const speed = 0.05;
+                const rect = img.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    img.style.transform = `translateY(${rect.top * speed}px)`;
+                }
+            });
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

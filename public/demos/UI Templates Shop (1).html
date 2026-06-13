@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>UI Templates Shop</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816; --primary: #6366f1; --text: #e5e7eb; --muted: #9ca3af;
+      --radius-lg: 18px; --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.6);
+    }
+    body {
+      font-family: system-ui, sans-serif; background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+      color: var(--text); line-height: 1.6;
+    }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 1.25rem; }
+    header {
+      position: sticky; top: 0; z-index: 40; backdrop-filter: blur(18px);
+      background: rgba(15, 23, 42, 0.72); border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 0; }
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #4f46e5); color: white;
+      padding: 0.45rem 1.1rem; border-radius: 999px; border: none; cursor: pointer;
+    }
+    .hero { padding: 4rem 0; display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.4rem; align-items: center; }
+    .hero-title { font-size: clamp(2rem, 4vw, 2.9rem); font-weight: 800; }
+    .hero-title span { background: linear-gradient(120deg, #22c55e, #6366f1); -webkit-background-clip: text; color: transparent; }
+    .templates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.2rem; }
+    .card {
+      border-radius: var(--radius-lg); padding: 0.9rem; background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9); transition: transform 0.2s;
+    }
+    .card:hover { transform: translateY(-6px); border-color: var(--primary); }
+  </style>
+</head>
+<body>
+  <header><div class="container"><nav class="nav"><strong>UI SHOP</strong><button class="btn-primary">Get Bundle</button></nav></div></header>
+  <main class="container">
+    <section class="hero">
+      <div>
+        <h1 class="hero-title">Smooth UI templates for <span>shops & SaaS</span></h1>
+        <p style="color:var(--muted); margin: 1rem 0;">Browse beautifully crafted website templates with glassmorphism.</p>
+      </div>
+    </section>
+    <div class="templates-grid">
+      <article class="card">
+        <h3>Aurora Shop Landing</h3>
+        <p style="font-size: 0.8rem; color: var(--muted);">Glassmorphism e-commerce hero.</p>
+        <div style="margin-top: 1rem; font-weight: 700;">$18</div>
+      </article>
+    </div>
+  </main>
+<script src="../template-injector.js"></script>
+</body>
+</html>

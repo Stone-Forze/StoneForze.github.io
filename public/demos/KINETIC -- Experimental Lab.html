@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KINETIC // Experimental Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #080808;
+            --text: #ffffff;
+            --accent: #ff3e00;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* We will use a custom scroll container */
+        }
+
+        /* --- Liquid Cursor --- */
+        #cursor {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            background: var(--text);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* --- SVG Liquid Filter --- */
+        .liquid-container {
+            filter: url('#gooey');
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- Scroll Wrapper --- */
+        #scroll-wrapper {
+            display: flex;
+            width: 400vw; /* 4 sections wide */
+            height: 100vh;
+            will-change: transform;
+        }
+
+        section {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+        }
+
+        .giant-text {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(5rem, 20vw, 15rem);
+            line-height: 0.8;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            transition: transform 0.2s ease-out;
+            user-select: none;
+        }
+
+        .morph-box {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            z-index: -1;
+            animation: morphing 8s infinite alternate ease-in-out;
+            filter: blur(40px);
+            opacity: 0.6;
+        }
+
+        @keyframes morphing {
+            0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: scale(1) rotate(0deg); }
+            100% { border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%; transform: scale(1.2) rotate(180deg); }
+        }
+
+        /* --- Nav Overlay --- */
+        .ui-overlay {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            z-index: 1000;
+            font-family: 'Syncopate';
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0; left: 0;
+            height: 2px;
+            background: var(--accent);
+            width: 0%;
+            z-index: 1001;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scroll-progress" id="progress"></div>
+    <div id="cursor"></div>
+    <div class="ui-overlay">KINETIC_LAB // 2026</div>
+
+    <svg style="display:none;">
+        <defs>
+            <filter id="gooey">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+            </filter>
+        </defs>
+    </svg>
+
+    <div id="scroll-wrapper">
+        <section>
+            <div class="morph-box"></div>
+            <h1 class="giant-text" data-speed="0.1">Evolve</h1>
+        </section>
+        
+        <section>
+            <h1 class="giant-text" data-speed="-0.1" style="color: transparent; -webkit-text-stroke: 1px white;">Fluid</h1>
+        </section>
+
+        <section>
+            <div class="morph-box" style="background: #00f0ff;"></div>
+            <h1 class="giant-text" data-speed="0.2">Shift</h1>
+        </section>
+
+        <section>
+            <h1 class="giant-text">End.</h1>
+        </section>
+    </div>
+
+    <script>
+        const scrollWrapper = document.getElementById('scroll-wrapper');
+        const cursor = document.getElementById('cursor');
+        const progress = document.getElementById('progress');
+        
+        let currentScroll = 0;
+        let targetScroll = 0;
+        let ease = 0.05;
+
+        // --- Custom Horizontal Smooth Scroll ---
+        window.addEventListener('wheel', (e) => {
+            targetScroll += e.deltaY;
+            // Clamp scroll
+            targetScroll = Math.max(0, Math.min(targetScroll, window.innerWidth * 3));
+        });
+
+        function animate() {
+            // Smooth easing math
+            currentScroll += (targetScroll - currentScroll) * ease;
+            
+            // Apply horizontal transform
+            scrollWrapper.style.transform = `translateX(-${currentScroll}px)`;
+            
+            // Update progress bar
+            const maxScroll = window.innerWidth * 3;
+            progress.style.width = `${(currentScroll / maxScroll) * 100}%`;
+
+            // Parallax effect on text
+            document.querySelectorAll('.giant-text').forEach(text => {
+                const speed = text.getAttribute('data-speed') || 0;
+                const shift = currentScroll * speed;
+                text.style.transform = `skewX(${(targetScroll - currentScroll) * 0.1}deg) translateX(${shift}px)`;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // --- Interactive Cursor ---
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 20 + 'px';
+            cursor.style.top = e.clientY - 20 + 'px';
+            
+            // Scale cursor on movement speed
+            const velocity = Math.abs(e.movementX) + Math.abs(e.movementY);
+            const scale = 1 + (velocity * 0.05);
+            cursor.style.transform = `scale(${Math.min(scale, 3)})`;
+        });
+
+        // Click interaction
+        document.addEventListener('mousedown', () => cursor.style.transform += ' scale(0.5)');
+        document.addEventListener('mouseup', () => cursor.style.transform = 'scale(1)');
+
+        animate();
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

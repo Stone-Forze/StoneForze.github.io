@@ -1,0 +1,772 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Archaeology Terminal v1.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00FF00;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* CRT Screen Effect */
+        .crt {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: #0a0a0a;
+            overflow: hidden;
+        }
+
+        /* Scanlines overlay */
+        .crt::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+            animation: scanlines 8s linear infinite;
+        }
+
+        /* Flicker animation */
+        .crt::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(18, 16, 16, 0.1);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes scanlines {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(10px);
+            }
+        }
+
+        @keyframes flicker {
+            0% {
+                opacity: 0.27861;
+            }
+            5% {
+                opacity: 0.34769;
+            }
+            10% {
+                opacity: 0.23604;
+            }
+            15% {
+                opacity: 0.90626;
+            }
+            20% {
+                opacity: 0.18128;
+            }
+            25% {
+                opacity: 0.83891;
+            }
+            30% {
+                opacity: 0.65583;
+            }
+            35% {
+                opacity: 0.67807;
+            }
+            40% {
+                opacity: 0.26559;
+            }
+            45% {
+                opacity: 0.84693;
+            }
+            50% {
+                opacity: 0.96019;
+            }
+            55% {
+                opacity: 0.08594;
+            }
+            60% {
+                opacity: 0.20313;
+            }
+            65% {
+                opacity: 0.71988;
+            }
+            70% {
+                opacity: 0.53455;
+            }
+            75% {
+                opacity: 0.37288;
+            }
+            80% {
+                opacity: 0.71428;
+            }
+            85% {
+                opacity: 0.70419;
+            }
+            90% {
+                opacity: 0.7003;
+            }
+            95% {
+                opacity: 0.36108;
+            }
+            100% {
+                opacity: 0.24387;
+            }
+        }
+
+        /* Green glow effect */
+        .glow {
+            text-shadow: 
+                0 0 5px #00FF00,
+                0 0 10px #00FF00,
+                0 0 15px #00FF00,
+                0 0 20px #00FF00;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px solid #00FF00;
+            padding: 15px;
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Main content area */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Excavator panel */
+        .excavator-panel {
+            border: 2px solid #00FF00;
+            padding: 15px;
+            background: rgba(0, 255, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .excavator-panel h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #00FF00;
+            padding-bottom: 5px;
+        }
+
+        /* Dig button */
+        .dig-button {
+            background: transparent;
+            border: 2px solid #00FF00;
+            color: #00FF00;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .dig-button:hover {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 20px #00FF00;
+        }
+
+        .dig-button:active {
+            transform: scale(0.98);
+        }
+
+        .dig-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading bar */
+        .loading-container {
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading-container.active {
+            display: block;
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 30px;
+            border: 2px solid #00FF00;
+            position: relative;
+            overflow: hidden;
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .loading-fill {
+            height: 100%;
+            background: #00FF00;
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px #00FF00;
+        }
+
+        .loading-text {
+            margin-top: 10px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Artifact display */
+        .artifact-display {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #00FF00;
+            padding: 10px;
+            background: rgba(0, 255, 0, 0.02);
+        }
+
+        .artifact {
+            border: 1px solid #00FF00;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(0, 255, 0, 0.05);
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .artifact-header {
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .artifact-content {
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .artifact-image {
+            border: 1px solid #00FF00;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            background: rgba(0, 255, 0, 0.03);
+        }
+
+        /* Log panel */
+        .log-panel {
+            border: 2px solid #00FF00;
+            padding: 15px;
+            background: rgba(0, 255, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-panel h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #00FF00;
+            padding-bottom: 5px;
+        }
+
+        .log-display {
+            flex: 1;
+            overflow-y: auto;
+            font-size: 11px;
+            line-height: 1.4;
+            border: 1px solid #00FF00;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .log-entry {
+            margin-bottom: 3px;
+            opacity: 0;
+            animation: typeIn 0.1s forwards;
+        }
+
+        @keyframes typeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .log-entry.system {
+            color: #00FF00;
+        }
+
+        .log-entry.warning {
+            color: #FFFF00;
+        }
+
+        .log-entry.error {
+            color: #FF0000;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00FF00;
+            box-shadow: 0 0 5px #00FF00;
+        }
+
+        /* Cursor blink */
+        .cursor {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% {
+                opacity: 1;
+            }
+            50%, 100% {
+                opacity: 0;
+            }
+        }
+
+        /* Stats display */
+        .stats {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #00FF00;
+            background: rgba(0, 255, 0, 0.05);
+            font-size: 12px;
+        }
+
+        .stat-line {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="crt">
+        <div class="container glow">
+            <div class="header">
+                <h1>â—† DIGITAL ARCHAEOLOGY TERMINAL v1.0 â—†</h1>
+                <p>SYSTEM INITIALIZED | EXCAVATION PROTOCOLS ACTIVE | [CLASSIFIED]</p>
+            </div>
+
+            <div class="main-content">
+                <div class="excavator-panel">
+                    <h2>[ DIGITAL EXCAVATOR ]</h2>
+                    <button class="dig-button glow" id="digButton">â–º INITIATE DIG SEQUENCE</button>
+                    
+                    <div class="loading-container" id="loadingContainer">
+                        <div class="loading-bar">
+                            <div class="loading-fill" id="loadingFill"></div>
+                        </div>
+                        <div class="loading-text" id="loadingText">Connecting via 56k modem... 0%</div>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat-line">ARTIFACTS RECOVERED: <span id="artifactCount">0</span></div>
+                        <div class="stat-line">EXCAVATIONS: <span id="digCount">0</span></div>
+                        <div class="stat-line">CONNECTION: 56k V.90</div>
+                        <div class="stat-line">STATUS: <span id="status">READY</span></div>
+                    </div>
+
+                    <div class="artifact-display" id="artifactDisplay">
+                        <div style="text-align: center; opacity: 0.5; margin-top: 50px;">
+                            [ NO ARTIFACTS RECOVERED ]<br>
+                            <span class="cursor">â–ˆ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="log-panel">
+                    <h2>[ SYSTEM LOG ]</h2>
+                    <div class="log-display" id="logDisplay"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Artifact database
+        const artifacts = [
+            {
+                type: "NETSCAPE NAVIGATOR ICON",
+                content: "A perfectly preserved icon from Netscape Navigator 3.0. The blue 'N' with stars circling around it - the gateway to the World Wide Web for millions.",
+                ascii: `
+    â•”â•â•â•â•â•â•â•â•—
+    â•‘ â˜…  N  â•‘
+    â•‘ â˜…   â˜… â•‘
+    â•šâ•â•â•â•â•â•â•â•
+    NETSCAPE`
+            },
+            {
+                type: "UNDER CONSTRUCTION GIF",
+                content: "The legendary animated construction worker. Found on 87% of all websites between 1995-1998. Still digging after all these years.",
+                ascii: `
+    âš ï¸ UNDER âš ï¸
+    CONSTRUCTION
+    ðŸ‘·â€â™‚ï¸ ðŸš§ ðŸ‘·â€â™‚ï¸
+    [ANIMATED]`
+            },
+            {
+                type: "DANCING BABY GIF",
+                content: "The viral sensation that predated viral sensations. A 3D rendered baby dancing in an endless loop. Shared via email chains across the globe.",
+                ascii: `
+    ðŸ‘¶
+   /|\\
+   / \\
+   DANCING
+   [LOOPING]`
+            },
+            {
+                type: "VISITOR COUNTER",
+                content: "A precious hit counter widget. This one shows '000042' visits. Every webmaster's pride and joy, tracking each precious visitor.",
+                ascii: `
+    â•”â•â•â•â•â•â•â•â•â•â•â•â•—
+    â•‘ VISITORS: â•‘
+    â•‘  000042   â•‘
+    â•šâ•â•â•â•â•â•â•â•â•â•â•â•`
+            },
+            {
+                type: "GEOCITIES HOMEPAGE",
+                content: "Fragment of a GeoCities page from the 'CapeCanaveral' neighborhood. Features tiled space background, Comic Sans headers, and at least 7 different font colors.",
+                ascii: `
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    WELCOME 2 MY
+    HOMEPAGE!!!1!
+    [MIDI PLAYING]
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`
+            },
+            {
+                type: "MAILTO: LINK",
+                content: "An ancient communication protocol. Click here to open your email client and send a message to webmaster@domain.com. Hope you have Outlook Express installed!",
+                ascii: `
+    â•”â•â•â•â•â•â•â•â•â•â•â•â•—
+    â•‘  ðŸ“§ EMAIL â•‘
+    â•‘   ME!!!   â•‘
+    â•šâ•â•â•â•â•â•â•â•â•â•â•â•`
+            },
+            {
+                type: "FLAME GIF DIVIDER",
+                content: "Horizontal rule replacement. Animated flames that separated content sections with MAXIMUM COOLNESS. Found in 'cool_gifs' folder.",
+                ascii: `
+    ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥
+    [ANIMATED]
+    ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥`
+            },
+            {
+                type: "FRAMES LAYOUT",
+                content: "A frameset structure dividing the page into navigation, content, and banner areas. Breaking the back button since 1996.",
+                ascii: `
+    â”Œâ”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”
+    â”‚ NAV â”‚ MAIN â”‚
+    â”‚     â”‚      â”‚
+    â””â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”˜
+    [FRAMESET]`
+            },
+            {
+                type: "GUESTBOOK ENTRY",
+                content: "A signed guestbook entry: 'UR SITE ROCKS!!! - xXCoolDude99Xx' Left on 03/15/1997 at 2:34 PM. IP logged for posterity.",
+                ascii: `
+    â•”â•â•â•â•â•â•â•â•â•â•â•â•—
+    â•‘ GUESTBOOK â•‘
+    â•‘ ENTRY #42 â•‘
+    â•‘ â˜…â˜…â˜…â˜…â˜…     â•‘
+    â•šâ•â•â•â•â•â•â•â•â•â•â•â•`
+            },
+            {
+                type: "MARQUEE TAG",
+                content: "The legendary <marquee> element. Text scrolling infinitely from right to left. Accessibility nightmare, nostalgia dream.",
+                ascii: `
+    â—„â•â•â•â•â•â•â•â•â•â•â•
+    SCROLLING...
+    â•â•â•â•â•â•â•â•â•â•â•â–º
+    [MARQUEE]`
+            },
+            {
+                type: "JAVA APPLET",
+                content: "A fossilized Java applet. Requires JRE 1.1 to run. Status: Loading... (It's been loading since 1998)",
+                ascii: `
+    â•”â•â•â•â•â•â•â•â•â•â•â•â•—
+    â•‘   JAVA    â•‘
+    â•‘  APPLET   â•‘
+    â•‘ LOADING...â•‘
+    â•šâ•â•â•â•â•â•â•â•â•â•â•â•`
+            },
+            {
+                type: "BLINK TAG",
+                content: "The infamous <blink> tag. Made text flash on and off. Banned by the Geneva Convention of Web Design (probably).",
+                ascii: `
+    â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“
+    â–‘ BLINKING â–‘
+    â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“â–“
+    [SEIZURE WARNING]`
+            },
+            {
+                type: "WEBRING BADGE",
+                content: "A portal to the ancient web ring network. 'Next Site | Previous Site | Random'. Communities before social media.",
+                ascii: `
+    â•”â•â•â•â•â•â•â•â•â•â•â•â•—
+    â•‘  WEBRING  â•‘
+    â•‘ â† SITE â†’ â•‘
+    â•šâ•â•â•â•â•â•â•â•â•â•â•â•`
+            },
+            {
+                type: "MIDI BACKGROUND MUSIC",
+                content: "auto-play MIDI file detected: 'song.mid'. Plays automatically on page load. Volume control? What's that?",
+                ascii: `
+    â™ªâ™«â™ªâ™«â™ªâ™«â™ªâ™«
+    NOW PLAYING:
+    untitled.mid
+    â™ªâ™«â™ªâ™«â™ªâ™«â™ªâ™«`
+            },
+            {
+                type: "BEST VIEWED IN...",
+                content: "Browser recommendation badge: 'Best viewed in Internet Explorer 4.0 at 800x600 resolution'. Compatibility was optional.",
+                ascii: `
+    â•”â•â•â•â•â•â•â•â•â•â•â•â•—
+    â•‘BEST VIEWEDâ•‘
+    â•‘    IN     â•‘
+    â•‘  IE 4.0   â•‘
+    â•šâ•â•â•â•â•â•â•â•â•â•â•â•`
+            }
+        ];
+
+        // System variables
+        let digCount = 0;
+        let artifactCount = 0;
+        let isDigging = false;
+
+        // DOM elements
+        const digButton = document.getElementById('digButton');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const loadingFill = document.getElementById('loadingFill');
+        const loadingText = document.getElementById('loadingText');
+        const artifactDisplay = document.getElementById('artifactDisplay');
+        const logDisplay = document.getElementById('logDisplay');
+        const digCountDisplay = document.getElementById('digCount');
+        const artifactCountDisplay = document.getElementById('artifactCount');
+        const statusDisplay = document.getElementById('status');
+
+        // Initialize system log
+        function initializeLog() {
+            const bootMessages = [
+                'SYSTEM BOOT SEQUENCE INITIATED...',
+                'LOADING BIOS v2.1.3',
+                'CPU: Intel 486DX2 66MHz',
+                'RAM: 16MB OK',
+                'HDD: 540MB DETECTED',
+                'INITIALIZING NETWORK ADAPTER...',
+                'MODEM: US Robotics 56K V.90',
+                'LOADING EXCAVATION PROTOCOLS...',
+                'CONNECTING TO WAYBACK MACHINE...',
+                'TEMPORAL STABILIZERS: ONLINE',
+                'ARTIFACT DATABASE: LOADED',
+                'ALL SYSTEMS NOMINAL',
+                'â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•',
+                'DIGITAL ARCHAEOLOGY TERMINAL READY',
+                'AWAITING USER INPUT...'
+            ];
+
+            bootMessages.forEach((msg, index) => {
+                setTimeout(() => {
+                    addLogEntry(msg, 'system');
+                }, index * 150);
+            });
+        }
+
+        // Add log entry
+        function addLogEntry(message, type = 'system') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDisplay.appendChild(entry);
+            logDisplay.scrollTop = logDisplay.scrollHeight;
+        }
+
+        // Simulate 56k loading
+        function simulate56kLoading() {
+            return new Promise((resolve) => {
+                let progress = 0;
+                const duration = 5000; // 5 seconds
+                const steps = 100;
+                const interval = duration / steps;
+
+                loadingContainer.classList.add('active');
+                digButton.disabled = true;
+                statusDisplay.textContent = 'EXCAVATING';
+
+                const loadingMessages = [
+                    'Establishing connection...',
+                    'Handshaking with remote server...',
+                    'Downloading artifact data...',
+                    'Decoding transmission...',
+                    'Reconstructing fragments...',
+                    'Verifying integrity...',
+                    'Finalizing recovery...'
+                ];
+
+                const loadingInterval = setInterval(() => {
+                    progress += 1;
+                    loadingFill.style.width = progress + '%';
+                    
+                    const messageIndex = Math.floor((progress / 100) * loadingMessages.length);
+                    const message = loadingMessages[Math.min(messageIndex, loadingMessages.length - 1)];
+                    loadingText.textContent = `${message} ${progress}%`;
+
+                    // Random connection hiccups
+                    if (Math.random() < 0.1) {
+                        loadingText.textContent = `Connection interrupted... Retrying... ${progress}%`;
+                    }
+
+                    if (progress >= 100) {
+                        clearInterval(loadingInterval);
+                        loadingText.textContent = 'ARTIFACT RECOVERED! 100%';
+                        setTimeout(() => {
+                            loadingContainer.classList.remove('active');
+                            loadingFill.style.width = '0%';
+                            digButton.disabled = false;
+                            statusDisplay.textContent = 'READY';
+                            resolve();
+                        }, 500);
+                    }
+                }, interval);
+            });
+        }
+
+        // Display artifact
+        function displayArtifact(artifact) {
+            const artifactElement = document.createElement('div');
+            artifactElement.className = 'artifact glow';
+            
+            const timestamp = new Date().toLocaleString();
+            
+            artifactElement.innerHTML = `
+                <div class="artifact-header">
+                    â–º ARTIFACT RECOVERED: ${artifact.type}
+                    <br>TIMESTAMP: ${timestamp}
+                </div>
+                <div class="artifact-content">
+                    ${artifact.content}
+                </div>
+                <div class="artifact-image">
+                    <pre>${artifact.ascii}</pre>
+                </div>
+            `;
+
+            // Clear placeholder if it's the first artifact
+            if (artifactCount === 0) {
+                artifactDisplay.innerHTML = '';
+            }
+
+            artifactDisplay.insertBefore(artifactElement, artifactDisplay.firstChild);
+            artifactCount++;
+            artifactCountDisplay.textContent = artifactCount;
+        }
+
+        // Dig sequence
+        async function startDigSequence() {
+            if (isDigging) return;
+            
+            isDigging = true;
+            digCount++;
+            digCountDisplay.textContent = digCount;
+
+            addLogEntry('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•', 'system');
+            addLogEntry(`EXCAVATION #${digCount} INITIATED`, 'system');
+            addLogEntry('Scanning temporal coordinates...', 'system');
+            addLogEntry('Target: Early Web Era (1995-2002)', 'system');
+            addLogEntry('Initiating 56k modem connection...', 'system');
+
+            // Simulate modem sounds in log
+            setTimeout(() => addLogEntry('*SCREECH* *BEEP* *BOOP* *STATIC*', 'system'), 500);
+            setTimeout(() => addLogEntry('Connection established at 52.8 kbps', 'system'), 1500);
+
+            await simulate56kLoading();
+
+            // Select random artifact
+            const randomArtifact = artifacts[Math.floor(Math.random() * artifacts.length)];
+            
+            addLogEntry(`ARTIFACT DETECTED: ${randomArtifact.type}`, 'system');
+            addLogEntry('Transferring data packets...', 'system');
+            addLogEntry('Reconstruction complete!', 'system');
+            addLogEntry('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•', 'system');
+
+            displayArtifact(randomArtifact);
+
+            isDigging = false;
+        }
+
+        // Event listeners
+        digButton.addEventListener('click', startDigSequence);
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            initializeLog();
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

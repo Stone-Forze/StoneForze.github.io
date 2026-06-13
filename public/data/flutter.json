@@ -1,0 +1,57 @@
+{
+  "category": "flutter",
+  "subcategories": [
+    {
+      "label": "Flutter Applications",
+      "icon": "🦋",
+      "projects": [
+        {
+          "title": "StoneShop E-Commerce",
+          "description": "Full-featured cross-platform retail application built with Flutter. Integrated Firebase authentication, real-time product inventory sync, cart caching, and Razorpay payment integration.",
+          "featured": true,
+          "status": "active",
+          "year": "2024",
+          "platform": "Android+iOS",
+          "screens": 10,
+          "thumbnailEmoji": "🛍️",
+          "thumbnailBg": "linear-gradient(135deg, #0369a1 0%, #0c4a6e 100%)",
+          "thumbnailUrl": "",
+          "keyFeatures": [
+            "Firebase User Auth",
+            "Real-time Product Sync",
+            "Cart Local Caching",
+            "Razorpay Payment Gateway"
+          ],
+          "tags": ["Flutter", "Dart", "Firebase", "State Management", "Razorpay"],
+          "links": {
+            "playstore": "https://play.google.com/store/apps/details?id=com.stoneforze.stoneshop",
+            "github": "https://github.com/stonemz/stoneshop-flutter"
+          }
+        },
+        {
+          "title": "FinSight Wallet Tracker",
+          "description": "Beautiful expense logging and budgeting application. Includes graphical category breakdowns, monthly spending goal notifications, and CSV file data backup export.",
+          "featured": true,
+          "status": "sample",
+          "year": "2024",
+          "platform": "Android+iOS",
+          "screens": 6,
+          "thumbnailEmoji": "💳",
+          "thumbnailBg": "linear-gradient(135deg, #4d7c0f 0%, #1a2e05 100%)",
+          "thumbnailUrl": "",
+          "keyFeatures": [
+            "Graphical Category Analysis",
+            "Monthly Budget Goals",
+            "CSV Backup Export",
+            "Hive DB State Management"
+          ],
+          "tags": ["Flutter", "Dart", "Hive DB", "Provider", "FlChart"],
+          "links": {
+            "playstore": "",
+            "github": "https://github.com/stonemz/finsight-wallet"
+          }
+        }
+      ]
+    }
+  ]
+}

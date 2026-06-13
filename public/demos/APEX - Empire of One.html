@@ -1,0 +1,436 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX | Empire of One</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS RESET & VARIABLES --- */
+        :root {
+            --bg-color: #050505;
+            --card-bg: #0a0a0a;
+            --text-main: #e0e0e0;
+            --text-muted: #666;
+            --accent: #00f3ff; /* Electric Cyan */
+            --accent-dim: rgba(0, 243, 255, 0.1);
+            --font-head: 'Oswald', sans-serif;
+            --font-code: 'Roboto Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Custom cursor activated */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-code);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background-color: var(--accent);
+        }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid var(--accent);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        /* --- NOISE OVERLAY (Gritty Texture) --- */
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: 900;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            font-family: var(--font-head);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.1;
+        }
+        
+        .highlight { color: var(--accent); }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5,5,5,0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+        .nav-items a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .nav-items a:hover { color: var(--accent); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+            background: radial-gradient(circle at 80% 50%, rgba(0, 243, 255, 0.05) 0%, transparent 50%);
+        }
+
+        .hero-text { z-index: 2; max-width: 800px; }
+
+        .hero h1 {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: slideIn 1s ease forwards 0.5s;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            border-left: 3px solid var(--accent);
+            padding-left: 1rem;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 1s;
+        }
+
+        .btn-glitch {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 15px 40px;
+            font-family: var(--font-code);
+            font-weight: 700;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .btn-glitch:hover {
+            background: var(--accent);
+            color: var(--bg-color);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        /* --- THE MINDSET (Grid) --- */
+        section { padding: 6rem 10%; border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            text-align: right;
+            position: relative;
+        }
+        
+        .section-title::before {
+            content: '//';
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.4s;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--white); }
+        .card p { color: var(--text-muted); font-size: 0.9rem; }
+        .card-num {
+            position: absolute;
+            top: 10px; right: 20px;
+            font-size: 3rem;
+            font-family: var(--font-head);
+            color: rgba(255,255,255,0.03);
+        }
+
+        /* --- STATS / HUSTLE --- */
+        .stats-section {
+            display: flex;
+            justify-content: space-between;
+            background: #080808;
+            padding: 4rem 10%;
+        }
+        
+        .stat-box { text-align: center; }
+        .stat-box h2 { font-size: 4rem; color: var(--accent); margin-bottom: 0; }
+        .stat-box p { font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+
+        /* --- MANIFESTO (Scrolling Text) --- */
+        .marquee {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            background: var(--accent);
+            color: var(--bg-color);
+            padding: 1rem 0;
+            font-family: var(--font-head);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transform: rotate(-2deg) scale(1.1);
+            margin: 4rem 0;
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- CONTACT / FOOTER --- */
+        .footer {
+            text-align: center;
+            padding: 4rem 0;
+        }
+        
+        .footer h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .footer a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); }
+
+        /* --- ANIMATIONS --- */
+        @keyframes slideIn {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3.5rem; }
+            .stats-section { flex-direction: column; gap: 3rem; }
+            .cursor-dot, .cursor-outline { display: none; } /* Default cursor on touch */
+            * { cursor: auto; }
+            .section-title { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <div class="noise"></div>
+
+    <nav>
+        <div class="logo">APEX</div>
+        <div class="nav-items">
+            <a href="#mindset">MINDSET</a>
+            <a href="#vision">VISION</a>
+            <a href="#contact">JOIN</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-text">
+            <h1 id="typewriter"></h1>
+            <p>Validation is a luxury I do not can afford. I build in silence.</p>
+            <button class="btn-glitch">Enter The Arena</button>
+        </div>
+    </header>
+
+    <div class="marquee">
+        <div class="marquee-content">
+             NO DISTRACTIONS // PURE FOCUS // BUILD THE EMPIRE // WALK ALONE // NO DISTRACTIONS // PURE FOCUS // BUILD THE EMPIRE // WALK ALONE
+        </div>
+    </div>
+
+    <section id="mindset">
+        <div class="section-title reveal">
+            <h2>The Code</h2>
+        </div>
+        <div class="grid-container">
+            <div class="card reveal">
+                <span class="card-num">01</span>
+                <h3>Solitude</h3>
+                <p>Solitude is not loneliness. It is the only place where the mind sharpens itself. While they party, I plan.</p>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.1s;">
+                <span class="card-num">02</span>
+                <h3>Discipline</h3>
+                <p>Motivation is fleeting. Discipline is reliable. I do what needs to be done, regardless of how I feel.</p>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.2s;">
+                <span class="card-num">03</span>
+                <h3>Stoicism</h3>
+                <p>I cannot control the world, but I command my mind. Emotions are data, not directives.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section reveal" id="vision">
+        <div class="stat-box">
+            <h2>100%</h2>
+            <p>Focus</p>
+        </div>
+        <div class="stat-box">
+            <h2>0</h2>
+            <p>Excuses</p>
+        </div>
+        <div class="stat-box">
+            <h2>1</h2>
+            <p>Goal</p>
+        </div>
+    </section>
+
+    <section style="background: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop') no-repeat center/cover; height: 60vh; position: relative; display:flex; align-items:center; justify-content:center; background-attachment: fixed;">
+        <div style="background: rgba(0,0,0,0.7); padding: 2rem; border: 1px solid var(--accent); backdrop-filter: blur(5px);">
+            <h2 style="color: var(--white); font-size: 2.5rem; text-align: center;">"The wolf on the hill is never as hungry <br>as the wolf climbing the hill."</h2>
+        </div>
+    </section>
+
+    <footer class="footer" id="contact">
+        <div class="reveal">
+            <h2>Built Different.</h2>
+            <p style="color: #666; margin-bottom: 2rem;">Ready to level up?</p>
+            <a href="#">Contact Me</a>
+        </div>
+        <p style="margin-top: 4rem; font-size: 0.7rem; color: #333;">&copy; 2024 APEX. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // --- 1. TYPEWRITER EFFECT ---
+        const textElement = document.getElementById("typewriter");
+        const phrases = ["I WALK ALONE.", "EMPIRE OF ONE.", "SILENCE IS GOLD."];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+            
+            if (isDeleting) {
+                textElement.innerText = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                textElement.innerText = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = 100;
+
+            if (isDeleting) typeSpeed /= 2;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                isDeleting = true;
+                typeSpeed = 2000; // Pause at end
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        document.addEventListener('DOMContentLoaded', type);
+
+        // --- 2. CUSTOM CURSOR ---
+        const cursorDot = document.querySelector("[data-cursor-dot]");
+        const cursorOutline = document.querySelector("[data-cursor-outline]");
+
+        window.addEventListener("mousemove", function (e) {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            // Add a slight delay/lag to the outline for smooth feel
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Hover effect on links/buttons to expand cursor
+        const interactables = document.querySelectorAll('a, button, .card');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.width = '70px';
+                cursorOutline.style.height = '70px';
+                cursorOutline.style.backgroundColor = 'rgba(0, 243, 255, 0.1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.width = '40px';
+                cursorOutline.style.height = '40px';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // --- 3. SCROLL REVEAL ANIMATION ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BATTLEGROUNDS - Survivor Landing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pubg-yellow: #f2a900;
+            --pubg-dark: #121212;
+            --pubg-grey: #2a2a2a;
+            --text-white: #eeeeee;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            cursor: crosshair; /* Tactical cursor */
+        }
+
+        body {
+            background-color: var(--pubg-dark);
+            color: var(--text-white);
+            font-family: 'Teko', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)),
+                url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'); /* Generic gaming background */
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        /* --- UI OVERLAY ELEMENTS --- */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* --- HEADER --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(0,0,0,0.8);
+            border-bottom: 3px solid var(--pubg-yellow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--pubg-yellow);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(242, 169, 0, 0.5);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--pubg-yellow);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--pubg-yellow);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 6rem;
+            line-height: 1;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: var(--pubg-yellow);
+        }
+
+        .cta-btn {
+            background: rgba(242, 169, 0, 0.1);
+            border: 2px solid var(--pubg-yellow);
+            color: var(--pubg-yellow);
+            padding: 15px 40px;
+            font-size: 2rem;
+            font-family: 'Teko', sans-serif;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .cta-btn:hover {
+            background: var(--pubg-yellow);
+            color: black;
+            box-shadow: 0 0 20px var(--pubg-yellow);
+            transform: scale(1.05);
+        }
+
+        /* --- STATS BAR --- */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            background: rgba(0,0,0,0.9);
+            padding: 40px;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+
+        .stat-box {
+            text-align: center;
+            border: 1px solid #444;
+            padding: 20px;
+            width: 200px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            color: var(--pubg-yellow);
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: black;
+            padding: 50px;
+            text-align: center;
+            color: #555;
+            text-transform: uppercase;
+            border-top: 5px solid var(--pubg-grey);
+        }
+
+        /* --- HUD ELEMENTS (Health Bar Style) --- */
+        .hud-health {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 10px;
+            background: #333;
+            border: 1px solid #000;
+            z-index: 100;
+        }
+
+        .hud-fill {
+            width: 75%;
+            height: 100%;
+            background: linear-gradient(90deg, #fff, #b3b3b3);
+            box-shadow: 0 0 5px white;
+        }
+
+        .boost-bar {
+            position: absolute;
+            top: -5px;
+            left: 0;
+            width: 40%;
+            height: 3px;
+            background: var(--pubg-yellow);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="scanlines"></div>
+
+    <header>
+        <div class="logo">Battlegrounds</div>
+        <nav>
+            <ul>
+                <li><a href="#" class="sound-trigger">News</a></li>
+                <li><a href="#" class="sound-trigger">Patch Notes</a></li>
+                <li><a href="#" class="sound-trigger">Esports</a></li>
+                <li><a href="#" class="sound-trigger">Community</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Winner Winner <br><span>Chicken Dinner</span></h1>
+        <p style="font-size: 1.5rem; letter-spacing: 2px;">SURVIVE. LOOT. ELIMINATE.</p>
+        <button class="cta-btn sound-click">Play Now</button>
+    </section>
+
+    <section class="stats-container">
+        <div class="stat-box">
+            <div class="stat-number">99</div>
+            <div class="stat-label">Alive</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">12</div>
+            <div class="stat-label">Kills</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">ZONE</div>
+            <div class="stat-label">Closing in 30s</div>
+        </div>
+    </section>
+
+    <div class="hud-health">
+        <div class="boost-bar"></div>
+        <div class="hud-fill"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Krafton Inc. All Rights Reserved. This is a fan concept.</p>
+    </footer>
+
+    <script>
+        // --- SOUND ENGINE ---
+        // Note: For this to work, you need 'hover.mp3' and 'click.mp3' in the same folder.
+        // If files are missing, it will log to console but not crash.
+        
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        const hoverSound = new Audio('hover.mp3'); 
+        const clickSound = new Audio('click.mp3');
+
+        // Lower volume slightly
+        hoverSound.volume = 0.3; 
+        clickSound.volume = 0.5;
+
+        // Function to handle Hover sounds
+        function playHover() {
+            // Reset time to allow rapid re-triggering
+            hoverSound.currentTime = 0;
+            hoverSound.play().catch(e => console.log("Audio not found or blocked: " + e));
+        }
+
+        // Function to handle Click sounds
+        function playClick() {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(e => console.log("Audio not found or blocked: " + e));
+        }
+
+        // Attach event listeners to all interactive elements
+        const triggers = document.querySelectorAll('.sound-trigger, .cta-btn, a');
+
+        triggers.forEach(el => {
+            el.addEventListener('mouseenter', playHover);
+            el.addEventListener('click', playClick);
+        });
+
+        // Add a "Glitch" effect to the title randomly
+        const title = document.querySelector('.hero h1 span');
+        setInterval(() => {
+            if(Math.random() > 0.9) {
+                title.style.textShadow = '2px 0 red, -2px 0 blue';
+                setTimeout(() => {
+                    title.style.textShadow = 'none';
+                }, 100);
+            }
+        }, 1000);
+
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

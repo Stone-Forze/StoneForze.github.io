@@ -1,0 +1,294 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura | Ethereal Minimalism</title>
+    <style>/* Reset and Base Styles */
+:root {
+    --bg-gradient-start: #fdfbf7; /* Soft Off-White */
+    --bg-gradient-end: #e6e6fa;   /* Pale Lavender */
+    --text-primary: #2a2a2a;
+    --text-secondary: #555555;
+    --accent-lavender: #bfaee3;
+    --font-serif: 'Playfair Display', 'Times New Roman', serif;
+    --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Navigation - Frosted Glass Effect */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.2); /* Low opacity white */
+    backdrop-filter: blur(12px);          /* The requested frosted effect */
+    -webkit-backdrop-filter: blur(12px);  /* Safari support */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.logo {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 3rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    transition: color 0.5s ease;
+}
+
+.nav-links a:hover {
+    color: var(--text-primary);
+}
+
+/* Buttons - Slow Transitions */
+button {
+    cursor: pointer;
+    border: none;
+    font-family: var(--font-sans);
+    transition: all 0.5s ease; /* Requested 0.5s ease */
+}
+
+.cta-small {
+    background: transparent;
+    border: 1px solid var(--text-primary);
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+}
+
+.cta-small:hover {
+    background: var(--text-primary);
+    color: white;
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 2rem;
+}
+
+.headline {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 8vw, 6rem); /* Responsive massive font */
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+}
+
+.sub-headline {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 500px;
+    margin-bottom: 3rem;
+    font-weight: 300;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.btn-primary {
+    background-color: var(--text-primary);
+    color: white;
+    padding: 1rem 2.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-lavender);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(191, 174, 227, 0.2);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-primary);
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+    border-bottom: 1px solid transparent;
+}
+
+.btn-secondary:hover {
+    border-bottom: 1px solid var(--text-primary);
+    opacity: 0.7;
+}
+
+/* Grid Layout */
+.grid-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 4rem;
+    padding: 8rem 10%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.card {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    transition: transform 0.5s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h2 {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+
+.card p {
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* Scroll Animations */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 3rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Simplified for this demo */
+    }
+    
+    .headline {
+        font-size: 3.5rem;
+    }
+    
+    .grid-section {
+        padding: 4rem 5%;
+        gap: 2rem;
+    }
+}
+</style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="logo">Aura.</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#about">Essence</a></li>
+                <li><a href="#work">Vision</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        <button class="cta-small">Connect</button>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero scroll-reveal">
+            <h1 class="headline">Silence is the<br>loudest sound.</h1>
+            <p class="sub-headline">Experience digital tranquility designed for the modern soul.</p>
+            <div class="hero-actions">
+                <button class="btn-primary">Begin Journey</button>
+                <button class="btn-secondary">Learn More</button>
+            </div>
+        </section>
+
+        <!-- Content Grid -->
+        <section class="grid-section">
+            <div class="card scroll-reveal">
+                <h2>Clarity</h2>
+                <p>Removing the noise to reveal the signal. We focus on what truly matters in design.</p>
+            </div>
+            <div class="card scroll-reveal" style="transition-delay: 0.2s;">
+                <h2>Fluidity</h2>
+                <p>Like water, our interfaces adapt to every container, ensuring a seamless experience.</p>
+            </div>
+            <div class="card scroll-reveal" style="transition-delay: 0.4s;">
+                <h2>Harmony</h2>
+                <p>Colors and typography that breathe together, creating a sense of balance and peace.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Aura Design Systems. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Simple Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.scroll-reveal').forEach((el) => {
+            observer.observe(el);
+        });
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

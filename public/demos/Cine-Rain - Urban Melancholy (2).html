@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cine-Rain | Urban Melancholy</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --charcoal: #1A1A1A;
+            --neon-amber: #FF9A00;
+            --text-primary: #E6E6E6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--charcoal);
+            color: var(--text-primary);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        #rain-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(3rem, 10vw, 6rem);
+            color: var(--neon-amber);
+            text-shadow: 0 0 20px rgba(255, 154, 0, 0.5);
+        }
+
+        .wet-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border: 1px solid rgba(255, 154, 0, 0.2);
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="rain-container"></div>
+    <section class="hero">
+        <h1>URBAN MELANCHOLY</h1>
+        <div class="wet-card">
+            <p>An atmospheric exploration of rain-drenched cityscapes and noir aesthetics.</p>
+        </div>
+    </section>
+<script src="../template-injector.js"></script>
+</body>
+</html>

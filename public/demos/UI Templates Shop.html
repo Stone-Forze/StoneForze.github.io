@@ -1,0 +1,1235 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>UI Templates Shop</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-soft: #0b1020;
+      --card: #0f172a;
+      --card-soft: #111827;
+      --primary: #6366f1;
+      --primary-soft: #4f46e5;
+      --accent: #22c55e;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: rgba(148, 163, 184, 0.25);
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.6);
+      --transition: 200ms ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* ===== NAVBAR ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: radial-gradient(circle at top left,
+          rgba(79, 70, 229, 0.35),
+          transparent 50%)
+        , rgba(15, 23, 42, 0.72);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+
+    .logo-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: conic-gradient(from 220deg,
+          #22c55e,
+          #6366f1,
+          #a855f7,
+          #22c55e);
+      box-shadow: 0 0 25px rgba(129, 140, 248, 0.8);
+      display: grid;
+      place-items: center;
+      color: #0b1020;
+      font-size: 0.9rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.6rem;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .nav-links a {
+      position: relative;
+      padding-bottom: 0.2rem;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      height: 2px;
+      border-radius: 999px;
+      transform: scaleX(0);
+      transform-origin: center;
+      background: linear-gradient(90deg, #22c55e, #6366f1);
+      transition: transform 180ms ease-out;
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.8rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text);
+      transition: transform var(--transition), box-shadow var(--transition),
+        background var(--transition), border-color var(--transition), color var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-ghost {
+      border-color: rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(129, 140, 248, 0.9);
+      background: rgba(15, 23, 42, 0.95);
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.6);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      box-shadow: 0 20px 40px rgba(79, 70, 229, 0.55);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) translateZ(0);
+      box-shadow: 0 28px 60px rgba(79, 70, 229, 0.7);
+      background: linear-gradient(135deg, #4f46e5, #4338ca);
+    }
+
+    /* ===== HERO ===== */
+    main {
+      padding-top: 1.5rem;
+      padding-bottom: 3rem;
+    }
+
+    .hero {
+      padding: 2rem 0 3rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 2.4rem;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(129, 140, 248, 0.45);
+      background: radial-gradient(circle at top left,
+          rgba(56, 189, 248, 0.35),
+          transparent 55%)
+        , rgba(15, 23, 42, 0.9);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.8);
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 4vw, 2.9rem);
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      margin: 1rem 0 0.6rem;
+    }
+
+    .hero-title span {
+      background: linear-gradient(120deg, #22c55e, #6366f1, #a855f7);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      color: var(--muted);
+      font-size: 0.96rem;
+      max-width: 32rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 0.4rem;
+    }
+
+    .hero-note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.9rem;
+    }
+
+    .hero-note span {
+      color: #a5b4fc;
+    }
+
+    .hero-preview {
+      position: relative;
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top left,
+          rgba(129, 140, 248, 0.35),
+          transparent 60%)
+        , rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      padding: 1.2rem;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-glow {
+      position: absolute;
+      inset: -50%;
+      background: radial-gradient(circle at 0 0,
+          rgba(99, 102, 241, 0.4),
+          transparent 60%);
+      opacity: 0.5;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .preview-dots {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .preview-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+
+    .preview-dot:nth-child(1) {
+      background: #f97316;
+    }
+
+    .preview-dot:nth-child(2) {
+      background: #22c55e;
+    }
+
+    .preview-dot:nth-child(3) {
+      background: #38bdf8;
+    }
+
+    .preview-pill {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(96, 165, 250, 0.5);
+      color: #bfdbfe;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 0.8rem;
+    }
+
+    .preview-main {
+      border-radius: var(--radius-md);
+      padding: 0.9rem;
+      background: linear-gradient(145deg, #020617, #020617);
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
+    }
+
+    .preview-main-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .preview-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .preview-badge {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid rgba(107, 114, 128, 0.9);
+      color: #9ca3af;
+    }
+
+    .preview-cols {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .preview-card {
+      border-radius: 0.7rem;
+      padding: 0.45rem;
+      background: radial-gradient(circle at top left,
+          rgba(79, 70, 229, 0.35),
+          transparent 55%)
+        , rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      font-size: 0.7rem;
+    }
+
+    .preview-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.68rem;
+    }
+
+    .preview-card strong {
+      display: block;
+      margin-top: 0.18rem;
+      font-size: 0.76rem;
+    }
+
+    .preview-side {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .preview-mini {
+      border-radius: 0.7rem;
+      padding: 0.55rem;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 0.7rem;
+    }
+
+    .preview-mini span {
+      display: block;
+      color: var(--muted);
+    }
+
+    /* ===== CATEGORY TABS ===== */
+    .section {
+      padding: 2.3rem 0 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1.2rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .section-subtitle {
+      font-size: 0.83rem;
+      color: var(--muted);
+      max-width: 30rem;
+    }
+
+    .tabs {
+      display: inline-flex;
+      padding: 0.25rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      gap: 0.2rem;
+    }
+
+    .tab-btn {
+      position: relative;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.74rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color var(--transition), transform var(--transition);
+    }
+
+    .tab-btn.active {
+      color: #e5e7eb;
+      transform: translateY(-0.5px);
+    }
+
+    .tab-highlight {
+      position: absolute;
+      z-index: -1;
+      border-radius: 999px;
+      background: radial-gradient(circle at top left,
+          rgba(34, 197, 94, 0.5),
+          rgba(79, 70, 229, 0.9));
+      transition: transform 220ms ease, width 220ms ease;
+    }
+
+    /* ===== TEMPLATE CARDS ===== */
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+    }
+
+    .card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      padding: 0.9rem;
+      background: radial-gradient(circle at 0 -20%,
+          rgba(79, 70, 229, 0.4),
+          transparent 55%)
+        , var(--card);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.85);
+      overflow: hidden;
+      cursor: pointer;
+      transform-origin: center;
+      transition: transform 220ms ease, box-shadow 220ms ease,
+        border-color 200ms ease, background 220ms ease;
+      opacity: 0;
+      transform: translateY(18px) scale(0.98);
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition: opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 26px 70px rgba(15, 23, 42, 0.95);
+      border-color: rgba(129, 140, 248, 0.9);
+      background: radial-gradient(circle at 0 0,
+          rgba(129, 140, 248, 0.55),
+          transparent 55%)
+        , var(--card-soft);
+    }
+
+    .card-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 -10%,
+          rgba(56, 189, 248, 0.18),
+          transparent 40%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease-out;
+      mix-blend-mode: screen;
+    }
+
+    .card:hover .card-glow {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .card-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .card-badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 197, 94, 0.7);
+      color: #bbf7d0;
+      background: rgba(15, 23, 42, 0.95);
+      white-space: nowrap;
+    }
+
+    .thumb {
+      border-radius: 0.8rem;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: radial-gradient(circle at top,
+          rgba(15, 23, 42, 0.9),
+          rgba(15, 23, 42, 1));
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 0.8rem;
+    }
+
+    .thumb-inner {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: 0.45fr 1fr;
+      font-size: 0.65rem;
+      color: #9ca3af;
+    }
+
+    .thumb-top {
+      border-bottom: 1px solid rgba(31, 41, 55, 1);
+      padding: 0.4rem 0.55rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .thumb-dots {
+      display: flex;
+      gap: 0.16rem;
+    }
+
+    .thumb-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+
+    .thumb-main {
+      padding: 0.4rem 0.55rem;
+      display: grid;
+      grid-template-columns: 1.6fr 1.2fr;
+      gap: 0.4rem;
+    }
+
+    .thumb-block {
+      border-radius: 0.4rem;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .thumb-block:nth-child(1) {
+      background: radial-gradient(circle at top left,
+          rgba(56, 189, 248, 0.3),
+          transparent 50%)
+        , rgba(15, 23, 42, 0.95);
+    }
+
+    .thumb-block:nth-child(2) {
+      display: grid;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 0.25rem;
+      padding: 0.3rem;
+    }
+
+    .thumb-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 0.15rem 0.35rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.18rem;
+      font-size: 0.6rem;
+    }
+
+    .thumb-tag {
+      display: inline-block;
+      padding: 0.08rem 0.4rem;
+      border-radius: 999px;
+      background: rgba(79, 70, 229, 0.18);
+      border: 1px solid rgba(129, 140, 248, 0.6);
+      color: #c7d2fe;
+      font-size: 0.6rem;
+      margin-left: auto;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .price {
+      font-weight: 600;
+      color: #d1d5db;
+    }
+
+    .price span {
+      font-size: 0.7rem;
+      color: #6b7280;
+      text-decoration: line-through;
+      margin-left: 0.3rem;
+    }
+
+    .label-pill {
+      border-radius: 999px;
+      padding: 0.12rem 0.6rem;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .label-pill strong {
+      color: #a5b4fc;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid rgba(55, 65, 81, 1);
+      padding: 2rem 0 2.3rem;
+      margin-top: 3rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: radial-gradient(circle at bottom,
+          rgba(15, 23, 42, 0.9),
+          #020617);
+    }
+
+    .footer-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .footer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: #9ca3af;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 960px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-preview {
+        order: -1;
+      }
+      .templates-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav-links {
+        display: none;
+      }
+      .templates-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .hero {
+        padding-top: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <header>
+    <div class="container">
+      <nav class="nav">
+        <a class="logo" href="#">
+          <div class="logo-mark">UI</div>
+          <span>TemplateShop</span>
+        </a>
+        <div class="nav-links">
+          <a href="#templates">Templates</a>
+          <a href="#categories">Categories</a>
+          <a href="#pricing">Pricing</a>
+        </div>
+        <div class="nav-actions">
+          <button class="btn btn-ghost">Sign in</button>
+          <button class="btn btn-primary">Get bundle</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="pill">
+              <span class="pill-dot"></span>
+              120+ productionâ€‘ready website templates
+            </div>
+            <h1 class="hero-title">
+              Smooth UI templates for <span>shops, SaaS & landing pages</span>
+            </h1>
+            <p class="hero-subtitle">
+              Browse beautifully crafted website templates with subtle motion,
+              clean layouts, and categoryâ€‘based filtering. Copy the code, plug
+              in your content, launch in minutes.
+            </p>
+            <div class="hero-actions">
+              <button class="btn btn-primary">Browse all templates</button>
+              <button class="btn btn-ghost">View eâ€‘commerce pack</button>
+            </div>
+            <p class="hero-note">
+              Instant download â€¢ Lifetime updates â€¢ <span>No design skills required</span>
+            </p>
+          </div>
+
+          <div class="hero-preview">
+            <div class="hero-glow"></div>
+            <div class="preview-header">
+              <div class="preview-dots">
+                <span class="preview-dot"></span>
+                <span class="preview-dot"></span>
+                <span class="preview-dot"></span>
+              </div>
+              <span class="preview-pill">Live preview mode</span>
+            </div>
+            <div class="preview-grid">
+              <!-- Left: grid overview -->
+              <div class="preview-main">
+                <div class="preview-main-title">Template Categories</div>
+                <div class="preview-badges">
+                  <span class="preview-badge">Eâ€‘commerce</span>
+                  <span class="preview-badge">Landing</span>
+                  <span class="preview-badge">Dashboard</span>
+                  <span class="preview-badge">Portfolio</span>
+                </div>
+                <div class="preview-cols">
+                  <div class="preview-card">
+                    <span>Trending</span>
+                    <strong>Minimal Shop</strong>
+                  </div>
+                  <div class="preview-card">
+                    <span>Top rated</span>
+                    <strong>SaaS Gradient</strong>
+                  </div>
+                  <div class="preview-card">
+                    <span>New</span>
+                    <strong>Neon Portfolio</strong>
+                  </div>
+                </div>
+              </div>
+              <!-- Right: mini cards -->
+              <div class="preview-side">
+                <div class="preview-mini">
+                  <span>âœ¨ Smooth hover & scroll animations</span>
+                  <span>Built with HTML, CSS & tiny JS</span>
+                </div>
+                <div class="preview-mini">
+                  <span>ðŸŽ¯ Filter templates by category</span>
+                  <span>No framework lockâ€‘in</span>
+                </div>
+                <div class="preview-mini">
+                  <span>ðŸ§© Copyâ€‘paste components</span>
+                  <span>Buttons, navbars, sections & more</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORIES + TABS -->
+    <section id="templates" class="section">
+      <div class="container">
+        <div class="section-header" id="categories">
+          <div>
+            <h2 class="section-title">Website template gallery</h2>
+            <p class="section-subtitle">
+              Explore smooth, animated templates by category. Click a tab to
+              filter the grid inâ€‘place without reloading the page.
+            </p>
+          </div>
+
+          <!-- Category Tabs -->
+          <div class="tabs" id="tabs">
+            <!-- highlight element (moved by JS) -->
+            <div class="tab-highlight" id="tab-highlight"></div>
+            <button class="tab-btn active" data-filter="all">All</button>
+            <button class="tab-btn" data-filter="shop">Shop / Eâ€‘commerce</button>
+            <button class="tab-btn" data-filter="landing">Landing Pages</button>
+            <button class="tab-btn" data-filter="dashboard">Dashboards</button>
+          </div>
+        </div>
+
+        <!-- Template cards -->
+        <div class="templates-grid" id="templates-grid">
+          <!-- SHOP -->
+          <article class="card" data-category="shop">
+            <div class="card-glow"></div>
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Aurora Shop Landing</h3>
+                <p class="card-meta">Glassmorphism eâ€‘commerce hero with smooth hover states.</p>
+              </div>
+              <span class="card-badge">Eâ€‘commerce</span>
+            </div>
+            <div class="thumb">
+              <div class="thumb-inner">
+                <div class="thumb-top">
+                  <div class="thumb-dots">
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                  </div>
+                  <span>aurora-shop.html</span>
+                </div>
+                <div class="thumb-main">
+                  <div class="thumb-block"></div>
+                  <div class="thumb-block">
+                    <div class="thumb-pill">
+                      <span>Hero</span>
+                      <span class="thumb-tag">Sale -40%</span>
+                    </div>
+                    <div class="thumb-pill">Animated categories</div>
+                    <div class="thumb-pill">Cart hover microâ€‘interactions</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="price">$18 <span>$29</span></div>
+              <div class="label-pill">
+                <span>Includes:</span> <strong>Shop + Product + Checkout</strong>
+              </div>
+            </div>
+          </article>
+
+          <!-- SHOP -->
+          <article class="card" data-category="shop">
+            <div class="card-glow"></div>
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Minimal Grid Store</h3>
+                <p class="card-meta">Clean product grid with subtle scale + shadow motion.</p>
+              </div>
+              <span class="card-badge">Eâ€‘commerce</span>
+            </div>
+            <div class="thumb">
+              <div class="thumb-inner">
+                <div class="thumb-top">
+                  <div class="thumb-dots">
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                  </div>
+                  <span>minimal-store.html</span>
+                </div>
+                <div class="thumb-main">
+                  <div class="thumb-block"></div>
+                  <div class="thumb-block">
+                    <div class="thumb-pill">Responsive 3â€“1 column grid</div>
+                    <div class="thumb-pill">Category filter chips</div>
+                    <div class="thumb-pill">Quickâ€‘view animation</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="price">$15</div>
+              <div class="label-pill">
+                <span>Perfect for</span> <strong>small shops</strong>
+              </div>
+            </div>
+          </article>
+
+          <!-- LANDING -->
+          <article class="card" data-category="landing">
+            <div class="card-glow"></div>
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">SaaS Gradient Launch</h3>
+                <p class="card-meta">Hero + pricing + FAQ with scrollâ€‘in animations.</p>
+              </div>
+              <span class="card-badge">Landing</span>
+            </div>
+            <div class="thumb">
+              <div class="thumb-inner">
+                <div class="thumb-top">
+                  <div class="thumb-dots">
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                  </div>
+                  <span>saas-launch.html</span>
+                </div>
+                <div class="thumb-main">
+                  <div class="thumb-block"></div>
+                  <div class="thumb-block">
+                    <div class="thumb-pill">Animated pricing cards</div>
+                    <div class="thumb-pill">FAQ accordion</div>
+                    <div class="thumb-pill">CTA button pulse</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="price">$19</div>
+              <div class="label-pill">
+                <span>Stack:</span> <strong>HTML + CSS + vanilla JS</strong>
+              </div>
+            </div>
+          </article>
+
+          <!-- LANDING -->
+          <article class="card" data-category="landing">
+            <div class="card-glow"></div>
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Creator Portfolio</h3>
+                <p class="card-meta">Scrollâ€‘reveal sections & smooth project hover.</p>
+              </div>
+              <span class="card-badge">Landing</span>
+            </div>
+            <div class="thumb">
+              <div class="thumb-inner">
+                <div class="thumb-top">
+                  <div class="thumb-dots">
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                  </div>
+                  <span>creator-portfolio.html</span>
+                </div>
+                <div class="thumb-main">
+                  <div class="thumb-block"></div>
+                  <div class="thumb-block">
+                    <div class="thumb-pill">Project cards</div>
+                    <div class="thumb-pill">About + contact blocks</div>
+                    <div class="thumb-pill">Subtle parallax hero</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="price">$16</div>
+              <div class="label-pill">
+                <span>Built for</span> <strong>designers & devs</strong>
+              </div>
+            </div>
+          </article>
+
+          <!-- DASHBOARD -->
+          <article class="card" data-category="dashboard">
+            <div class="card-glow"></div>
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Analytics Dashboard</h3>
+                <p class="card-meta">Stats layout, cards, and panels with hover motion.</p>
+              </div>
+              <span class="card-badge">Dashboard</span>
+            </div>
+            <div class="thumb">
+              <div class="thumb-inner">
+                <div class="thumb-top">
+                  <div class="thumb-dots">
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                  </div>
+                  <span>analytics-dashboard.html</span>
+                </div>
+                <div class="thumb-main">
+                  <div class="thumb-block"></div>
+                  <div class="thumb-block">
+                    <div class="thumb-pill">Metric cards</div>
+                    <div class="thumb-pill">Sidebar navigation</div>
+                    <div class="thumb-pill">Table + filter row</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="price">$22</div>
+              <div class="label-pill">
+                <span>Great for</span> <strong>admin panels</strong>
+              </div>
+            </div>
+          </article>
+
+          <!-- DASHBOARD -->
+          <article class="card" data-category="dashboard">
+            <div class="card-glow"></div>
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Eâ€‘commerce Admin</h3>
+                <p class="card-meta">Manage orders, products & customers with ease.</p>
+              </div>
+              <span class="card-badge">Dashboard</span>
+            </div>
+            <div class="thumb">
+              <div class="thumb-inner">
+                <div class="thumb-top">
+                  <div class="thumb-dots">
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                    <span class="thumb-dot"></span>
+                  </div>
+                  <span>shop-admin.html</span>
+                </div>
+                <div class="thumb-main">
+                  <div class="thumb-block"></div>
+                  <div class="thumb-block">
+                    <div class="thumb-pill">Order list</div>
+                    <div class="thumb-pill">Product CRUD</div>
+                    <div class="thumb-pill">Search + filters</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="price">$24</div>
+              <div class="label-pill">
+                <span>Use with</span> <strong>any backend</strong>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIMPLE PRICING CTA -->
+    <section id="pricing" class="section">
+      <div class="container">
+        <div class="hero-preview" style="margin-top: 2.5rem;">
+          <div class="preview-header">
+            <div class="preview-dots">
+              <span class="preview-dot"></span>
+              <span class="preview-dot"></span>
+              <span class="preview-dot"></span>
+            </div>
+            <span class="preview-pill">Bundle & save</span>
+          </div>
+          <div class="preview-grid">
+            <div class="preview-main">
+              <div class="preview-main-title">Unlimited templates pack</div>
+              <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.45rem;">
+                Get every template, all future updates, and new category drops for one
+                simple price.
+              </p>
+              <div class="preview-cols">
+                <div class="preview-card">
+                  <span>Includes</span>
+                  <strong>All current templates</strong>
+                </div>
+                <div class="preview-card">
+                  <span>Updates</span>
+                  <strong>New drops monthly</strong>
+                </div>
+                <div class="preview-card">
+                  <span>License</span>
+                  <strong>Unlimited projects</strong>
+                </div>
+              </div>
+            </div>
+            <div class="preview-side">
+              <div class="preview-mini">
+                <span style="font-size:1.4rem;font-weight:700;">$59</span>
+                <span>Oneâ€‘time payment Â· Lifetime access</span>
+              </div>
+              <div class="preview-mini">
+                <span>Includes all categories:</span>
+                <span>Eâ€‘commerce Â· SaaS Â· Portfolio Â· Dashboard</span>
+              </div>
+              <button class="btn btn-primary" style="width:100%;margin-top:0.2rem;">
+                Get the full library
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="logo">
+          <div class="logo-mark">UI</div>
+          <span>TemplateShop</span>
+        </div>
+        <div class="footer-badge">
+          <span>âš¡</span>
+          <span>Smooth UI â€¢ Lightweight code â€¢ Easy to customize</span>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;">
+        <span>Â© <span id="year"></span> TemplateShop. All rights reserved.</span>
+        <span>Built with HTML, CSS & vanilla JS.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Scroll-in animation for cards
+    const cards = document.querySelectorAll(".card");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    cards.forEach((card) => observer.observe(card));
+
+    // Category filter tabs
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const grid = document.getElementById("templates-grid");
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const filter = btn.getAttribute("data-filter");
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Filter cards
+        cards.forEach((card) => {
+          const cat = card.getAttribute("data-category");
+          if (filter === "all" || filter === cat) {
+            card.style.display = "block";
+            // re-trigger fade-in if needed
+            card.classList.add("visible");
+          } else {
+            card.style.display = "none";
+          }
+        });
+
+        moveHighlight();
+      });
+    });
+
+    // Animated tab highlight
+    const tabs = document.getElementById("tabs");
+    const highlight = document.getElementById("tab-highlight");
+
+    function moveHighlight() {
+      const active = tabs.querySelector(".tab-btn.active");
+      if (!active) return;
+      const rect = active.getBoundingClientRect();
+      const tabsRect = tabs.getBoundingClientRect();
+      const left = rect.left - tabsRect.left;
+      highlight.style.transform = `translateX(${left}px)`;
+      highlight.style.width = rect.width + "px";
+      highlight.style.height = rect.height + "px";
+    }
+
+    window.addEventListener("resize", moveHighlight);
+    window.addEventListener("load", () => {
+      // create initial highlight size/pos
+      moveHighlight();
+    });
+  </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORBIT // Future Scale</title>
+    <style>
+        :root {
+            --bg: #050507;
+            --surface: #0f0f12;
+            --text: #ffffff;
+            --text-muted: #888890;
+            --accent: #6366f1;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* --- Animated Background Mesh --- */
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15), transparent 60%);
+            opacity: 0.6;
+            animation: pulse 10s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            100% { transform: scale(1.2); opacity: 0.7; }
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 24px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+        }
+
+        .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.5px; }
+        .btn-nav {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .btn-nav:hover { background: white; color: black; }
+
+        /* --- Layout --- */
+        section {
+            padding: 120px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #fff, #999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0; /* JS Reveal */
+            transform: translateY(30px);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .cta-primary {
+            display: inline-block;
+            padding: 16px 48px;
+            background: var(--gradient);
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+            opacity: 0;
+            transform: translateY(30px);
+            box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.5);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.6);
+        }
+
+        /* --- Metrics Grid --- */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .metric-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .metric-val {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-feature-settings: "tnum"; /* Monospaced numbers */
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        /* --- Feature Split --- */
+        .feature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin: 100px 0;
+        }
+
+        .feature-visual {
+            aspect-ratio: 4/3;
+            background: linear-gradient(45deg, #1a1a1e, #2a2a2e);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        /* Visual Abstract Shapes */
+        .shape {
+            position: absolute;
+            background: var(--gradient);
+            border-radius: 50%;
+            filter: blur(40px);
+        }
+
+        /* --- Animations --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s var(--ease);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .feature-row { grid-template-columns: 1fr; }
+            h1 { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mesh-bg"></div>
+
+    <nav>
+        <div class="logo">ORBIT.</div>
+        <a href="#invest" class="btn-nav">Get Deck</a>
+    </nav>
+
+    <section class="hero">
+        <h1 class="stagger">Scale Without<br>Friction.</h1>
+        <p class="stagger" style="transition-delay: 0.1s;">The first autonomous revenue engine designed for hyper-growth SaaS.</p>
+        <a href="#demo" class="cta-primary stagger" style="transition-delay: 0.2s;">Request Access</a>
+    </section>
+
+    <section>
+        <div class="feature-row reveal">
+            <div class="feature-text">
+                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">The Problem</h2>
+                <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;">
+                    Traditional revenue operations are manual, siloed, and slow. Companies lose 20% of ARR due to data fragmentation.
+                </p>
+                <div style="height: 1px; width: 100px; background: var(--accent);"></div>
+            </div>
+            <div class="feature-visual">
+                <div class="shape" style="width: 100px; height: 100px; top: 20%; left: 20%;"></div>
+                <div class="shape" style="width: 150px; height: 150px; bottom: 10%; right: 10%; background: #fff; opacity: 0.1;"></div>
+            </div>
+        </div>
+
+        <div class="feature-row reveal">
+            <div class="feature-visual" style="order: 2;">
+                <div class="shape" style="width: 200px; height: 200px; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+            </div>
+            <div class="feature-text" style="order: 1;">
+                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">The Orbit Solution</h2>
+                <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;">
+                    A unified neural mesh that predicts churn, optimizes pricing, and automates upsells in real-time.
+                </p>
+                <ul style="list-style: none; color: var(--text);">
+                    <li style="margin-bottom: 10px;">âœ“ Zero-setup integration</li>
+                    <li style="margin-bottom: 10px;">âœ“ 99.9% Prediction Accuracy</li>
+                    <li style="margin-bottom: 10px;">âœ“ Enterprise Security</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="reveal" style="text-align: center; font-size: 2.5rem; margin-bottom: 60px;">Traction (Q3 2025)</h2>
+        <div class="metrics-grid">
+            <div class="metric-card reveal">
+                <div class="metric-val" data-target="150">0</div>
+                <div class="metric-label">Enterprise Clients</div>
+            </div>
+            <div class="metric-card reveal" style="transition-delay: 0.1s;">
+                <div class="metric-val" data-target="32">0</div>
+                <div class="metric-label">Million ARR</div>
+            </div>
+            <div class="metric-card reveal" style="transition-delay: 0.2s;">
+                <div class="metric-val" data-target="240">0</div>
+                <div class="metric-label">% YOY Growth</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="invest" style="text-align: center; padding: 150px 5%;">
+        <div class="reveal">
+            <h2 style="font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 30px;">Join the Round.</h2>
+            <p style="color: var(--text-muted); margin-bottom: 50px;">Series A allocation closing in 48 hours.</p>
+            <a href="#" class="cta-primary">Contact Founders</a>
+        </div>
+    </section>
+
+    <script>
+        // --- Hero Stagger Animation ---
+        window.addEventListener('load', () => {
+            const staggers = document.querySelectorAll('.stagger');
+            staggers.forEach((el) => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            });
+        });
+
+        // --- Scroll Reveal ---
+        const observerOptions = { threshold: 0.2 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Trigger counters if inside a revealed card
+                    if(entry.target.querySelector('.metric-val')) {
+                        const counter = entry.target.querySelector('.metric-val');
+                        if(!counter.classList.contains('counted')) {
+                            animateCounter(counter);
+                            counter.classList.add('counted');
+                        }
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        // Also observe metric cards individually for staggered effect
+        document.querySelectorAll('.metric-card').forEach(el => observer.observe(el));
+
+
+        // --- Metrics Counter Logic ---
+        function animateCounter(el) {
+            const target = +el.getAttribute('data-target');
+            const duration = 2000; // 2 seconds
+            const stepTime = 20; 
+            const steps = duration / stepTime;
+            const increment = target / steps;
+            
+            let current = 0;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    el.innerText = target + (target === 32 ? 'M+' : (target === 240 ? '%' : '+'));
+                    clearInterval(timer);
+                } else {
+                    el.innerText = Math.floor(current);
+                }
+            }, stepTime);
+        }
+    </script>
+<script src="../template-injector.js"></script>
+</body>
+</html>

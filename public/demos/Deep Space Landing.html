@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Space Landing</title>
+
+<!-- =========================
+     FONTS
+========================= -->
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   GLOBAL
+========================================================= */
+:root{
+  --bg:#000000;
+  --glass:rgba(255,255,255,0.05);
+  --purple:#a855f7;
+  --blue:#3b82f6;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Inter,sans-serif;
+  background:var(--bg);
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* =========================================================
+   STARFIELD CANVAS
+========================================================= */
+#starfield{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+}
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+section{
+  min-height:100vh;
+  padding:120px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center;
+}
+
+/* =========================================================
+   HEADINGS
+========================================================= */
+h1,h2{
+  font-family:'Syncopate',sans-serif;
+  letter-spacing:2px;
+}
+
+h1{font-size:48px;margin-bottom:20px}
+h2{font-size:32px;margin-bottom:20px}
+
+/* =========================================================
+   COSMIC GLASS CARD
+========================================================= */
+.card{
+  width:min(90%,420px);
+  padding:28px;
+  margin:20px;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border-radius:16px;
+  border:1px solid transparent;
+  background-clip:padding-box;
+  box-shadow:
+    0 0 20px rgba(168,85,247,0.2),
+    0 0 40px rgba(59,130,246,0.15);
+  transform-style:preserve-3d;
+  perspective:1000px;
+  transition:transform .2s ease;
+}
+
+/* =========================================================
+   ORBIT ELEMENT
+========================================================= */
+.orbit{
+  width:120px;
+  height:120px;
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:50%;
+  position:relative;
+  margin-bottom:30px;
+  animation:spin 18s linear infinite;
+}
+
+.orbit::after{
+  content:"";
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#fff;
+  position:absolute;
+  top:-7px;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+@keyframes spin{
+  from{transform:rotate(0)}
+  to{transform:rotate(360deg)}
+}
+
+/* =========================================================
+   WARP TRANSITION
+========================================================= */
+.warp{
+  animation:warpAnim .8s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes warpAnim{
+  from{transform:scale(0.8);opacity:0;filter:blur(12px)}
+  to{transform:scale(1);opacity:1;filter:blur(0)}
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media(max-width:600px){
+ h1{font-size:32px}
+ h2{font-size:24px}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="starfield"></canvas>
+
+<section class="warp">
+  <div class="orbit"></div>
+  <h1>Deep Space Interface</h1>
+  <div class="card">Cosmic Glass UI with reactive 3D perspective and nebula glow.</div>
+</section>
+
+<section>
+  <h2>Interstellar Motion</h2>
+  <div class="card">Orbiting systems and starfield motion simulate deep space travel.</div>
+</section>
+
+<section>
+  <h2>Warp Navigation</h2>
+  <div class="card">Smooth 60fps animations with futuristic immersive transitions.</div>
+</section>
+
+<script>
+/* =========================================================
+   STARFIELD PARTICLE SYSTEM (SCROLL FLIGHT)
+========================================================= */
+const canvas=document.getElementById("starfield");
+const ctx=canvas.getContext("2d");
+
+let w,h;
+function resize(){
+ w=canvas.width=window.innerWidth;
+ h=canvas.height=window.innerHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+const stars=[];
+for(let i=0;i<400;i++){
+ stars.push({
+  x:Math.random()*w,
+  y:Math.random()*h,
+  z:Math.random()*w
+ });
+}
+
+let scrollSpeed=0;
+
+window.addEventListener("scroll",()=>{
+ scrollSpeed=window.scrollY*0.02;
+});
+
+function animate(){
+ ctx.fillStyle="#000";
+ ctx.fillRect(0,0,w,h);
+
+ stars.forEach(s=>{
+  s.z-=1+scrollSpeed*0.1;
+  if(s.z<=0){s.z=w}
+
+  const k=128/s.z;
+  const px=s.x*k+w/2;
+  const py=s.y*k+h/2;
+
+  if(px>=0 && px<=w && py>=0 && py<=h){
+    const size=(1-k)*2;
+    ctx.fillStyle="white";
+    ctx.fillRect(px,py,size,size);
+  }
+ });
+
+ requestAnimationFrame(animate);
+}
+animate();
+
+/* =========================================================
+   3D CARD ROTATION ON MOUSE
+========================================================= */
+document.querySelectorAll(".card").forEach(card=>{
+ card.addEventListener("mousemove",e=>{
+   const rect=card.getBoundingClientRect();
+   const x=e.clientX-rect.left;
+   const y=e.clientY-rect.top;
+   const midX=rect.width/2;
+   const midY=rect.height/2;
+   const rotateY=(x-midX)/12;
+   const rotateX=(midY-y)/12;
+   card.style.transform=`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+ });
+ card.addEventListener("mouseleave",()=>{
+   card.style.transform="rotateX(0) rotateY(0)";
+ });
+});
+</script>
+
+<script src="../template-injector.js"></script>
+</body>
+</html>
+

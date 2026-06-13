@@ -1,0 +1,975 @@
+﻿Arguments:
+file_path:
+/home/user/high-fashion-editorial.html
+content:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="High-Fashion Editorial - Premium print-inspired website with ink-on-paper aesthetic, page-turn navigation, and asymmetrical Bento-grid layout.">
+    <title>Editorial â€” High Fashion</title>
+    
+    <!-- Google Fonts: DM Serif Display for bold serifs -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /*==============================================
+          CSS CUSTOM PROPERTIES: Design System
+        ===============================================*/
+        :root {
+            /* Color Palette: Ink-on-Paper */
+            --ivory: #f9f7f4;
+            --paper-white: #fffef9;
+            --ink-black: #1a1a1a;
+            --charcoal: #2b2b2b;
+            --accent-gold: #d4af37;
+            --subtle-gray: #e8e6e3;
+            
+            /* Typography */
+            --font-serif: 'DM Serif Display', serif;
+            --font-sans: 'Inter', sans-serif;
+            
+            /* Spacing & Layout */
+            --page-padding: clamp(2rem, 8vw, 6rem);
+            --grid-gap: clamp(1rem, 3vw, 2rem);
+            --section-spacing: clamp(4rem, 10vh, 8rem);
+            
+            /* Effects */
+            --transition-smooth: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --hover-lift: -4px;
+            
+            /* Z-Index Layers */
+            --z-base: 1;
+            --z-content: 10;
+            --z-nav: 100;
+            --z-overlay: 999;
+        }
+        
+        /*==============================================
+          RESET & BASE STYLES
+        ===============================================*/
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background: var(--ivory);
+            color: var(--ink-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+            /* Subtle paper texture */
+            background-image: 
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+        
+        ::selection {
+            background: var(--ink-black);
+            color: var(--paper-white);
+        }
+        
+        /*==============================================
+          NAVIGATION: Slide-Over Menu
+        ===============================================*/
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem var(--page-padding);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: var(--z-nav);
+            background: linear-gradient(to bottom, var(--ivory), transparent);
+        }
+        
+        .logo {
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--ink-black);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+        
+        .menu-toggle {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: none;
+            border: 1px solid var(--ink-black);
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--ink-black);
+            color: var(--paper-white);
+        }
+        
+        /* Slide-Over Menu Panel */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            background: var(--paper-white);
+            box-shadow: -20px 0 60px rgba(0, 0, 0, 0.15);
+            z-index: var(--z-overlay);
+            transition: right var(--transition-smooth);
+            padding: 4rem 3rem;
+            overflow-y: auto;
+        }
+        
+        .menu-overlay.active {
+            right: 0;
+        }
+        
+        .menu-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--ink-black);
+        }
+        
+        .menu-nav {
+            margin-top: 4rem;
+        }
+        
+        .menu-nav ul {
+            list-style: none;
+        }
+        
+        .menu-nav li {
+            margin: 2rem 0;
+        }
+        
+        .menu-nav a {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: var(--ink-black);
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .menu-nav a:hover {
+            transform: translateX(10px);
+        }
+        
+        /* Ink-Bleed Hover Effect */
+        .menu-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--ink-black);
+            transition: width 0.4s ease;
+        }
+        
+        .menu-nav a:hover::after {
+            width: 100%;
+        }
+        
+        /*==============================================
+          HERO SECTION
+        ===============================================*/
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--page-padding);
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            color: var(--ink-black);
+        }
+        
+        .hero-subtitle {
+            font-family: var(--font-sans);
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            color: var(--charcoal);
+        }
+        
+        .scroll-indicator {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 4rem;
+            opacity: 0.6;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /*==============================================
+          ASYMMETRICAL BENTO GRID
+        ===============================================*/
+        .bento-section {
+            padding: var(--section-spacing) var(--page-padding);
+        }
+        
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 400;
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--grid-gap);
+            margin-bottom: var(--section-spacing);
+        }
+        
+        .bento-item {
+            position: relative;
+            overflow: hidden;
+            background: var(--paper-white);
+            border: 1px solid var(--subtle-gray);
+            transition: all var(--transition-smooth);
+        }
+        
+        .bento-item:hover {
+            transform: translateY(var(--hover-lift));
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            border-color: var(--ink-black);
+        }
+        
+        /* Grid Item Layouts - Asymmetrical */
+        .bento-item.large {
+            grid-column: span 8;
+            grid-row: span 2;
+            min-height: 600px;
+        }
+        
+        .bento-item.medium {
+            grid-column: span 6;
+            min-height: 400px;
+        }
+        
+        .bento-item.small {
+            grid-column: span 4;
+            min-height: 300px;
+        }
+        
+        .bento-item.tall {
+            grid-column: span 4;
+            grid-row: span 2;
+            min-height: 600px;
+        }
+        
+        /* Content Inside Bento Items */
+        .bento-content {
+            padding: clamp(2rem, 5vw, 4rem);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .bento-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-smooth);
+        }
+        
+        .bento-item:hover .bento-image {
+            transform: scale(1.05);
+        }
+        
+        .bento-overlay {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(to top, rgba(249, 247, 244, 0.95), transparent);
+            padding: 2rem;
+            margin: -2rem;
+        }
+        
+        .bento-label {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            color: var(--charcoal);
+        }
+        
+        .bento-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        
+        .bento-description {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.8;
+            max-width: 500px;
+        }
+        
+        /* Placeholder Images with SVG Patterns */
+        .bento-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--subtle-gray), var(--paper-white));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            color: var(--ink-black);
+            opacity: 0.1;
+        }
+        
+        /*==============================================
+          QUOTE SECTION (Editorial Block)
+        ===============================================*/
+        .quote-section {
+            padding: var(--section-spacing) var(--page-padding);
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        blockquote {
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-style: italic;
+            line-height: 1.5;
+            margin: 0;
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        blockquote::before {
+            content: '"';
+            font-size: 6rem;
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.1;
+        }
+        
+        cite {
+            display: block;
+            margin-top: 2rem;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-style: normal;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        /*==============================================
+          FOOTER
+        ===============================================*/
+        footer {
+            padding: 4rem var(--page-padding);
+            border-top: 1px solid var(--subtle-gray);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+        
+        .footer-column h4 {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column li {
+            margin: 0.75rem 0;
+        }
+        
+        .footer-column a {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            color: var(--charcoal);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        /* Ink-Bleed Effect */
+        .footer-column a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--ink-black);
+            transition: width 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            color: var(--ink-black);
+        }
+        
+        .footer-column a:hover::after {
+            width: 100%;
+        }
+        
+        .footer-bottom {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--subtle-gray);
+            font-size: 0.75rem;
+            color: var(--charcoal);
+        }
+        
+        /*==============================================
+          PAGE TRANSITION (Page-Turn Effect)
+        ===============================================*/
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--paper-white);
+            z-index: var(--z-overlay);
+            pointer-events: none;
+            clip-path: circle(0% at 50% 50%);
+            transition: clip-path 1s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        
+        .page-transition.active {
+            clip-path: circle(150% at 50% 50%);
+        }
+        
+        /*==============================================
+          RESPONSIVE DESIGN
+        ===============================================*/
+        @media (max-width: 1024px) {
+            .bento-item.large,
+            .bento-item.medium,
+            .bento-item.small,
+            .bento-item.tall {
+                grid-column: span 12;
+                min-height: 400px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem;
+            }
+            
+            .menu-overlay {
+                max-width: 100%;
+            }
+            
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            footer {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /*==============================================
+          ACCESSIBILITY: Reduced Motion
+        ===============================================*/
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        
+        /*==============================================
+          FOCUS STATES (Accessibility)
+        ===============================================*/
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--ink-black);
+            outline-offset: 4px;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">Editorial</a>
+        <button class="menu-toggle" aria-label="Open menu">Menu</button>
+    </nav>
+    
+    <!-- Slide-Over Menu -->
+    <div class="menu-overlay" role="dialog" aria-modal="true">
+        <button class="menu-close" aria-label="Close menu">&times;</button>
+        <nav class="menu-nav">
+            <ul>
+                <li><a href="#collections">Collections</a></li>
+                <li><a href="#featured">Featured</a></li>
+                <li><a href="#stories">Stories</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!-- Page Transition Overlay -->
+    <div class="page-transition"></div>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Timeless<br>Elegance</h1>
+            <p class="hero-subtitle">
+                A curated exploration of contemporary design, where bold typography meets asymmetrical balance in the pursuit of visual perfection.
+            </p>
+            <div class="scroll-indicator">Scroll to Explore</div>
+        </div>
+    </section>
+    
+    <!-- Asymmetrical Bento Grid Section -->
+    <section class="bento-section" id="collections">
+        <h2 class="section-title">Collections</h2>
+        
+        <div class="bento-grid">
+            
+            <!-- Large Feature Item -->
+            <div class="bento-item large">
+                <div class="bento-placeholder">I</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Spring 2026</div>
+                        <h3 class="bento-title">Modern Renaissance</h3>
+                        <p class="bento-description">
+                            A fusion of classical forms and contemporary sensibilities, celebrating the intersection of tradition and innovation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tall Item -->
+            <div class="bento-item tall">
+                <div class="bento-placeholder">II</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Editorial</div>
+                        <h3 class="bento-title">Minimalist Vision</h3>
+                        <p class="bento-description">
+                            Less is more in this study of restraint and intentional design.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Medium Item -->
+            <div class="bento-item medium">
+                <div class="bento-placeholder">III</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Featured</div>
+                        <h3 class="bento-title">Urban Poetry</h3>
+                        <p class="bento-description">
+                            Finding beauty in the everyday rhythms of metropolitan life.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Medium Item -->
+            <div class="bento-item medium">
+                <div class="bento-placeholder">IV</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Spotlight</div>
+                        <h3 class="bento-title">Contrast Study</h3>
+                        <p class="bento-description">
+                            An exploration of light and shadow, form and negative space.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Small Item -->
+            <div class="bento-item small">
+                <div class="bento-placeholder">V</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Detail</div>
+                        <h3 class="bento-title">Texture</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Small Item -->
+            <div class="bento-item small">
+                <div class="bento-placeholder">VI</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Craft</div>
+                        <h3 class="bento-title">Precision</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Small Item -->
+            <div class="bento-item small">
+                <div class="bento-placeholder">VII</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Form</div>
+                        <h3 class="bento-title">Balance</h3>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+    
+    <!-- Quote Section -->
+    <section class="quote-section">
+        <blockquote>
+            Design is not just what it looks like and feels like. Design is how it works.
+            <cite>â€” A Timeless Principle</cite>
+        </blockquote>
+    </section>
+    
+    <!-- Featured Stories Section -->
+    <section class="bento-section" id="featured">
+        <h2 class="section-title">Featured Stories</h2>
+        
+        <div class="bento-grid">
+            
+            <div class="bento-item medium">
+                <div class="bento-placeholder">VIII</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Interview</div>
+                        <h3 class="bento-title">Behind the Lens</h3>
+                        <p class="bento-description">
+                            Conversations with visionaries shaping the future of visual storytelling.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bento-item medium">
+                <div class="bento-placeholder">IX</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Process</div>
+                        <h3 class="bento-title">From Concept to Creation</h3>
+                        <p class="bento-description">
+                            A deep dive into the iterative journey of bringing ideas to life.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bento-item large">
+                <div class="bento-placeholder">X</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Essay</div>
+                        <h3 class="bento-title">The Art of Subtlety</h3>
+                        <p class="bento-description">
+                            Exploring how restraint and refinement create lasting impact in an age of visual excess.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bento-item tall">
+                <div class="bento-placeholder">XI</div>
+                <div class="bento-content">
+                    <div class="bento-overlay">
+                        <div class="bento-label">Series</div>
+                        <h3 class="bento-title">Monochrome Moments</h3>
+                        <p class="bento-description">
+                            A visual narrative stripped to its essence.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-column">
+            <h4>Explore</h4>
+            <ul>
+                <li><a href="#">Collections</a></li>
+                <li><a href="#">Stories</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Archive</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-column">
+            <h4>Connect</h4>
+            <ul>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">Pinterest</a></li>
+                <li><a href="#">Newsletter</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-column">
+            <h4>Editorial</h4>
+            <ul>
+                <li><a href="#">Submit Work</a></li>
+                <li><a href="#">Collaborate</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Press</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 Editorial. All rights reserved. Crafted with precision and care.</p>
+        </div>
+    </footer>
+    
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        /*==============================================
+          SLIDE-OVER MENU TOGGLE
+        ===============================================*/
+        const menuToggle = document.querySelector('.menu-toggle');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const menuClose = document.querySelector('.menu-close');
+        const menuLinks = document.querySelectorAll('.menu-nav a');
+        
+        // Open menu
+        menuToggle.addEventListener('click', () => {
+            menuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        });
+        
+        // Close menu
+        function closeMenu() {
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        menuClose.addEventListener('click', closeMenu);
+        
+        // Close menu when clicking on a link
+        menuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                
+                // Trigger page transition
+                triggerPageTransition(() => {
+                    closeMenu();
+                    document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+        });
+        
+        // Close menu when clicking outside
+        menuOverlay.addEventListener('click', (e) => {
+            if (e.target === menuOverlay) {
+                closeMenu();
+            }
+        });
+        
+        // Close menu on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && menuOverlay.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+        
+        /*==============================================
+          PAGE TRANSITION (Page-Turn Effect)
+        ===============================================*/
+        const pageTransition = document.querySelector('.page-transition');
+        
+        function triggerPageTransition(callback) {
+            pageTransition.classList.add('active');
+            
+            setTimeout(() => {
+                if (callback) callback();
+                
+                setTimeout(() => {
+                    pageTransition.classList.remove('active');
+                }, 500);
+            }, 500);
+        }
+        
+        /*==============================================
+          SMOOTH SCROLL WITH PAGE TRANSITION
+        ===============================================*/
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                
+                if (targetId === '#') return;
+                
+                triggerPageTransition(() => {
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+        
+        /*==============================================
+          BENTO ITEM PARALLAX ON SCROLL
+        ===============================================*/
+        const bentoImages = document.querySelectorAll('.bento-image');
+        
+        function parallaxScroll() {
+            bentoImages.forEach(image => {
+                const rect = image.getBoundingClientRect();
+                const scrollPercent = (rect.top / window.innerHeight) * 100;
+                
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    image.style.transform = `translateY(${scrollPercent * 0.1}px) scale(1.1)`;
+                }
+            });
+        }
+        
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    parallaxScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+        
+        /*==============================================
+          INTERSECTION OBSERVER: Fade-In Animation
+        ===============================================*/
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const fadeElements = document.querySelectorAll('.bento-item, blockquote');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '0';
+                    entry.target.style.transform = 'translateY(40px)';
+                    
+                    setTimeout(() => {
+                        entry.target.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, 100);
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        fadeElements.forEach(el => observer.observe(el));
+        
+        /*==============================================
+          ACCESSIBILITY: Focus Management
+        ===============================================*/
+        // Trap focus within menu when open
+        menuOverlay.addEventListener('keydown', (e) => {
+            if (!menuOverlay.classList.contains('active')) return;
+            
+            const focusableElements = menuOverlay.querySelectorAll(
+                'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+            
+            if (e.key === 'Tab') {
+                if (e.shiftKey && document.activeElement === firstElement) {
+                    e.preventDefault();
+                    lastElement.focus();
+                } else if (!e.shiftKey && document.activeElement === lastElement) {
+                    e.preventDefault();
+                    firstElement.focus();
+                }
+            }
+        });
+        
+        // Set initial focus when menu opens
+        menuToggle.addEventListener('click', () => {
+            setTimeout(() => menuClose.focus(), 100);
+        });
+    </script>
+    
+<script src="../template-injector.js"></script>
+</body>
+</html>
