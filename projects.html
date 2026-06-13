@@ -1493,6 +1493,13 @@
         background: radial-gradient(circle, rgba(179, 29, 56, 0.10) 0%, rgba(179, 29, 56, 0.02) 45%, transparent 70%) !important;
       }
 
+      /* 🧲 MAGNETIC TEXT EFFECT 🧲 */
+      .mag-letter {
+        display: inline-block;
+        transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+        will-change: transform;
+        cursor: default;
+      }
     </style>
   </head>
   <body class="dot-grid-bg">
@@ -1505,7 +1512,7 @@
     <nav id="navbar">
       <div class="container nav-container">
         <a href="index.html#hero" class="logo">
-          Stone Forze <span class="logo-icon">⚒</span>
+          <span class="logo-text">Stone Forze</span> <span class="logo-icon">⚒</span>
         </a>
 
         <ul class="nav-links">
@@ -2168,6 +2175,47 @@
         window.initCardTilt = initCardTilt;
         initCardTilt();
 
+
+        // --- Magnetic Text Effect ---
+        function initMagneticText(selector) {
+          document.querySelectorAll(selector).forEach(el => {
+            const text = el.textContent;
+            el.innerHTML = [...text].map(ch =>
+              ch === ' '
+                ? ' '
+                : `<span class="mag-letter">${ch}</span>`
+            ).join('');
+          });
+        }
+
+        document.addEventListener('mousemove', e => {
+          if (window.innerWidth < 768) return;
+          document.querySelectorAll('.mag-letter').forEach(letter => {
+            const r  = letter.getBoundingClientRect();
+            const cx = r.left + r.width / 2;
+            const cy = r.top  + r.height / 2;
+            const dx = e.clientX - cx;
+            const dy = e.clientY - cy;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            
+            const maxDist = 80; 
+            if (dist < maxDist) {
+              const pull = (maxDist - dist) / maxDist;
+              const moveX = dx * pull * 0.3; 
+              const moveY = dy * pull * 0.3; 
+              const rotX = (dy / maxDist) * -15 * pull; 
+              const rotY = (dx / maxDist) * 15 * pull; 
+              const scaleX = 1 + (Math.abs(dx) / maxDist) * 0.15 * pull;
+
+              letter.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) rotateX(${rotX}deg) rotateY(${rotY}deg) scaleX(${scaleX})`;
+            } else {
+              letter.style.transform = 'translate3d(0,0,0) rotateX(0) rotateY(0) scaleX(1)';
+            }
+          });
+        });
+
+        initMagneticText('.logo-text');
+        initMagneticText('h1');
 
       });
     </script>
