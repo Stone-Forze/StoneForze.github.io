@@ -147,8 +147,6 @@
 
       html {
         scroll-behavior: smooth;
-        overflow-x: hidden;
-        max-width: 100vw;
       }
       
       /* Custom Premium Scrollbar */
@@ -173,8 +171,6 @@
         color: var(--text-primary);
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
-        overflow-x: hidden;
-        max-width: 100vw;
         overflow-x: hidden;
       }
       
@@ -867,14 +863,7 @@
           perspective: none;
         }
         .canvas-web { display: none; }
-        .canvas-mobile { 
-          left: 50%; 
-          margin-left: -140px;
-          transform: scale(0.6) rotateX(10deg) rotateY(-10deg) translateY(var(--float-y)); 
-          right: auto; 
-          --rx: 0deg !important; 
-          --ry: 0deg !important; 
-        }
+        .canvas-mobile { display: none; }
       }
 
       /* Scroll Indicator (Task 2C) */
