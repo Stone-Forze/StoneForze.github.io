@@ -4364,7 +4364,11 @@
             let actionButtons = "";
             if (proj.links) {
               if (proj.links.demo && proj.links.demo.trim() !== "") {
-                actionButtons += `<a href="${proj.links.demo}" target="_blank" class="btn btn-outline btn-sm">Live Demo</a>`;
+                let demoUrl = proj.links.demo;
+                if (proj.globalCategory === 'templates') {
+                  demoUrl = `preview.html?url=${encodeURIComponent(proj.links.demo)}&title=${encodeURIComponent(proj.title)}`;
+                }
+                actionButtons += `<a href="${demoUrl}" target="_blank" class="btn btn-outline btn-sm">Live Demo</a>`;
               } else if (
                 proj.links.playstore &&
                 proj.links.playstore.trim() !== ""
