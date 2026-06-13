@@ -2,106 +2,53 @@
   "category": "websites",
   "subcategories": [
     {
-      "label": "Web Applications",
-      "icon": "⚡",
-      "projects": [
-        {
-          "title": "Stone Forze Portfolio",
-          "description": "Premium portfolio website built for a freelance digital agency featuring responsive layout, light/dark mode, dynamic JSON project loader, and an integrated AI assistant chatbot.",
-          "featured": true,
-          "status": "active",
-          "year": "2024",
-          "pages": 6,
-          "score": 94,
-          "thumbnailEmoji": "⚒",
-          "thumbnailBg": "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
-          "thumbnailUrl": "",
-          "keyFeatures": [
-            "Dynamic Project Loader",
-            "Integrated AI Chatbot",
-            "Responsive Dark/Light Mode",
-            "Vite & Express Server Setup"
-          ],
-          "tags": ["HTML5", "Vanilla CSS", "Vite", "Express", "TypeScript"],
-          "links": {
-            "demo": "https://stoneforze.com",
-            "github": "https://github.com/stonemz/stoneforze"
-          }
-        },
-        {
-          "title": "SaaS Platform Dashboard",
-          "description": "Interactive business intelligence and metrics monitoring dashboard. Responsive layouts with animated charts, drag-and-drop widget customization, and state preservation.",
-          "featured": true,
-          "status": "sample",
-          "year": "2024",
-          "pages": 12,
-          "score": 98,
-          "realtime": true,
-          "thumbnailEmoji": "📈",
-          "thumbnailBg": "linear-gradient(135deg, #065f46 0%, #022c22 100%)",
-          "thumbnailUrl": "",
-          "keyFeatures": [
-            "Dynamic Interactive Charts",
-            "Draggable Widgets Grid",
-            "Real-time Metrics Simulation",
-            "State Persistence"
-          ],
-          "tags": ["React", "Tailwind CSS", "Recharts", "Vite"],
-          "links": {
-            "demo": "",
-            "github": "https://github.com/stonemz/saas-dashboard"
-          }
-        }
-      ]
-    },
-    {
-      "label": "Business & Landing Pages",
+      "label": "Live Websites",
       "icon": "🌐",
       "projects": [
         {
-          "title": "LexJuris Law Chambers",
-          "description": "Professional multi-page web presence built for a modern corporate law firm. Integrated appointment scheduler, practice areas showcase, and contact form.",
-          "featured": false,
+          "title": "ELEVENS Restaurant",
+          "description": "Premium dining experience website built for ELEVENS Restaurant in Gola Gokaran Nath, featuring delicious food showcases and responsive design.",
+          "featured": true,
           "status": "active",
-          "year": "2023",
-          "pages": 8,
-          "score": 92,
-          "thumbnailEmoji": "⚖️",
+          "year": "2024",
+          "pages": 5,
+          "score": 98,
+          "thumbnailEmoji": "🍽️",
           "thumbnailBg": "linear-gradient(135deg, #78350f 0%, #451a03 100%)",
           "thumbnailUrl": "",
           "keyFeatures": [
-            "Integrated Booking Scheduler",
-            "Practice Areas Filter",
-            "Responsive Contact Form",
-            "SEO Optimization"
+            "Modern Responsive Design",
+            "Interactive Menu Display",
+            "Fast Built Output",
+            "SEO Optimized"
           ],
-          "tags": ["HTML5", "CSS3", "JavaScript", "SEO Optimized"],
+          "tags": ["React", "CSS3", "Frontend"],
           "links": {
-            "demo": "https://lexjuris.example.com",
+            "demo": "https://restaurant-elevens.netlify.app/",
             "github": ""
           }
         },
         {
-          "title": "FitFlex Gym Landing Page",
-          "description": "High-conversion fitness center landing page featuring class schedules, trainer highlights, membership plans, and visual media galleries.",
-          "featured": false,
+          "title": "Deposit Coffee Corner",
+          "description": "A cozy and elegant premium cafe website built for Deposit Coffee Corner in Lancaster, Pennsylvania, featuring smooth scroll animations and modern layouts.",
+          "featured": true,
           "status": "active",
-          "year": "2023",
-          "pages": 1,
+          "year": "2024",
+          "pages": 4,
           "score": 96,
-          "thumbnailEmoji": "💪",
-          "thumbnailBg": "linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%)",
+          "thumbnailEmoji": "☕",
+          "thumbnailBg": "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
           "thumbnailUrl": "",
           "keyFeatures": [
-            "Dynamic Interactive Schedules",
-            "Trainer Spotlights Grid",
-            "Vibrant Fitness Animations",
-            "Custom Typography CSS"
+            "Smooth Scroll Transitions",
+            "Premium Dark/Light Themes",
+            "Responsive Web Design",
+            "High Performance"
           ],
-          "tags": ["HTML5", "CSS3", "Scroll Animations"],
+          "tags": ["HTML5", "CSS3", "JavaScript"],
           "links": {
-            "demo": "https://fitflex.example.com",
-            "github": "https://github.com/stonemz/fitflex"
+            "demo": "https://deposit-coffee.netlify.app/",
+            "github": ""
           }
         }
       ]
