@@ -2882,7 +2882,7 @@
 
           <h1 class="hero-title fade-in-up delay-100">
             <span class="hero-title-gradient">I Build Apps & Websites</span><br>
-            That Clients <span class="text-gradient-accent" style="font-style: italic">Actually Ship</span>
+            <span class="hero-mag-text">That Clients </span><span class="text-gradient-accent" style="font-style: italic">Actually Ship</span>
           </h1>
 
           <p class="hero-subtitle fade-in-up delay-200">
@@ -4139,9 +4139,9 @@
     <!-- JavaScript -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        initMagneticText('.hero h1');
+        initMagneticText('.hero-title-gradient, .hero-mag-text, .text-gradient-accent');
         initMagneticText('.logo-text');
-        initMagneticText('.sec-title');
+        initMagneticText('h2');
 
         // --- Theme Toggle Logic ---
         const themeToggleBtn = document.getElementById("theme-toggle");
