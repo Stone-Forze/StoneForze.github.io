@@ -472,6 +472,7 @@
         pointer-events: none;
         z-index: 0;
         filter: blur(80px);
+        will-change: transform;
       }
 
       .shape-1 {
@@ -864,6 +865,10 @@
         }
         .canvas-web { display: none; }
         .canvas-mobile { display: none; }
+        .hero-shape, .hero-glow, .pm-ambient-glow {
+          filter: none !important;
+          opacity: 0.6; /* Fallback for when blur is disabled */
+        }
       }
 
       /* Scroll Indicator (Task 2C) */
@@ -4649,6 +4654,13 @@
 
             requestAnimationFrame(updateGlow);
           };
+          
+          // Disable heavy cursor tracking on mobile/touch devices
+          if (window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 768) {
+            cursorGlow.style.display = 'none';
+            return; // Exit early so requestAnimationFrame loop never starts
+          }
+
           updateGlow();
         }
 
@@ -4965,8 +4977,10 @@
             
             setTimeout(() => p.remove(), duration * 1000);
           };
-          
-          setInterval(createParticle, 300);
+          // Only run particles on non-mobile devices to save battery/CPU
+          if (window.innerWidth > 768) {
+            setInterval(createParticle, 800); // Reduced frequency for better performance
+          }
         }
       });
     </script>

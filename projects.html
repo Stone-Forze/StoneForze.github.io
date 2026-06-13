@@ -1475,6 +1475,13 @@
           cursor: none;
         }
       }
+      
+      /* Disable custom cursor on mobile to save performance */
+      @media (max-width: 768px) {
+        #custom-cursor, #custom-cursor-dot, #cursor-glow {
+          display: none !important;
+        }
+      }
 
       /* Cursor Glow upgraded */
       #cursor-glow {
@@ -2019,8 +2026,13 @@
         const cursorDot = document.getElementById('custom-cursor-dot');
 
         if (cursorRing && cursorDot) {
-          document.addEventListener('mousemove', (e) => {
-            cursorRing.style.left = e.clientX + 'px';
+          // Disable heavy cursor tracking on mobile/touch devices
+          if (window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 768) {
+            cursorRing.style.display = 'none';
+            cursorDot.style.display = 'none';
+          } else {
+            document.addEventListener('mousemove', (e) => {
+              cursorRing.style.left = e.clientX + 'px';
             cursorRing.style.top = e.clientY + 'px';
             cursorRing.style.opacity = '1';
             cursorDot.style.left = e.clientX + 'px';
@@ -2050,8 +2062,9 @@
           };
 
           bindCursorHover();
-          const observer = new MutationObserver(bindCursorHover);
-          observer.observe(document.body, { childList: true, subtree: true });
+            const observer = new MutationObserver(bindCursorHover);
+            observer.observe(document.body, { childList: true, subtree: true });
+          }
         }
 
         // --- Staggered Entrance Animations ---
